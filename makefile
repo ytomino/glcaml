@@ -2,7 +2,14 @@ MAKE=make
 # Uncomment the following line on WIN32
 # MAKE=make WIN32=true
 
-all: sdl nosdl
+#all: sdl nosdl
+all: sdlmixer
+
+
+
+sdlmixer: 
+	$(MAKE) -f makefile.inc MLFILE=mixer
+
 
 sdl:
 	$(MAKE) -f makefile.inc MLFILE=audiopan
@@ -50,6 +57,7 @@ clean:
 	$(MAKE) -f makefile.inc MLFILE=lesson07 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson08 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson09 clean
+	$(MAKE) -f makefile.inc MLFILE=mixer clean
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum clean
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim clean
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera clean

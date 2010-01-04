@@ -713,6 +713,9 @@ module Audio : sig
 		size: int;
 	}
 
+    val int_of_sampletype : sample_type -> int (* internal-ish *)
+    val int_of_channel : channel_type -> int  (* internal-ish *)
+
 	(** The maximum sample mixer volume. Volume ranges from 0 (silence) to mix_maxvolume *)     
 	val mix_maxvolume   : int
 

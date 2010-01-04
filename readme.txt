@@ -33,10 +33,6 @@ WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO TH
 IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND FREEDOM 
 FROM INFRINGEMENT.
 
-Current Version
--------------------
-The current version is 20080215, created on 15 february 2008
-
 Installation
 -------------
 See the file install.txt, provided along with this distribution.
@@ -96,7 +92,15 @@ It contains the following files
 	sdlcaml.ml
 	sdlcaml.mli
 	sdlcaml_stub.c
+    caml.h
 located in the /lib subdirectory
+
+Additionally, optional SDL_mixer support is provided via the following files
+    sdl_mixer.ml
+    sdl_mixer.mli
+    sdl_mixer_stub.c
+    caml.h
+
 Generated, comprehensive documentation is located in the /doc directory
 The /src directory contains a number of SDL tutorials, translated into
 Ocaml from the Lazy Foo' Productions tutorials
