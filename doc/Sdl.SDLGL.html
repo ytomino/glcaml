@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sdl.Window.html">
+<link rel="next" href="Sdl.Event.html">
+<link rel="Up" href="Sdl.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.SDLGL</title>
+</head>
+<body>
+<div class="navbar"><a href="Sdl.Window.html">Previous</a>
+&nbsp;<a href="Sdl.html">Up</a>
+&nbsp;<a href="Sdl.Event.html">Next</a>
+</div>
+<center><h1>Module <a href="type_Sdl.SDLGL.html">Sdl.SDLGL</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> SDLGL: <code class="code">sig</code> <a href="Sdl.SDLGL.html">..</a> <code class="code">end</code></pre>SDL OpenGL support<br>
+<hr width="100%">
+<br><code><span class="keyword">type</span> <a name="TYPEgl_attr"></a><code class="type"></code>gl_attr = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">RED_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the framebuffer red component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">GREEN_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the framebuffer green component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">BLUE_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the framebuffer blue component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ALPHA_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the framebuffer alpha component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DOUBLEBUFFER</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >0 or 1, enable or disable double buffering</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">BUFFER_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the framebuffer, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DEPTH_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the depth buffer, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">STENCIL_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the stencil buffer, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ACCUM_RED_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the accumulation buffer red component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ACCUM_GREEN_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the accumulation buffer green component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ACCUM_BLUE_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the accumulation buffer blue component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ACCUM_ALPHA_SIZE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the accumulation buffer alpha component, in bits</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+While you can set most OpenGL attributes normally, the attributes listed above must be known before SDL sets the video mode. 
+		These attributes a set and read with <code class="code">set_attribute</code> and <code class="code">get_attribute</code>.<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALswap_buffers"></a>swap_buffers : <code class="type">unit -> unit</code></pre><div class="info">
+<code class="code">swap_buffers</code>
+		Swap OpenGL framebuffers/Update Display<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALload_bmp"></a>load_bmp : <code class="type">string -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a></code></pre><div class="info">
+<code class="code">load_bmp file -&gt; surface</code>
+		Loads a Windows Bitmap file and loads it into a surface suitable for use as an OpenGL texture<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_attribute"></a>set_attribute : <code class="type"><a href="Sdl.SDLGL.html#TYPEgl_attr">gl_attr</a> -> int -> unit</code></pre><div class="info">
+<code class="code">set_attribute attr value</code>
+		Sets the OpenGL attribute attr to value. The attributes you set don't take effect until after a call to <code class="code">set_video_mode</code>. 
+		You should use <code class="code">get_attribute</code> to check the values after a <code class="code">set_video_mode</code> call.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_attribute"></a>get_attribute : <code class="type"><a href="Sdl.SDLGL.html#TYPEgl_attr">gl_attr</a> -> int</code></pre><div class="info">
+<code class="code">get_attribute attr -&gt; value</code>	 
+		Returns the value of the SDL/OpenGL attribute attr in value. 
+		This is useful after a call to <code class="code">set_video_mode</code> to check whether your attributes have been set as you expected.<br>
+</div>
+</body></html>

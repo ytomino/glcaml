@@ -1,0 +1,193 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sdl.Audio.html">
+<link rel="Up" href="Sdl.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.Draw</title>
+</head>
+<body>
+<div class="navbar"><a href="Sdl.Audio.html">Previous</a>
+&nbsp;<a href="Sdl.html">Up</a>
+&nbsp;</div>
+<center><h1>Module <a href="type_Sdl.Draw.html">Sdl.Draw</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Draw: <code class="code">sig</code> <a href="Sdl.Draw.html">..</a> <code class="code">end</code></pre>Extra functions: font, bitmap, scaling and pixel operations<br>
+<hr width="100%">
+<pre><span class="keyword">exception</span> <a name="EXCEPTIONTGA_failure"></a>TGA_failure <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info">
+failure loading TGA file<br>
+</div>
+<pre><span class="keyword">exception</span> <a name="EXCEPTIONSfont_failure"></a>Sfont_failure <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info">
+Failure using SFont functions<br>
+</div>
+<br><code><span class="keyword">type</span> <a name="TYPEsfont"></a><code class="type"></code>sfont = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>font_list&nbsp;: <code class="type">(int * <a href="Sdl.Video.html#TYPErect">Sdl.Video.rect</a>) list</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >associative list of ASCII char values and corresponding SDL rects</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>font_surf&nbsp;: <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Texture map containing font characters</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>font_space&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Size of the space character ' ' in pixels. Default is the same size as 'L'</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>font_letters&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Space between letters in pixels. Default is the same size as '!'</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>font_line&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Space between lines in pixels. Default is zero i.e. font design handles it</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info">
+SFont texturemapped fonts based on the specifications at http://www.linux-games.com/sfont/
+		A font consists of a 32bpp RGBA surface with ASCII characters from 33 to 127. The first line in
+		the texturemap serves as a character delineator using the colour pink (255 0 255 255) to indicate
+		the space between each character rectangle.<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEfilter"></a><code class="type"></code>filter = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">BOX</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">TRIANGLE</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">BELL</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">BSPLINE</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">HERMITE</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MITCHELL</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">LANCZOS3</span> <span class="keyword">of</span> <code class="type">int</code></code></td>
+
+</tr></table>
+
+<div class="info">
+Filters to be used in scaling bitmaps. Currently only box, triangle and lanczos3 filters have been implemented<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALbox"></a>box : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALtriangle"></a>triangle : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALbell"></a>bell : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALbspline"></a>bspline : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALhermite"></a>hermite : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALmitchell"></a>mitchell : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALlanczos3"></a>lanczos3 : <code class="type"><a href="Sdl.Draw.html#TYPEfilter">filter</a></code></pre><pre><span class="keyword">val</span> <a name="VALput_pixel"></a>put_pixel : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> int -> int -> int32 -> unit</code></pre><div class="info">
+<code class="code">put_pixel surface x y pixel</code>
+		puts an int32 rgb(a) pixel, such as output of <code class="code">map_rgb(a)</code>, on surface <code class="code">surface</code> at location <code class="code">(x,y)</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_pixel"></a>get_pixel : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> int -> int -> int32</code></pre><div class="info">
+<code class="code">get_pixel surface x y -&gt; pixel</code>
+		gets an int32 rgb(a) pixel, from surface <code class="code">surface</code> at location <code class="code">(x,y)</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALscale"></a>scale : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> float -> <a href="Sdl.Draw.html#TYPEfilter">filter</a> -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a></code></pre><div class="info">
+<code class="code">scale surface factor filter -&gt; surface</code>
+		Scales a surface by the given scale <code class="code">factor</code>, using the given <code class="code">filter</code>, and returning a new scaled surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALscale_to"></a>scale_to : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> int -> int -> <a href="Sdl.Draw.html#TYPEfilter">filter</a> -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a></code></pre><div class="info">
+<code class="code">scale_to surface new_width new_height filter -&gt; surface</code>
+		Scales a surface to the new width and height given, using the given <code class="code">filter</code>, and returning a new scaled surface<br>
+</div>
+<br><code><span class="keyword">type</span> <a name="TYPEtga_orientation"></a><code class="type"></code>tga_orientation = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">From_upper_left</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">From_lower_left</span></code></td>
+
+</tr></table>
+
+<div class="info">
+<code class="code">read_tga file -&gt; width * height * bitsperpixel * pixel-data</code>
+		Targa TGA image file reader, based on the specs at http://astronomy.swin.edu.au/~pbourke/dataformats/tga/
+		Takes as parameter the file name and returns a tuple containing the image width, height, bytes-per-pixel
+		a string containing the image data in BGR(A) format, and the image orientation.
+		Reads 15, 16, 24 and 32 bit-per-pixel raw and RLE-compressed images.
+		Throws TGA_exception when anything goes wrong.<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALread_tga"></a>read_tga : <code class="type">string -> int * int * int * string * <a href="Sdl.Draw.html#TYPEtga_orientation">tga_orientation</a></code></pre><pre><span class="keyword">val</span> <a name="VALload_tga"></a>load_tga : <code class="type">string -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a></code></pre><div class="info">
+<code class="code">load_tga file -&gt; surface</code>
+		Loads a TGA file and returns a surface with the image data<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmake_sfont"></a>make_sfont : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> <a href="Sdl.Draw.html#TYPEsfont">sfont</a></code></pre><div class="info">
+<code class="code">make_sfont Surface_containing_loaded_RGBA_texture_map_with_font_characters -&gt;  sfont</code>
+		Takes a surface containing a texture-mapped font (see http://www.linux-games.com/sfont/)
+		and returns an sfont structure<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsfont_print"></a>sfont_print : <code class="type">string -> int -> int -> <a href="Sdl.Draw.html#TYPEsfont">sfont</a> -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> unit</code></pre><div class="info">
+<code class="code">sfont_print  string_to_print  x_position  y_position  sfont  surface_to_draw_text_on</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmake_mipmaps"></a>make_mipmaps : <code class="type"><a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> -> <a href="Sdl.Draw.html#TYPEfilter">filter</a> -> <a href="Sdl.Video.html#TYPEsurface">Sdl.Video.surface</a> array</code></pre><div class="info">
+<code class="code">make_mipmaps surface_bitmap scale_filter_type  -&gt;  array of mipmaps down to 1x1</code>
+		Makes mipmaps suitable for use in OpenGL, by generating an array of mipmaps down to 1x1.
+		The side of each mipmap is a power of two; if the sides of the original surface are powers of two then that
+		surface will be used as the first mipmap in the array, otherwise it will be scaled to the nearest power of two
+		and the result will be used as the first mipmap.<br>
+</div>
+</body></html>

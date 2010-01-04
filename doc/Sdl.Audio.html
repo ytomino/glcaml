@@ -1,0 +1,264 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Sdl.Timer.html">
+<link rel="next" href="Sdl.Draw.html">
+<link rel="Up" href="Sdl.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.Audio</title>
+</head>
+<body>
+<div class="navbar"><a href="Sdl.Timer.html">Previous</a>
+&nbsp;<a href="Sdl.html">Up</a>
+&nbsp;<a href="Sdl.Draw.html">Next</a>
+</div>
+<center><h1>Module <a href="type_Sdl.Audio.html">Sdl.Audio</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Audio: <code class="code">sig</code> <a href="Sdl.Audio.html">..</a> <code class="code">end</code></pre>Low-level audio<br>
+<hr width="100%">
+<br><code><span class="keyword">type</span> <a name="TYPEsample_type"></a><code class="type"></code>sample_type = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">U8</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >8 bits unsigned</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">S8</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >8 bits signed</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">U16</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits unsigned</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">S16</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits signed</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">U16LSB</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits unsigned least-significant-bit first</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">S16LSB</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits signed least-significant-bit first</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">U16MSB</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits unsigned most-significant-bit first</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">S16MSB</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >16 bits signed most-significant-bit first</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+Type of sample<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEaudio_status"></a><code class="type"></code>audio_status = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">STOPPED</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device has been stopped</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">PAUSED</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device has been paused</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">PLAYING</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device is currently playing</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">UNKNOWN</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Device state is unknown</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+Status of the audio device<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEchannel_type"></a><code class="type"></code>channel_type = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MONO</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Mono channel</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">STEREO</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Stereo channel</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+
+<br><code><span class="keyword">type</span> <a name="TYPEaudio_spec"></a><code class="type"></code>audio_spec = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>frequency&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The number of samples sent to the sound device every second. Common values are 11025, 22050 and 44100. The higher the better.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>format&nbsp;: <code class="type"><a href="Sdl.Audio.html#TYPEsample_type">sample_type</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Specifies the size and type of each sample element</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>channels&nbsp;: <code class="type"><a href="Sdl.Audio.html#TYPEchannel_type">channel_type</a></code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >The number of seperate sound channels</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>silence&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>samples&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >When used with <code class="code">open_audio</code> this refers to the size of the audio buffer in samples. A sample a chunk of audio data of the size specified in format mulitplied by the number of channels. When the <code class="code">audio_spec</code> is used with <code class="code">load-wav</code> samples is set to 4096.</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>size&nbsp;: <code class="type">int</code>;</code></td>
+
+</tr></table>
+}
+
+<div class="info">
+The <code class="code">audio_spec</code> structure is used to describe the format of some audio data. 
+		This structure is used by <code class="code">open_audio</code> and <code class="code">load-wav</code>. 
+		While all fields are used by <code class="code">open_audio</code> only freq, format, samples and channels are used by <code class="code">load_wav</code>.<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALmix_maxvolume"></a>mix_maxvolume : <code class="type">int</code></pre><div class="info">
+The maximum sample mixer volume. Volume ranges from 0 (silence) to mix_maxvolume<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALopen_audio"></a>open_audio : <code class="type"><a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a> -> (<a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> unit) -> <a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a></code></pre><div class="info">
+<code class="code">open_audio desired_audio_spec mixer_callback -&gt; obtained audio_spec </code> 
+		This function opens the audio device with the <code class="code">desired</code> parameters, and returns the <code class="code">obtained</code> parameters, 
+		placing the actual hardware parameters in the structure pointed to by <code class="code">obtained</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALclose_audio"></a>close_audio : <code class="type">unit -> unit</code></pre><div class="info">
+<code class="code">close_audio</code> closes the audio device<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALload_wav"></a>load_wav : <code class="type">string -> <a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a> * <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a></code></pre><div class="info">
+<code class="code">load_wav filename -&gt; obtained audio_spec * wav_buffer</code> 
+		This function loads a WAVE file into memory.
+		If this function succeeds, it returns the given <code class="code">audio-spec</code>, filled with the audio data format of 
+		the wave data, and sets wav_buffer to a C-malloc'd buffer containing the audio data, 
+		You need to free the audio buffer with <code class="code">free-wav</code> when you are done with it.
+		This function sets the SDL error message if the wave file cannot be opened, 
+		uses an unknown data format, or is corrupt. Currently raw, MS-ADPCM and IMA-ADPCM WAVE files are supported.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfree_wav"></a>free_wav : <code class="type"><a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> unit</code></pre><div class="info">
+<code class="code">free_wav wav_buffer</code> 
+		Frees a WAV buffer allocated by load-wav<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALpause_audio"></a>pause_audio : <code class="type">bool -> unit</code></pre><div class="info">
+<code class="code">pause_audio on\off</code> 
+		Toggle audio playback on and off<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALlock_audio"></a>lock_audio : <code class="type">unit -> unit</code></pre><div class="info">
+The lock manipulated by these functions protects the callback function. 
+		During a <code class="code">lock_audio</code> period, you can be guaranteed that the callback function is not running. 
+		Do not call these from the callback function or you will cause deadlock.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALunlock_audio"></a>unlock_audio : <code class="type">unit -> unit</code></pre><div class="info">
+Unlocks a previous <code class="code">lock_audio</code> call.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmix_audio"></a>mix_audio : <code class="type"><a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> int -> unit</code></pre><div class="info">
+<code class="code">mix_audio buffer1 buffer2  volume</code> 
+		This function takes two audio buffers of len bytes each of the playing audio format and mixes them, 
+		performing addition, volume adjustment, and overflow clipping. 
+		The volume ranges from 0 to <code class="code">mix_maxvolume</code> and should be set to the maximum value for full audio volume. 
+		Note this does not change hardware volume. This is provided for convenience -- you can mix your own audio data.
+		Note: Do not use this function for mixing together more than two streams of sample data. 
+		The output from repeated application of this function may be distorted by clipping, because there is no 
+		accumulator with greater range than the input (not to mention this being an inefficient way of doing it). 
+		Use mixing functions from SDL_mixer, OpenAL, or write your own mixer instead.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_audio_status"></a>get_audio_status : <code class="type">unit -> <a href="Sdl.Audio.html#TYPEaudio_status">audio_status</a></code></pre><div class="info">
+<code class="code">get_audio_status -&gt; audio_status</code>
+		Returns either <code class="code">STOPPED</code>, <code class="code">PAUSED</code> or <code class="code">PLAYING</code> depending on the current audio status<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALconvert_audio"></a>convert_audio : <code class="type"><a href="Sdl.Audio.html#TYPEsample_type">sample_type</a> -><br>       <a href="Sdl.Audio.html#TYPEchannel_type">channel_type</a> -><br>       int -><br>       <a href="Sdl.Audio.html#TYPEsample_type">sample_type</a> -><br>       <a href="Sdl.Audio.html#TYPEchannel_type">channel_type</a> -> int -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a></code></pre><div class="info">
+<code class="code">convert_audio from_format from_channels from_frequency to_format to_channels to_frequency input_buffer -&gt; output_buffer</code> 
+		Converts an audio sample in <code class="code">input_buffer</code> of sample type <code class="code">from_format</code>, number of channels <code class="code">from_channels</code>, and sample frequency <code class="code">from_frequency</code>
+		to sample type <code class="code">to_format</code>, number of channels <code class="code">to_channels</code>, and sample frequency <code class="code">to_frequency</code>
+		The converted samples are returned in <code class="code">output_buffer</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfx_pan"></a>fx_pan : <code class="type">float -> float -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a></code></pre><div class="info">
+<code class="code">fx_pan  pan volume input_buffer  -&gt; output_buffer</code> 
+		This is an auxiliary, non core SDL mixing function.  It takes an input sample in <code class="code">input_buffer</code>
+		and pans it (or more accurately, adjusts the balance) according to the value of <code class="code">pan</code> which lies in the range [-1.0 - 1.0 ].
+		A value of -1.0 means that the sound will be coming exclusively from the left speaker, a value of 0.0 
+		means that the sound will come equally from both speakers, and 1.0 means that the sound will come exclusively from
+		the right speaker. The panned sample will be placed in the <code class="code">output_buffer</code>.
+		<code class="code">volume</code> sets the volume for the output buffer<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfx_shift"></a>fx_shift : <code class="type">float -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a></code></pre><div class="info">
+<code class="code">fx_shift : frequency_shift input_buffer -&gt; output_buffer</code>
+		This is an auxiliary, non core SDL mixing function.  It takes an input sample in <code class="code">input_buffer</code> and shifts its frequency.
+		<code class="code">frequency_shift</code> determines the frequency shift. A value of 1.0 leaves the frequency unchanged, a value between 0.1 and 1.0
+		lowers the frequency and a value between 1.0 and 10.0 raises the frequency. Shifts are capped in the range [0.1 - 10.0].
+		The frequency shifted sound is placed in <code class="code">output_buffer</code><br>
+</div>
+</body></html>

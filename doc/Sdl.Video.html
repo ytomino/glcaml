@@ -1,0 +1,509 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Sdl.Window.html">
+<link rel="Up" href="Sdl.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.Video</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a href="Sdl.html">Up</a>
+&nbsp;<a href="Sdl.Window.html">Next</a>
+</div>
+<center><h1>Module <a href="type_Sdl.Video.html">Sdl.Video</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Video: <code class="code">sig</code> <a href="Sdl.Video.html">..</a> <code class="code">end</code></pre>Interface to SDL framebuffer
+<p>
+
+	SDL presents a very simple interface to the display framebuffer. The framebuffer is represented as an 
+	offscreen surface to which you can write directly. If you want the screen to show what you have written, 
+	call the update function which will guarantee that the desired portion of the screen is updated.
+<p>
+
+	Before you call any of the SDL video functions, you must first call <code class="code">init [VIDEO]</code>, 
+	which initializes the video and events in the SDL library. Check for the exception <code class="code">SDL_failure</code>, 
+	to see if there were any errors in starting up.
+<p>
+
+	If you use both sound and video in your application, you need to call  <code class="code">init [AUDIO; VIDEO]</code> 
+	before opening the sound device, otherwise under Win32 DirectX, you won't be able to set full-screen display modes.
+<p>
+
+	After you have initialized the library, you can start up the video display in a number of ways. 
+	The easiest way is to pick a common screen resolution and depth and just initialize the video, checking for errors. 
+	You will probably get what you want, but SDL may be emulating your requested mode and converting the display 
+	on update. The best way is to query, for the best video mode closest to the desired one, and then convert 
+	your images to that pixel format.
+<p>
+
+	SDL currently supports any bit depth &gt;= 8 bits per pixel. 8 bpp formats are considered 8-bit palettized modes, 
+	while 12, 15, 16, 24, and 32 bits per pixel are considered "packed pixel" modes, meaning each pixel contains the 
+	RGB color components packed in the bits of the pixel.
+<p>
+
+	After you have initialized your video mode, you can take the surface that was returned, and write to it 
+	like any other framebuffer, calling the update routine as you go.
+<p>
+
+	When you have finished your video access and are ready to quit your application, you should call <code class="code">quit ()</code> to 
+	shutdown the video and events.<br>
+<hr width="100%">
+<br><code><span class="keyword">type</span> <a name="TYPEvideo_flag"></a><code class="type"></code>video_flag = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">SWSURFACE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface is in system memory</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">HWSURFACE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface is in video memory</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">ANYFORMAT</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Allow any video pixel format</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">HWPALETTE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface has exclusive palette</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">DOUBLEBUF</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Set up double-buffered video mode</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">FULLSCREEN</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface is a full screen display</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">HWACCEL</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Blit uses hardware acceleration</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">SRCCOLORKEY</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Blit uses a source color key</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">RLEACCEL</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Colorkey blit is RLE accelerated</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">SRCALPHA</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Blit uses source alpha blending</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">SRCCLIPPING</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Blit uses source clipping</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">OPENGL</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface supports OpenGL</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">RESIZABLE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Surface is resizable</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">NOFRAME</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Creates a window with no title frame and no border</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+Flags that determine properties of video surfaces<br>
+</div>
+
+<pre><span class="keyword">type</span> <a name="TYPEsurface"></a><code class="type"></code>surface </pre>
+<div class="info">
+A surface is a software or hardware framebuffer<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALsurface_pixels"></a>surface_pixels : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a></code></pre><div class="info">
+Get a byte_array containing the raw pixel data. Non-copying<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_width"></a>surface_width : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the surface width in pixels<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_height"></a>surface_height : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the surface height in pixels<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_flags"></a>surface_flags : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list</code></pre><div class="info">
+Get a list of the surface flags<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_bpp"></a>surface_bpp : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the number bits per pixel for the surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_rmask"></a>surface_rmask : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the mask for the red color component for each pixel for the surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_gmask"></a>surface_gmask : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the mask for the green color component for each pixel for the surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_bmask"></a>surface_bmask : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the mask for the blue color component for each pixel for the surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsurface_amask"></a>surface_amask : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int</code></pre><div class="info">
+Get the mask for the alpha component for each pixel for the surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfree_surface"></a>free_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+Free a surface. Note: after freeing a surface it cannot be used again.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmust_lock"></a>must_lock : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> bool</code></pre><div class="info">
+<code class="code">True</code> if the surface passed in should be locked, else <code class="code">false</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALlock_surface"></a>lock_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+<code class="code">lock_surface ()</code> sets up a surface for directly accessing the pixels. Between calls to <code class="code">lock_surface ()</code> 
+		and <code class="code">unlock_surface ()</code>, you can write to and read from <code class="code">(surface_pixels _)</code>, using the pixel format stored in 
+		<code class="code">(surface_format _)</code>. Once you are done accessing the surface, you should use <code class="code">unlock_surface ()</code> to release it.
+		Not all surfaces require locking. If <code class="code">(must_lock surface)</code> is <code class="code">false</code>, then you can read and write 
+		to the surface at any time, and the pixel format of the surface will not change. 
+		No operating system or library calls should be made between <code class="code">lock/unlock</code> pairs, as critical system locks 
+		may be held during this time.
+		It should be noted, that since SDL 1.1.8 surface locks are recursive. This means that you can lock a 
+		surface multiple times, but each lock must have a match unlock.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALunlock_surface"></a>unlock_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+Unlock surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALvideo_mode_ok"></a>video_mode_ok : <code class="type">int -> int -> int -> <a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list -> bool</code></pre><div class="info">
+<code class="code">video_mode_ok width height bpp_flags -&gt; true/false</code>
+		<code class="code">video_mode_ok</code> returns false if the requested mode is not supported under any bit depth, 
+	    or returns true if a closest available mode with the given width, height and 
+	    requested surface flags exists (see <code class="code">set_video_mode</code>).
+		You can usually request any bpp you want when setting the video mode and SDL will emulate that 
+		color depth with a shadow video surface.
+		The arguments to <code class="code">video_mode_ok</code> are the same ones you would pass to <code class="code">set_video_mode</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_video_mode"></a>set_video_mode : <code class="type">int -> int -> int -> <a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list -> <a href="Sdl.Video.html#TYPEsurface">surface</a></code></pre><div class="info">
+<code class="code">set_video_mode width height bpp flags -&gt; surface</code> 
+		Set up a video mode with the specified width, height and bitsperpixel.
+		If bpp is 0, it is treated as the current display bits per pixel.
+		The flags parameter is the same as the flags field of the SDL surface structure. 
+		A list containing one or more of the following values are valid.<ul>
+<li><code class="code">SWSURFACE</code> Create the video surface in system memory </li>
+<li><code class="code">HWSURFACE</code> Create the video surface in video memory </li>
+<li><code class="code">ASYNCBLIT</code> Enables the use of asynchronous updates of the display surface. This will usually slow down blitting on single CPU machines, but may provide a speed increase on SMP systems. </li>
+<li><code class="code">ANYFORMAT</code> Normally, if a video surface of the requested bits-per-pixel (bpp) is not available, SDL will emulate one with a shadow surface. Passing <code class="code">ANYFORMAT</code> prevents this and causes SDL to use the video surface, regardless of its pixel depth. </li>
+<li><code class="code">HWPALETTE</code> Give SDL exclusive palette access. Without this flag you may not always get the the colors you request with SDL_SetColors or SDL_SetPalette. </li>
+<li><code class="code">DOUBLEBUF</code> Enable hardware double buffering; only valid with <code class="code">HWSURFACE</code>. Calling <code class="code">flip</code> will flip the buffers and update the screen. All drawing will take place on the surface that is not displayed at the moment. If double buffering could not be enabled then <code class="code">flip</code> will just perform a <code class="code">update_rect</code> on the entire screen. </li>
+<li><code class="code">FULLSCREEN</code> SDL will attempt to use a fullscreen mode. If a hardware resolution change is not possible (for whatever reason), the next higher resolution will be used and the display window centered on a black background. </li>
+<li><code class="code">OPENGL</code> Create an OpenGL rendering context. You should have previously set OpenGL video attributes with <code class="code">set_attribute</code>. </li>
+<li><code class="code">OPENGLBLIT</code> Create an OpenGL rendering context, like above, but allow normal blitting operations. The screen (2D) surface may have an alpha channel, and <code class="code">update_rects</code> must be used for updating changes to the screen surface. </li>
+<li><code class="code">RESIZABLE</code> Create a resizable window. When the window is resized by the user a <code class="code">VIDEORESIZE</code> event is generated and <code class="code">set_video_mode</code> can be called again with the new size. </li>
+<li><code class="code">NOFRAME</code> If possible, <code class="code">NOFRAME</code> causes SDL to create a window with no title bar or frame decoration. Fullscreen modes automatically have this flag set. 
+		Note: Whatever flags <code class="code">set_video_mode</code> could satisfy are set in the flags member of the returned surface.
+		Note: The bpp parameter is the number of bits per pixel, so a bpp of 24 uses the packed representation of 3 bytes/pixel. For the more common 4 bytes/pixel mode, use a bpp of 32. Somewhat oddly, both 15 and 16 will request a 2 bytes/pixel mode, but different pixel formats.
+		Note: Use <code class="code">SWSURFACE</code> if you plan on doing per-pixel manipulations, or blit surfaces with alpha channels, and require a high framerate. 
+		When you use hardware surfaces (<code class="code">HWSURFACE</code>), SDL copies the surfaces from video memory to system memory when you lock them, and back when you unlock them. 
+		This can cause a major performance hit. (Be aware that you may request a hardware surface, but receive a software surface. 
+		Many platforms can only provide a hardware surface when using <code class="code">FULLSCREEN</code>.) <code class="code">HWSURFACE</code> is best used when the surfaces you'll be blitting can also be stored in video memory.
+		Note: If you want to control the position on the screen when creating a windowed surface, you may do so by setting the environment variables "SDL_VIDEO_CENTERED=center" or "SDL_VIDEO_WINDOW_POS=x,y". You can set them via <code class="code">putenv</code>.
+		The framebuffer surface; if it fails it raises SDL_failure. The surface returned is freed by <code class="code">quit</code>  and should not be freed by the caller. Note: This rule includes consecutive calls to <code class="code">set_video_mode</code> (i.e. resize or rez change) - the pre-existing surface will be released automatically.</li>
+</ul>
+<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALcreate_rgb_surface"></a>create_rgb_surface : <code class="type"><a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list -> int -> int -> int -> <a href="Sdl.Video.html#TYPEsurface">surface</a></code></pre><div class="info">
+<code class="code">create_rgb_surface video_flag_list width height bitsperpixel -&gt; surface</code>
+		Allocate an empty surface (must be called after <code class="code">set_video_mode</code>)
+		If bitsPerPixel is 8 an empty palette is allocated for the surface, otherwise a 'packed-pixel' pixel format is created using internal RGBA masks based on standard 15,16,24 and 32 bitperpixel formats, and taking platform endianness into account. 
+		The flags specifies the type of surface that should be created, it is alist containing one or more of the following possible values.<ul>
+<li><code class="code">SWSURFACE </code>		 SDL will create the surface in system memory. This improves the performance of pixel level access, however you may not be able to take advantage of some types of hardware blitting.</li>
+<li><code class="code">HWSURFACE</code> 		 SDL will attempt to create the surface in video memory. This will allow SDL to take advantage of Video-&gt;Video blits (which are often accelerated).</li>
+<li><code class="code">SRCCOLORKEY</code> 		 This flag turns on color keying for blits from this surface. If <code class="code">HWSURFACE</code> is also specified and color keyed blits are hardware-accelerated, then SDL will attempt to place the surface in video memory. If the screen is a hardware surface and color keyed blits are hardware-accelerated then the <code class="code">HWSURFACE</code> flag will be set. Use <code class="code">set_color_key</code> to set or clear this flag after surface creation.</li>
+<li><code class="code">SRCALPHA</code> 		 This flag turns on alpha-blending for blits from this surface. If <code class="code">HWSURFACE</code> is also specified and alpha-blending blits are hardware-accelerated, then the surface will be placed in video memory if possible. If the screen is a hardware surface and alpha-blending blits are hardware-accelerated then the <code class="code">HWSURFACE</code> flag will be set. Use <code class="code">set_alpha</code> to set or clear this flag after surface creation.</li>
+</ul>
+<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALload_bmp"></a>load_bmp : <code class="type">string -> <a href="Sdl.Video.html#TYPEsurface">surface</a></code></pre><div class="info">
+<code class="code">load_bmp file -&gt; surface</code>
+		Loads a surface from a named Windows BMP file.
+		Note: When loading a 24-bit Windows BMP file, pixel data points are loaded as blue, green, red, and NOT red, green, blue (as one might expect).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALsave_bmp"></a>save_bmp : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> string -> unit</code></pre><div class="info">
+<code class="code">save_bmp surface file </code>
+		Saves the SDL_Surface <i>surface</i> as a Windows BMP file named <i>file</i><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_color_key"></a>set_color_key : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list -> int32 -> unit</code></pre><div class="info">
+<code class="code">set_color_key surf flag key</code> 
+		Sets the color key (transparent pixel) in a blittable surface and enables or disables RLE blit acceleration.
+		RLE acceleration can substantially speed up blitting of images with large horizontal runs of transparent pixels 
+		(i.e., pixels that match the key value). The key must be of the same pixel format as the surface, <code class="code">map_rgb</code> 
+		is often useful for obtaining an acceptable value.
+		If flag is <code class="code">SRCCOLORKEY</code> then key is the transparent pixel value in the source image of a blit.
+		If flag contains  <code class="code">RLEACCEL</code> then the surface will be draw using RLE acceleration when drawn with blit_surface.
+		The surface will actually be encoded for RLE acceleration the first time <code class="code">blit_surface</code> or <code class="code">display_format</code> 
+		is called on the surface.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_alpha"></a>set_alpha : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPEvideo_flag">video_flag</a> list -> int -> unit</code></pre><div class="info">
+<code class="code">set_alpha surf flag alpha</code> 
+		Note: This function and the semantics of SDL alpha blending have changed since version 1.1.4. Up until version 1.1.5, 
+		an alpha value of 0 was considered opaque and a value of 255 was considered transparent. 
+		This has now been inverted: 0 (<code class="code">ALPHA_TRANSPARENT</code>) is now considered transparent and 255 (S<code class="code">ALPHA_OPAQUE</code>) is now 
+		considered opaque.
+<p>
+
+		<code class="code">set_alpha</code> is used for setting the per-surface alpha value and/or enabling and disabling alpha blending.
+<p>
+
+		The surface parameter specifies which surface whose alpha attributes you wish to adjust. flags is used to specify 
+		whether alpha blending should be used (S<code class="code">SRCALPHA</code>) and whether the surface should use RLE acceleration for blitting 
+		(<code class="code">RLEACCEL</code>). flags can contain both of these two options, one of these options or none. 
+		If <code class="code">SRCALPHA</code> is not passed as a flag then all alpha information is ignored when blitting the surface. 
+		The alpha parameter is the per-surface alpha value; a surface need not have an alpha channel to use per-surface 
+		alpha and blitting can still be accelerated with <code class="code">RLEACCEL.</code>
+<p>
+
+		Note: The per-surface alpha value of 128 is considered a special case and is optimised, so it's much faster than other 
+		per-surface values.
+<p>
+
+		Alpha affects surface blitting in the following ways:<ul>
+<li>RGBA-&gt;RGB with <code class="code">SRCALPHA</code> 		The source is alpha-blended with the destination, using the alpha channel. <code class="code">SRCCOLORKEY</code> and the per-surface alpha are ignored.</li>
+<li>RGBA-&gt;RGB without <code class="code">SRCALPHA</code> 	 	The RGB data is copied from the source. The source alpha channel and the per-surface alpha value are ignored. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied.</li>
+<li>RGB-&gt;RGBA with <code class="code">SRCALPHA</code> 		The source is alpha-blended with the destination using the per-surface alpha value. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied. The alpha channel of the copied pixels is set to opaque.</li>
+<li>RGB-&gt;RGBA without <code class="code">SRCALPHA</code> 	 	The RGB data is copied from the source and the alpha value of the copied pixels is set to opaque. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied.</li>
+<li>RGBA-&gt;RGBA with <code class="code">SRCALPHA</code> 		The source is alpha-blended with the destination using the source alpha channel. The alpha channel in the destination surface is left untouched. <code class="code">SRCCOLORKEY</code> is ignored.</li>
+<li>RGBA-&gt;RGBA without <code class="code">SRCALPHA</code> 	The RGBA data is copied to the destination surface. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied.</li>
+<li>RGB-&gt;RGB with <code class="code">SRCALPHA</code> 		 	The source is alpha-blended with the destination using the per-surface alpha value. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied.</li>
+<li>RGB-&gt;RGB without <code class="code">SRCALPHA</code> 		The RGB data is copied from the source. If <code class="code">SRCCOLORKEY</code> is set, only the pixels not matching the colorkey value are copied.
+		Note: When blitting, the presence or absence of <code class="code">SRCALPHA</code> is relevant only on the source surface, not the destination.
+		Note: Note that RGBA-&gt;RGBA blits (with <code class="code">SRCALPHA</code> set) keep the alpha of the destination surface. 
+		This means that you cannot compose two arbitrary RGBA surfaces this way and get the result 
+		you would expect from "overlaying" them; the destination alpha will work as a mask.
+		Note: Also note that per-pixel and per-surface alpha cannot be combined; the per-pixel alpha is always used if available.</li>
+</ul>
+<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_clipping"></a>set_clipping : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int -> int -> int -> int -> unit</code></pre><div class="info">
+<code class="code">set_clipping surf top left bottom right</code> 
+		Sets the clipping rectangle for a surface. When this surface is the destination of a blit, only the area within the clip rectangle will be drawn into.
+		The rectangle pointed to by the coordinates (top left  bottom right) will be clipped to the edges of the surface so that the clip rectangle for a surface can never fall outside the edges of the surface.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALdisable_clipping"></a>disable_clipping : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+<code class="code">disable_clipping surface</code>
+		Disables clipping to the clipping rectangle set for a surface<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALdisplay_format"></a>display_format : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPEsurface">surface</a></code></pre><div class="info">
+<code class="code">display_format src_surface -&gt; dest_surface</code>
+		This function takes a surface and copies it to a new surface of the pixel format and colors of the video framebuffer, suitable for fast blitting onto the display surface. It calls <code class="code">convert_surface</code>.
+		If you want to take advantage of hardware colorkey or alpha blit acceleration, you should set the colorkey and alpha value before calling this function.
+		If you want an alpha channel, see <code class="code">display_format_alpha</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_rgb"></a>get_rgb : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int32 -> int * int * int</code></pre><div class="info">
+<code class="code">get_rgb surface -&gt; pixel -&gt; red * green * blue</code>
+		Get RGB component values from a pixel stored in the specified pixel format. This function uses the entire 8-bit [0..255] range when 
+		converting color components from pixel formats with less than 8-bits per RGB component (e.g., a completely white pixel in 16-bit RGB565 format would return [0xff, 0xff, 0xff] not [0xf8, 0xfc, 0xf8]).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_rgba"></a>get_rgba : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int32 -> int * int * int * int</code></pre><div class="info">
+<code class="code">get_rgba  surface -&gt; pixel -&gt; red * green * blue * alpha</code>
+		Get RGBA component values from a pixel stored in the specified pixel format.
+		This function uses the entire 8-bit [0..255] range when converting color components from pixel formats with less than 8-bits per RGB component 
+		(e.g., a completely white pixel in 16-bit RGB565 format would return [0xff, 0xff, 0xff] not [0xf8, 0xfc, 0xf8]).
+		If the surface has no alpha component, the alpha will be returned as 0xff (100% opaque).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmap_rgb"></a>map_rgb : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int -> int -> int -> int32</code></pre><div class="info">
+<code class="code">map_rgb surface -&gt; red -&gt; green -&gt; blue -&gt; pixel</code>
+		Maps the RGB color value to the specified pixel format and returns the pixel value as a 32-bit int.
+		If the format has a palette (8-bit) the index of the closest matching color in the palette will be returned.
+		If the specified pixel format has an alpha component it will be returned as all 1 bits (fully opaque).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALmap_rgba"></a>map_rgba : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int -> int -> int -> int -> int32</code></pre><div class="info">
+<code class="code">map_rgba surface -&gt; red -&gt; green -&gt; blue -&gt; alpha -&gt; pixel</code>
+		Maps the RGBA color value to the specified pixel format and returns the pixel value as a 32-bit int.
+		If the format has a palette (8-bit) the index of the closest matching color in the palette will be returned.
+		If the specified pixel format has an alpha component it will be returned as all 1 bits (fully opaque).<br>
+</div>
+<br><code><span class="keyword">type</span> <a name="TYPErect"></a><code class="type"></code>rect = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span>rect_x&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >top left</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span>rect_y&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >top</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span>rect_w&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >width</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code><span class="keyword">mutable&nbsp;</span>rect_h&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >height</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info">
+Rectangle type, used for clipping and blitting operations<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALfill_surface"></a>fill_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int32 -> unit</code></pre><div class="info">
+<code class="code">fill_surface surface  pixel</code>
+		Fills the surface with pixels of the given color<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfill_rect"></a>fill_rect : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPErect">rect</a> -> int32 -> unit</code></pre><div class="info">
+<code class="code">fill_rect surface  dstrect pixel</code>
+		This function performs a fast fill of the given rectangle with color. 
+		The color should be a pixel of the format used by the surface, and can be generated by the <code class="code">map_rgb</code> or <code class="code">map_rgba</code> functions. 
+		If the color value contains an alpha value then the destination is simply "filled" with that alpha information, no blending takes place.
+		If there is a clip rectangle set on the destination (set via <code class="code">set_clip_rect</code>), then this function will clip based on the intersection of the clip rectangle 
+		and the dstrect rectangle, and the dstrect rectangle will be modified to represent the area actually filled.
+		If you call this on the video surface (ie: the value of <code class="code">get_video_surface ()</code>) you may have to update the video surface to see the result. 
+		This can happen if you are using a shadowed surface that is not double buffered in Windows XP using build 1.2.9.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALupdate_surface"></a>update_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+<code class="code">update_surface surface</code>
+		Makes sure the screen is updated<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALupdate_rect"></a>update_rect : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> int -> int -> int -> int -> unit</code></pre><div class="info">
+<code class="code">update_rect surface left top width height</code>
+		Makes sure the given area is updated on the given screen. The rectangle must be confined within the screen boundaries 
+		(no clipping is done).
+		This function should not be called while 'screen' is locked (lock_surface).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALupdate_rects"></a>update_rects : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPErect">rect</a> array -> unit</code></pre><div class="info">
+<code class="code">update_rects surface  rect_array</code>
+		Makes sure the given list of rectangles is updated on the given screen. The rectangles must all be confined within 
+		the screen boundaries (no clipping is done). 
+		WARNING : passing rectangles not confined within the screen boundaries to this function can cause very nasty 
+		crashes, at least with SDL 1.2.8, at least in Windows and Linux.
+		This function should not be called while screen is locked.
+		Note: It is advised to call this function only once per frame, since each call has some processing overhead. 
+		This is no restriction since you can pass any number of rectangles each time.
+		The rectangles are not automatically merged or checked for overlap. In general, the programmer can use his or her 
+		knowledge about his or her particular rectangles to merge them in an efficient way, to avoid overdraw.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALflip"></a>flip : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> unit</code></pre><div class="info">
+<code class="code">flip surface</code>
+		On hardware that supports double-buffering, this function sets up a flip and returns. The hardware will wait for vertical retrace, 
+		and then swap video buffers before the next video surface blit or lock will return. On hardware that doesn't support double-buffering, 
+		this is equivalent to calling <code class="code">(update_surface screen)</code>
+		The <code class="code">DOUBLEBUF</code> flag must have been passed to <code class="code">set_video_mode</code>, when setting the video mode for this function to perform hardware flipping.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALblit_surface"></a>blit_surface : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -><br>       <a href="Sdl.Video.html#TYPErect">rect</a> option -> <a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPErect">rect</a> option -> unit</code></pre><div class="info">
+<code class="code">blit_surface source_surface srcrect dest_surface dstrect</code>
+		This performs a fast blit from the source surface to the destination surface.
+		The width and height in srcrect determine the size of the copied rectangle. Only the position is used in the dstrect (the width and height are ignored).
+		If srcrect is <code class="code">None</code>, the entire surface is copied. If dstrect is <code class="code">None</code>, then the destination position (upper left corner) is (0, 0).
+		The final blit rectangle is saved in dstrect after all clipping is performed (srcrect is not modified).
+		The blit function should not be called on a locked surface. I.e. when you use your own drawing functions you may need to lock a surface, 
+		but this is not the case with blit_surface. Like most surface manipulation functions in SDL, it should not be used together with OpenGL.
+		The results of blitting operations vary greatly depending on whether <code class="code">SRCAPLHA</code> is set or not. See <code class="code">set_alpha</code> for an explanation of how this affects your results. 
+		Colorkeying and alpha attributes also interact with surface blitting..<br>
+</div>
+<br><code><span class="keyword">type</span> <a name="TYPEcolor"></a><code class="type"></code>color = {</code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>red&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >0..255</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>green&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >0..255</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code>&nbsp;&nbsp;</code></td>
+<td align="left" valign="top" >
+<code>blue&nbsp;: <code class="type">int</code>;</code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >0..255</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+}
+
+<div class="info">
+Color type<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALset_colors"></a>set_colors : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> <a href="Sdl.Video.html#TYPEcolor">color</a> array -> int -> int -> bool</code></pre><div class="info">
+<code class="code">set_colors surf colors firstcolor ncolors</code> 
+		Sets a portion of the colormap for the given 8-bit surface.
+<p>
+
+		When surface is the surface associated with the current display, the display colormap will be updated with the requested colors. 
+		If <code class="code">HWPALETTE</code> was set in set_video_mode flags, set_colors will always return true, and the palette is guaranteed to be set the way you desire, 
+		even if the window colormap has to be warped or run under emulation.
+<p>
+
+		The color components of a <code class="code">color</code> structure are 8-bits in size, giving you a total of 2563 = 16777216 colors.
+<p>
+
+		Palettized (8-bit) screen surfaces with the <code class="code">HWPALETTE</code> flag have two palettes, a logical palette that is used for mapping blits to/from the surface and a 
+		physical palette (that determines how the hardware will map the colors to the display). 
+		<code class="code">set_colors</code> modifies both palettes (if present), and is equivalent to calling <code class="code">set_palette</code> with the flags set to <code class="code">[LOGPAL ; PHYSPAL]</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALshow_cursor"></a>show_cursor : <code class="type">bool -> unit</code></pre><div class="info">
+<code class="code">show_cursor true\false</code>
+		Toggle whether or not the cursor is shown on the screen.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALwarp_mouse"></a>warp_mouse : <code class="type">int -> int -> unit</code></pre><div class="info">
+<code class="code">warp_mouse x y</code>
+		Set the position of the mouse cursor (generates a mouse motion event).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALstring_of_pixels"></a>string_of_pixels : <code class="type"><a href="Sdl.Video.html#TYPEsurface">surface</a> -> string</code></pre><div class="info">
+<code class="code">string_of_pixels surface -&gt; string</code>
+		Returns a copy of the raw pixel data in a surface as a string.<br>
+</div>
+</body></html>

@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="next" href="Glcaml.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html"><title>Sdl</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a href="index.html">Up</a>
+&nbsp;<a href="Glcaml.html">Next</a>
+</div>
+<center><h1>Module <a href="type_Sdl.html">Sdl</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Sdl: <code class="code">sig</code> <a href="Sdl.html">..</a> <code class="code">end</code></pre>SDLCaml, an Objective Caml interface for the SDL library<br>
+<hr width="100%">
+<pre><span class="keyword">exception</span> <a name="EXCEPTIONSDL_failure"></a>SDL_failure <span class="keyword">of</span> <code class="type">string</code></pre>
+<div class="info">
+The general exception thrown by SDL in case of failure<br>
+</div>
+<pre><span class="keyword">type</span> <a name="TYPEbyte_array"></a><code class="type"></code>byte_array = <code class="type">(int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t</code> </pre>
+<div class="info">
+Unsigned char Bigarrays, with C-style layout<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEinit_flag"></a><code class="type"></code>init_flag = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">TIMER</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize timer subsystem</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">AUDIO</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize audio subsystem</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">VIDEO</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize video subsystem</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">CDROM</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize CD ROM subsystem</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">JOYSTICK</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize joystick subsystem</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">NOPARACHUTE</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Don't catch fatal signals</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">EVENTTHREAD</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Run the event manager in a separate thread. Link with the Ocaml thread library if using this</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">EVERYTHING</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize all of the above subsystems, except for EVENTTHREAD</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+Initialization flags<br>
+</div>
+
+<pre><span class="keyword">val</span> <a name="VALinit"></a>init : <code class="type"><a href="Sdl.html#TYPEinit_flag">init_flag</a> list -> unit</code></pre><div class="info">
+Initializes SDL. This should be called before all other SDL functions. 
+	The init_flag parameter is a list specifies what part(s) of SDL to initialize. 
+	Raises SDL_failure on failure<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALquit"></a>quit : <code class="type">unit -> unit</code></pre><div class="info">
+Shuts down all SDL subsystems and frees the resources allocated to them.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_error"></a>get_error : <code class="type">unit -> string</code></pre><div class="info">
+Gets a string containing a description of the most recent SDL error<br>
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Video.html">Video</a>: <code class="code">sig</code> <a href="Sdl.Video.html">..</a> <code class="code">end</code></pre><div class="info">
+Interface to SDL framebuffer
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Window.html">Window</a>: <code class="code">sig</code> <a href="Sdl.Window.html">..</a> <code class="code">end</code></pre><div class="info">
+Windowing-related functions
+	SDL provides a small set of window management functions which allow applications to change 
+	their title and toggle from windowed mode to fullscreen (if available)
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.SDLGL.html">SDLGL</a>: <code class="code">sig</code> <a href="Sdl.SDLGL.html">..</a> <code class="code">end</code></pre><div class="info">
+SDL OpenGL support
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Event.html">Event</a>: <code class="code">sig</code> <a href="Sdl.Event.html">..</a> <code class="code">end</code></pre><div class="info">
+Event handling allows the application to receive input from the user.
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Timer.html">Timer</a>: <code class="code">sig</code> <a href="Sdl.Timer.html">..</a> <code class="code">end</code></pre><div class="info">
+Timer module
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Audio.html">Audio</a>: <code class="code">sig</code> <a href="Sdl.Audio.html">..</a> <code class="code">end</code></pre><div class="info">
+Low-level audio
+</div>
+<pre><span class="keyword">module</span> <a href="Sdl.Draw.html">Draw</a>: <code class="code">sig</code> <a href="Sdl.Draw.html">..</a> <code class="code">end</code></pre><div class="info">
+Extra functions: font, bitmap, scaling and pixel operations
+</div>
+<br>
+<b>Acknowledgements, license and copyright</b>
+<p>
+
+	SDLCaml
+<p>
+
+	Source code, additions and modifications 2006 - 2008  Elliott OTI 
+<p>
+
+	Copyright (C) 2006 - 2008 Elliott OTI
+<p>
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License version 2, as published by the Free Software Foundation.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU Library General Public License version 2 for more details
+	(enclosed in the file LGPL). 
+<p>
+
+	<b>Credits</b>
+<p>
+
+	Parts of the documentation reproduced verbatim or in altered form 
+	from the libsdl documentation (http://www.libsdl.org)
+<p>
+
+	Portions of modules Sdl, Video, SDLGL, Timer and Draw are based on code by Jean-Christophe Filliatre.
+<p>
+
+	Copyright (C) 1999 Jean-Christophe FILLIATRE:
+<p>
+
+	This library is free software; you can redistribute it and/or
+	modify it under the terms of the GNU Library General Public
+	License version 2, as published by the Free Software Foundation.
+	This library is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+	See the GNU Library General Public License version 2 for more details
+	(enclosed in the file LGPL). 
+<p>
+
+	The Event module contains code from the camlgl distribution (http://camlgl.sourceforge.net):
+<p>
+
+	(C) 2001-2002 Nickolay Kolchin-Semyonov
+<p>
+
+	This software is provided 'as-is', without any express or implied
+	warranty.  In no event will the authors be held liable for any damages
+	arising from the use of this software.
+	Permission is granted to anyone to use this software for any purpose,
+	including commercial applications, and to alter it and redistribute it
+	freely, subject to the following restrictions:
+<p>
+
+	1. The origin of this software must not be misrepresented; you must not
+	 claim that you wrote the original software. If you use this software
+	 in a product, an acknowledgment in the product documentation would be
+	 appreciated but is not required.
+<p>
+
+	2. Altered source versions must be plainly marked as such, and must not be
+	 misrepresented as being the original software.
+<p>
+
+	3. This notice may not be removed or altered from any source distribution.
+<p>
+
+	Nickolay Kolchin-Semyonov
+<p>
+
+	snob@snob.spb.ru<br>
+</body></html>
