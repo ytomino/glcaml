@@ -2,10 +2,7 @@ MAKE=make
 # Uncomment the following line on WIN32
 # MAKE=make WIN32=true
 
-#all: sdl nosdl
-all: sdlmixer
-
-
+all: sdlmixer sdl nosdl
 
 sdlmixer: 
 	$(MAKE) -f makefile.inc MLFILE=mixer
