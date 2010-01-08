@@ -1,9 +1,7 @@
 /*
  * sdlcaml - Objective Caml interface for the SDL library
- * Copyright 
- * (C) 1999 Jean-Christophe FILLIATRE, 
- * (C) 2006, 2007, 2008 Elliott Oti
- * (C) 2010 Einar Lielmanis
+ * SDL Mixer interface
+ * Copyright (C) 2010 Einar Lielmanis, einars@gmail.com
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU Library General Public
