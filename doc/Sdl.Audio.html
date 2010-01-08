@@ -13,7 +13,8 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
-<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.Audio</title>
+<link title="Win" rel="Chapter" href="Win.html">
+<link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl.Audio</title>
 </head>
 <body>
 <div class="navbar"><a href="Sdl.Timer.html">Previous</a>
@@ -188,7 +189,7 @@ The <code class="code">audio_spec</code> structure is used to describe the forma
 		While all fields are used by <code class="code">open_audio</code> only freq, format, samples and channels are used by <code class="code">load_wav</code>.<br>
 </div>
 
-<pre><span class="keyword">val</span> <a name="VALmix_maxvolume"></a>mix_maxvolume : <code class="type">int</code></pre><div class="info">
+<pre><span class="keyword">val</span> <a name="VALint_of_sampletype"></a>int_of_sampletype : <code class="type"><a href="Sdl.Audio.html#TYPEsample_type">sample_type</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALint_of_channel"></a>int_of_channel : <code class="type"><a href="Sdl.Audio.html#TYPEchannel_type">channel_type</a> -> int</code></pre><pre><span class="keyword">val</span> <a name="VALmix_maxvolume"></a>mix_maxvolume : <code class="type">int</code></pre><div class="info">
 The maximum sample mixer volume. Volume ranges from 0 (silence) to mix_maxvolume<br>
 </div>
 <pre><span class="keyword">val</span> <a name="VALopen_audio"></a>open_audio : <code class="type"><a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a> -> (<a href="Sdl.html#TYPEbyte_array">Sdl.byte_array</a> -> unit) -> <a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a></code></pre><div class="info">

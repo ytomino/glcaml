@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="previous" href="Win.html">
+<link rel="Up" href="index.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html">
+<link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl_mixer</title>
+</head>
+<body>
+<div class="navbar"><a href="Win.html">Previous</a>
+&nbsp;<a href="index.html">Up</a>
+&nbsp;</div>
+<center><h1>Module <a href="type_Sdl_mixer.html">Sdl_mixer</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Sdl_mixer: <code class="code">sig</code> <a href="Sdl_mixer.html">..</a> <code class="code">end</code></pre>Initialization flags<br>
+<hr width="100%">
+<br><code><span class="keyword">type</span> <a name="TYPEinit_flag"></a><code class="type"></code>init_flag = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">FLAC</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize FLAC decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MOD</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize MOD  decoder (via mikmod library)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MP3</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize MP3 decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">OGG</span></code></td>
+<td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize OGG decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
+</tr></table>
+
+<div class="info">
+Initialization flags<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEfading_type"></a><code class="type"></code>fading_type = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">NO_FADING</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">FADING_OUT</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">FADING_IN</span></code></td>
+
+</tr></table>
+
+<div class="info">
+Fading status query return codes<br>
+</div>
+
+<br><code><span class="keyword">type</span> <a name="TYPEmusic_type"></a><code class="type"></code>music_type = </code><table class="typetable">
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_NONE</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_CMD</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_WAV</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_MOD</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_MID</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_OGG</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_MP3</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_MP3_MAD</span></code></td>
+
+</tr>
+<tr>
+<td align="left" valign="top" >
+<code><span class="keyword">|</span></code></td>
+<td align="left" valign="top" >
+<code><span class="constructor">MUS_FLAC</span></code></td>
+
+</tr></table>
+
+<div class="info">
+Music type query return codes<br>
+</div>
+
+<pre><span class="keyword">type</span> <a name="TYPEchunk_t"></a><code class="type"></code>chunk_t </pre>
+<div class="info">
+Pointer-wrapped representation of audio chunk<br>
+</div>
+
+<pre><span class="keyword">type</span> <a name="TYPEmusic_t"></a><code class="type"></code>music_t </pre>
+<div class="info">
+Pointer-wrapped representation of music file<br>
+</div>
+
+<pre><span class="keyword">type</span> <a name="TYPEchannel"></a><code class="type"></code>channel = <code class="type">int</code> </pre>
+<div class="info">
+Channel number type. -1 usually corresponds to "all channels" or "any
+    channel", depending on context.<br>
+</div>
+
+<pre><span class="keyword">module</span> <a href="Sdl_mixer.Mix.html">Mix</a>: <code class="code">sig</code> <a href="Sdl_mixer.Mix.html">..</a> <code class="code">end</code></pre><br>
+<b>Acknowledgements, license and copyright</b>
+<p>
+
+	SDLCaml
+<p>
+
+    Modifications 2010 Einar Lielmanis, einars<br>
+</body></html>

@@ -25,7 +25,6 @@
 
 #include "caml.h"
 
-
 // thanks to OCamlSDL for the insight.
 // Mix_Chunk and Mix_Music get stuffed into Abstract_tag values
 // and treated as simple blobs in ocaml.
@@ -529,18 +528,6 @@ value sdlmixer_set_music_cmd (value command)
 {
     int res = Mix_SetMusicCMD(String_val(command));
     return Val_bool(res == 0);
-}
-
-value sdlmixer_set_synchro_value (value v)
-{
-    Mix_SetSynchroValue(Int_val(v));
-    return Val_unit;
-}
-
-value sdlmixer_get_synchro_value (value u)
-{
-    int v = Mix_GetSynchroValue();
-    return Val_int(v);
 }
 
 value sdlmixer_get_chunk (value channel)

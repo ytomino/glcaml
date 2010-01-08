@@ -164,8 +164,6 @@ external set_music_position : float -> bool = "sdlmixer_set_music_position"
 external playing : channel -> bool = "sdlmixer_playing"
 external playing_music : unit -> bool = "sdlmixer_playing_music"
 external set_music_cmd : string -> bool = "sdlmixer_set_music_cmd"
-external set_synchro_value : int -> unit = "sdlmixer_set_synchro_value"
-external get_synchro_value : unit -> int = "sdlmixer_get_synchro_value"
 external get_chunk : channel -> chunk_t = "sdlmixer_get_chunk"
 external close_audio : unit -> unit = "sdlmixer_close_audio"
 

@@ -8,7 +8,8 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
-<link title="Win" rel="Chapter" href="Win.html"><title>Sdl.Audio</title>
+<link title="Win" rel="Chapter" href="Win.html">
+<link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl.Audio</title>
 </head>
 <body>
 <code class="code"><span class="keyword">sig</span><br>
@@ -23,6 +24,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;samples&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;size&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;}<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;int_of_sampletype&nbsp;:&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Audio</span>.sample_type&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;int_of_channel&nbsp;:&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Audio</span>.channel_type&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;mix_maxvolume&nbsp;:&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;open_audio&nbsp;:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Audio</span>.audio_spec&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;(<span class="constructor">Sdl</span>.byte_array&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;unit)&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Audio</span>.audio_spec<br>

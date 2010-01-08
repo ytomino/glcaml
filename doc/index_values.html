@@ -9,11 +9,19 @@
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
-<link title="Win" rel="Chapter" href="Win.html"><title>Index of values</title>
+<link title="Win" rel="Chapter" href="Win.html">
+<link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Index of values</title>
 </head>
 <body>
 <center><h1>Index of values</h1></center>
 <table>
+<tr><td align="left"><br>A</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALall_channels">all_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALallocate_channels">allocate_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALany_channel">any_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>B</td></tr>
 <tr><td><a href="Sdl.Draw.html#VALbell">bell</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
@@ -32,6 +40,13 @@
 <tr><td><a href="Sdl.Draw.html#VALbspline">bspline</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>C</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALchannel_post">channel_post</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALclose_audio">close_audio</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Closes the mixer, halting all playing audio.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Audio.html#VALclose_audio">close_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td><div class="info">
 <code class="code">close_audio</code> closes the audio device
@@ -112,7 +127,66 @@ Default keyboard repeat interval
 		Enables/Disables Unicode keyboard translation.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALexpire_channel">expire_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">expire_channel channel ticks -&gt; true/false</code>
+    Changes the expiration delay for a particluar channel.
+</div>
+</td></tr>
 <tr><td align="left"><br>F</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_in_channel">fade_in_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_in_channel channel chunk loops ms -&gt; true/false</code>
+    Fades in channel / audio chunk over <code class="code">ms</code> milliseconds.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_in_channel_timed">fade_in_channel_timed</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_in_channel_timed channel chunk loops ms ticks -&gt; true/false</code>
+    Fades in channel / audio chunk over <code class="code">ms</code> milliseconds, for at most <code class="code">ticks</code>
+    milliseconds..
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_in_music">fade_in_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_in_music music_t loops ms -&gt; true/false</code>
+    Fades in music over <code class="code">ms</code> milliseconds.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_in_music_pos">fade_in_music_pos</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_in_music_pos music_t loops ms position -&gt; true/false</code>
+    Fades in music over <code class="code">ms</code> milliseconds, starting with exact position.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_out_channel">fade_out_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_out_channel channel ms -&gt; true/false</code>
+    Halts the channel, fading it out till it's silent.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_out_group">fade_out_group</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_out_group tag ms -&gt; true/false</code>
+    Halts the channel group, fading it out till it's silent.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfade_out_music">fade_out_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">fade_out_music ms -&gt; true/false</code>
+    Halts the music, fading it out till it's silent.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfading_channel">fading_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries the fading status of the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfading_music">fading_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries the fading status of the music.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Video.html#VALfill_rect">fill_rect</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">fill_rect surface  dstrect pixel</code>
@@ -125,10 +199,22 @@ Default keyboard repeat interval
 		Fills the surface with pixels of the given color
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfirst_available_channel">first_available_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
 <tr><td><a href="Sdl.Video.html#VALflip">flip</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">flip surface</code>
 		On hardware that supports double-buffering, this function sets up a flip and returns.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfree_chunk">free_chunk</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Releases allocated sound chunk
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALfree_music">free_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Releases allocated music file
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALfree_surface">free_surface</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
@@ -173,10 +259,35 @@ Free a surface.
 		Returns either <code class="code">STOPPED</code>, <code class="code">PAUSED</code> or <code class="code">PLAYING</code> depending on the current audio status
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_available_channel_count">get_available_channel_count</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Returns the total number of available channels.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Window.html#VALget_caption">get_caption</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">get_caption -&gt; window_caption * taskbar_caption</code>
 		Gets the title-bar and icon name of the display window.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_channel_fading">get_channel_fading</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries the fading status of the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_chunk">get_chunk</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves the chunk_t currently associated with the specified mixer channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_chunk_decoders">get_chunk_decoders</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves a list of formats supported for audio chunks.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_chunk_volume">get_chunk_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves current volume of the audio chunk.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.html#VALget_error">get_error</a> [<a href="Sdl.html">Sdl</a>]</td>
@@ -196,10 +307,35 @@ Gets a string containing a description of the most recent SDL error
 		Returns the SDL-defined name of the key in <code class="code">key</code>
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_last_error">get_last_error</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves a string containing a description of most recent Mix error.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Event.html#VALget_mod_state">get_mod_state</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">get_mod_state -&gt; key_mod list</code>
 		Returns a list of the current state of the modifier keys (CTRL, ALT, etc.).
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_music_decoders">get_music_decoders</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves a list of formats supported for music files.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_music_fading">get_music_fading</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries the fading status of the music.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_music_type">get_music_type</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves currently playing music type if music = None.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_music_volume">get_music_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves the volume of currently playing music.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALget_pixel">get_pixel</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
@@ -224,6 +360,16 @@ Gets a string containing a description of the most recent SDL error
 <td><div class="info">
 <code class="code">get_ticks -&gt; milliseconds</code>
 		Returns the number of milliseconds since SDL library initialization.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_version">get_version</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves a text representation of the used SDL_Mixer library, e.g 1.2.11
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALget_volume">get_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Retrieves current volume of the channel.
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#VALglAccum">glAccum</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -8900,7 +9046,59 @@ Gets a string containing a description of the most recent SDL error
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_zoom_y">gl_zoom_y</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_available">group_available</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_available tag -&gt; channel</code>
+    Finds the first available channel in a group of channels.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_channel">group_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_channel channel tag -&gt; true/false</code>
+    Attach a tag to a channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_channels">group_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_channels first_channel last_channel tag -&gt; true/false</code>
+    Attach a tag to a range of consecutive channels.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_count">group_count</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_count tag -&gt; n </code>
+    Returns the number of channels in a group.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_newer">group_newer</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_newer tag -&gt; channel</code>
+    Returns the "newer" (last) sample playng in a group of channels.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALgroup_oldest">group_oldest</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">group_oldest tag -&gt; channel</code>
+    Returns the "oldest" sample playng in a group of channels.
+</div>
+</td></tr>
 <tr><td align="left"><br>H</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALhalt_channel">halt_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Halts playing of the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALhalt_group">halt_group</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">halt_group tag</code>
+    Halts playing of the specified channel group.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALhalt_music">halt_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Halts playing the music.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Draw.html#VALhermite">hermite</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>I</td></tr>
@@ -8908,6 +9106,11 @@ Gets a string containing a description of the most recent SDL error
 <td><div class="info">
 <code class="code">iconify_window</code>
 		If the application is running in a window managed environment SDL attempts to iconify/minimise it.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALinit">init</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Loads dynamic libraries and prepares them for use.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.html#VALinit">init</a> [<a href="Sdl.html">Sdl</a>]</td>
@@ -8921,6 +9124,10 @@ Set up Ocaml graphics window for OpenGL input.
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#VALint_of_bool">int_of_bool</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl.Audio.html#VALint_of_channel">int_of_channel</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl.Audio.html#VALint_of_sampletype">int_of_sampletype</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALint_to_bool_array">int_to_bool_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -8939,10 +9146,28 @@ Set up Ocaml graphics window for OpenGL input.
 		Loads a surface from a named Windows BMP file.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALload_mus">load_mus</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">load_mus file -&gt; music_t</code>
+    Load a music (.mod .s3m .it .xm) file
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALload_music">load_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">load_mus file -&gt; music_t</code>
+    Load a music (.mod .s3m .it .xm) file
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Draw.html#VALload_tga">load_tga</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">load_tga file -&gt; surface</code>
 		Loads a TGA file and returns a surface with the image data
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALload_wav">load_wav</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">load_wav file -&gt; chunk_t</code>
+    Load a wave file
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Audio.html#VALload_wav">load_wav</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
@@ -8961,6 +9186,8 @@ The lock manipulated by these functions protects the callback function.
 <code class="code">lock_surface ()</code> sets up a surface for directly accessing the pixels.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALloop_forever">loop_forever</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
 <tr><td align="left"><br>M</td></tr>
 <tr><td><a href="Glcaml.html#VALmake_byte_array">make_byte_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -9043,6 +9270,12 @@ The maximum sample mixer volume.
 </div>
 </td></tr>
 <tr><td align="left"><br>O</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALopen_audio">open_audio</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">open_audio frequency format channels chunksize -&gt; unit</code>
+    Opens the mixer with certain audio format.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Audio.html#VALopen_audio">open_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td><div class="info">
 <code class="code">open_audio desired_audio_spec mixer_callback -&gt; obtained audio_spec </code> 
@@ -9051,10 +9284,56 @@ The maximum sample mixer volume.
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALpause">pause</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Pauses the specified channel.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Audio.html#VALpause_audio">pause_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td><div class="info">
 <code class="code">pause_audio on\off</code> 
 		Toggle audio playback on and off
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALpause_music">pause_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Pauses the music.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALpaused">paused</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries the pause state of the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALpaused_music">paused_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries whether the music is currently paused.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplay_channel">play_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">play_channel channel chunk loops -&gt; channel</code>
+   Plays an audio chunk on a specific channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplay_channel_timed">play_channel_timed</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplay_music">play_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">play_music music loops -&gt; true/false</code>
+   Play a music file (opened with <code class="code">load_mus</code>) on a specific channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplay_once">play_once</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplaying">playing</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries whether the channel is currently playing.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALplaying_music">playing_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Queries whether the music is currently playing.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#VALpoll_event">poll_event</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
@@ -9076,6 +9355,11 @@ The maximum sample mixer volume.
 </div>
 </td></tr>
 <tr><td align="left"><br>Q</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALquit">quit</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Unloads libraries loaded by with Mix.init
+</div>
+</td></tr>
 <tr><td><a href="Sdl.html#VALquit">quit</a> [<a href="Sdl.html">Sdl</a>]</td>
 <td><div class="info">
 Shuts down all SDL subsystems and frees the resources allocated to them.
@@ -9084,6 +9368,35 @@ Shuts down all SDL subsystems and frees the resources allocated to them.
 <tr><td align="left"><br>R</td></tr>
 <tr><td><a href="Sdl.Draw.html#VALread_tga">read_tga</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALremove_channel_expiration">remove_channel_expiration</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">expire_channel channel -&gt; true/false</code>
+    Removes the expiration time for a particular channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALreserve_channels">reserve_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">reserve_channels n -&gt; n_reserved</code>
+    Reserve the first channels (0..n-1) for the application: Don't allocate them
+    dynamically for the next sample if requested with a
+    <code class="code">Mix.first_available_channel</code> (-1).
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALresume">resume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Resumes a playback of the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALresume_music">resume_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Resumes the music playback.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALrewind_music">rewind_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Restarts the music playback from the beginning.
+</div>
+</td></tr>
 <tr><td align="left"><br>S</td></tr>
 <tr><td><a href="Sdl.Video.html#VALsave_bmp">save_bmp</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
@@ -9121,6 +9434,12 @@ Shuts down all SDL subsystems and frees the resources allocated to them.
 		Sets the title-bar and icon name of the display window.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_chunk_volume">set_chunk_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_chunk_volume chunk volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified audio chunk.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_clipping">set_clipping</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">set_clipping surf top left bottom right</code> 
@@ -9137,6 +9456,12 @@ Shuts down all SDL subsystems and frees the resources allocated to them.
 <td><div class="info">
 <code class="code">set_colors surf colors firstcolor ncolors</code> 
 		Sets a portion of the colormap for the given 8-bit surface.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_distance">set_distance</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_distance channel distance -&gt; true/false</code>
+    Set the "distance" of a channel.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Window.html#VALset_grab_input">set_grab_input</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
@@ -9158,10 +9483,51 @@ Shuts down all SDL subsystems and frees the resources allocated to them.
 		Sets the current state of the modifier keys (CTRL, ALT, etc.) in the input list.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_music_cmd">set_music_cmd</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+Stops music and sets external music playback command.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_music_position">set_music_position</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_music_position pos -&gt; true/false</code>
+    Sets the current position in the music stream.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_music_volume">set_music_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_music_volume volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the playing music.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_panning">set_panning</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_panning channel pan_left pan_right -&gt; trye/false</code>
+    Set the panning of a channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_position">set_position</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_position channel angle distance -&gt; true/false</code>
+    Set the position of a channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_reverse_stereo">set_reverse_stereo</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_reverse_stereo channel flip -&gt; true/false</code>
+    Causes a channel to reverse its stereo.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_video_mode">set_video_mode</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">set_video_mode width height bpp flags -&gt; surface</code> 
 		Set up a video mode with the specified width, height and bitsperpixel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALset_volume">set_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">set_volume channel volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified channel.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALsfont_print">sfont_print</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
@@ -9267,6 +9633,18 @@ Swap the back buffer to the screen
 <tr><td><a href="Sdl.Draw.html#VALtriangle">triangle</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
 <tr><td align="left"><br>U</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALungroup_channel">ungroup_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">ungroup_channel channel -&gt; true/false</code>
+    Remove a tag from the channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALungroup_channels">ungroup_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">ungroup_channels first_channel last_channel -&gt; true/false</code>
+    Remove a tag from the range of channels.
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Audio.html#VALunlock_audio">unlock_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td><div class="info">
 Unlocks a previous <code class="code">lock_audio</code> call.
@@ -9307,6 +9685,24 @@ Sleep for n microseconds
 		<code class="code">video_mode_ok</code> returns false if the requested mode is not supported under any bit depth, 
 	    or returns true if a closest available mode with the given width, height and 
 	    requested surface flags exists (see <code class="code">set_video_mode</code>).
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALvolume">volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">volume channel volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified channel.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALvolume_chunk">volume_chunk</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">volume_chunk chunk volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified audio chunk.
+</div>
+</td></tr>
+<tr><td><a href="Sdl_mixer.Mix.html#VALvolume_music">volume_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
+<td><div class="info">
+<code class="code">volume_music volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the playing music.
 </div>
 </td></tr>
 <tr><td align="left"><br>W</td></tr>

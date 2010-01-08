@@ -1,0 +1,400 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+<link rel="stylesheet" href="style.css" type="text/css">
+<meta content="text/html; charset=iso-8859-1" http-equiv="Content-Type">
+<link rel="Start" href="index.html">
+<link rel="Up" href="Sdl_mixer.html">
+<link title="Index of types" rel=Appendix href="index_types.html">
+<link title="Index of exceptions" rel=Appendix href="index_exceptions.html">
+<link title="Index of values" rel=Appendix href="index_values.html">
+<link title="Index of modules" rel=Appendix href="index_modules.html">
+<link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Glcaml" rel="Chapter" href="Glcaml.html">
+<link title="Win" rel="Chapter" href="Win.html">
+<link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl_mixer.Mix</title>
+</head>
+<body>
+<div class="navbar">&nbsp;<a href="Sdl_mixer.html">Up</a>
+&nbsp;</div>
+<center><h1>Module <a href="type_Sdl_mixer.Mix.html">Sdl_mixer.Mix</a></h1></center>
+<br>
+<pre><span class="keyword">module</span> Mix: <code class="code">sig</code> <a href="Sdl_mixer.Mix.html">..</a> <code class="code">end</code></pre><hr width="100%">
+<pre><span class="keyword">val</span> <a name="VALany_channel"></a>any_channel : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALfirst_available_channel"></a>first_available_channel : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALall_channels"></a>all_channels : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALchannel_post"></a>channel_post : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALloop_forever"></a>loop_forever : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALplay_once"></a>play_once : <code class="type">int</code></pre><pre><span class="keyword">val</span> <a name="VALinit"></a>init : <code class="type"><a href="Sdl_mixer.html#TYPEinit_flag">Sdl_mixer.init_flag</a> list -> unit</code></pre><div class="info">
+Loads dynamic libraries and prepares them for use.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALquit"></a>quit : <code class="type">unit -> unit</code></pre><div class="info">
+Unloads libraries loaded by with Mix.init<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_version"></a>get_version : <code class="type">unit -> string</code></pre><div class="info">
+Retrieves a text representation of the used SDL_Mixer library, e.g 1.2.11<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_last_error"></a>get_last_error : <code class="type">unit -> string</code></pre><div class="info">
+Retrieves a string containing a description of most recent Mix error.
+    Essentially the same as Sdl.get_error ()<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALopen_audio"></a>open_audio : <code class="type">int -> <a href="Sdl.Audio.html#TYPEsample_type">Sdl.Audio.sample_type</a> -> <a href="Sdl.Audio.html#TYPEchannel_type">Sdl.Audio.channel_type</a> -> int -> unit</code></pre><div class="info">
+<code class="code">open_audio frequency format channels chunksize -&gt; unit</code>
+    Opens the mixer with certain audio format.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALallocate_channels"></a>allocate_channels : <code class="type">int -> int</code></pre><pre><span class="keyword">val</span> <a name="VALload_wav"></a>load_wav : <code class="type">string -> <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a></code></pre><div class="info">
+<code class="code">load_wav file -&gt; chunk_t</code>
+    Load a wave file<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALload_mus"></a>load_mus : <code class="type">string -> <a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a></code></pre><div class="info">
+<code class="code">load_mus file -&gt; music_t</code>
+    Load a music (.mod .s3m .it .xm) file<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALload_music"></a>load_music : <code class="type">string -> <a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a></code></pre><div class="info">
+<code class="code">load_mus file -&gt; music_t</code>
+    Load a music (.mod .s3m .it .xm) file<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfree_chunk"></a>free_chunk : <code class="type"><a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> unit</code></pre><div class="info">
+Releases allocated sound chunk<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfree_music"></a>free_music : <code class="type"><a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a> -> unit</code></pre><div class="info">
+Releases allocated music file<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALplay_channel"></a>play_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">play_channel channel chunk loops -&gt; channel</code>
+   Plays an audio chunk on a specific channel.
+   If specified channel is <code class="code">Mix.first_available_channel</code> (-1), play on first free
+   channel.
+   If <code class="code">loops</code> is greater than zero, loop the sound that many times.
+   If <code class="code">loops</code> is Mix.loop_forever (-1), loop infinitely (~65000 times?)<br>
+</div>
+<br>
+<code class="code">play_channel_timed channel chunk loops ticks -&gt; channel</code>
+   Play an audio chunk on a specific channel for at most <code class="code">ticks</code> seconds.
+   If specified channel is <code class="code">Mix.first_available_channel</code> (-1), play on first free
+   channel.
+   If <code class="code">loops</code> is greater than zero, loop the sound that many times.
+   If <code class="code">loops</code> is Mix.loop_forever (-1), loop infinitely (~65000 times?)<br>
+<pre><span class="keyword">val</span> <a name="VALplay_channel_timed"></a>play_channel_timed : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><pre><span class="keyword">val</span> <a name="VALplay_music"></a>play_music : <code class="type"><a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a> -> int -> bool</code></pre><div class="info">
+<code class="code">play_music music loops -&gt; true/false</code>
+   Play a music file (opened with <code class="code">load_mus</code>) on a specific channel.
+   If <code class="code">loops</code> is greater than zero, loop the sound that many times.
+   If <code class="code">loops</code> is Mix.loop_forever (-1), loop infinitely (~65000 times?)<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_chunk_decoders"></a>get_chunk_decoders : <code class="type">unit -> string list</code></pre><div class="info">
+Retrieves a list of formats supported for audio chunks.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_music_decoders"></a>get_music_decoders : <code class="type">unit -> string list</code></pre><div class="info">
+Retrieves a list of formats supported for music files.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_music_type"></a>get_music_type : <code class="type"><a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a> option -> <a href="Sdl_mixer.html#TYPEmusic_type">Sdl_mixer.music_type</a></code></pre><div class="info">
+Retrieves currently playing music type if music = None.
+    Retrieves a music type for the Some music_t<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_panning"></a>set_panning : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> int -> bool</code></pre><div class="info">
+<code class="code">set_panning channel pan_left pan_right -&gt; trye/false</code>
+    Set the panning of a channel. The <code class="code">pan_left</code> and <code class="code">pan_right</code> channels are specified
+    as integers between 0 and 255, quietest to loudest, respectively.
+<p>
+
+    Technically, this is just individual volume control for a sample with
+    two (stereo) channels, so it can be used for more than just panning.
+    If you want real panning, call it like this:
+<p>
+
+    Mix_SetPanning(channel, left, 255 - left);
+<p>
+
+    Setting <code class="code">channel</code> to Mix.channel_post (-2) registers this as a posteffect, and
+    the panning will be done to the final mixed stream before passing it on
+    to the audio device.
+<p>
+
+    This uses the Mix_RegisterEffect() API internally, and returns without
+    registering the effect function if the audio device is not configured
+    for stereo output. Setting both (left) and (right) to 255 causes this
+    effect to be unregistered, since that is the data's normal state.
+<p>
+
+    Note that an audio device in mono mode is a no-op, but this call will return
+    success in that case.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_position"></a>set_position : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> int -> bool</code></pre><div class="info">
+<code class="code">set_position channel angle distance -&gt; true/false</code>
+    Set the position of a channel. <code class="code">angle</code> is an integer from 0 to 360, that
+    specifies the location of the sound in relation to the listener. <code class="code">angle</code>
+    will be reduced as neccesary (540 becomes 180 degrees, -100 becomes 260).
+    Angle 0 is due north, and rotates clockwise as the value increases.
+    For efficiency, the precision of this effect may be limited (angles 1
+    through 7 might all produce the same effect, 8 through 15 are equal, etc).
+    <code class="code">distance</code> is an integer between 0 and 255 that specifies the space
+    between the sound and the listener. The larger the number, the further
+    away the sound is. Using 255 does not guarantee that the channel will be
+    culled from the mixing process or be completely silent. For efficiency,
+    the precision of this effect may be limited (distance 0 through 5 might
+    all produce the same effect, 6 through 10 are equal, etc). Setting (angle)
+    and <code class="code">distance</code> to 0 unregisters this effect, since the data would be
+    unchanged.
+<p>
+
+    If you need more precise positional audio, consider using OpenAL for
+    spatialized effects instead of SDL_mixer. This is only meant to be a
+    basic effect for simple "3D" games.
+<p>
+
+    If the audio device is configured for mono output, then you won't get
+    any effectiveness from the angle; however, distance attenuation on the
+    channel will still occur. While this effect will function with stereo
+    voices, it makes more sense to use voices with only one channel of sound,
+    so when they are mixed through this effect, the positioning will sound
+    correct. You can convert them to mono through SDL before giving them to
+    the mixer in the first place if you like.
+<p>
+
+    Setting <code class="code">channel</code> to Mix.channel_post (-2) registers this as a posteffect, and
+    the positioning will be done to the final mixed stream before passing it
+    on to the audio device.
+<p>
+
+    This is a convenience wrapper over Mix_SetDistance() and Mix_SetPanning().<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_distance"></a>set_distance : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> bool</code></pre><div class="info">
+<code class="code">set_distance channel distance -&gt; true/false</code>
+    Set the "distance" of a channel. <code class="code">distance</code> is an integer from 0 to 255
+    that specifies the location of the sound in relation to the listener.
+    Distance 0 is overlapping the listener, and 255 is as far away as possible
+    A distance of 255 does not guarantee silence; in such a case, you might
+    want to try changing the chunk's volume, or just cull the sample from the
+    mixing process with Mix_HaltChannel().
+<p>
+
+    For efficiency, the precision of this effect may be limited (distances 1
+    through 7 might all produce the same effect, 8 through 15 are equal, etc).
+    <code class="code">distance</code> is an integer between 0 and 255 that specifies the space
+    between the sound and the listener. The larger the number, the further
+    away the sound is.
+<p>
+
+    Setting <code class="code">distance</code> to 0 unregisters this effect, since the data would be
+    unchanged.
+<p>
+
+    If you need more precise positional audio, consider using OpenAL for
+    spatialized effects instead of SDL_mixer. This is only meant to be a
+    basic effect for simple "3D" games.
+<p>
+
+    Setting <code class="code">channel</code> to Mix.channel_post (-2) registers this as a posteffect, and
+    the distance attenuation will be done to the final mixed stream before
+    passing it on to the audio device.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_reverse_stereo"></a>set_reverse_stereo : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool -> bool</code></pre><div class="info">
+<code class="code">set_reverse_stereo channel flip -&gt; true/false</code>
+    Causes a channel to reverse its stereo. This is handy if the user has his
+    speakers hooked up backwards, or you would like to have a minor bit of
+    psychedelia in your sound code.  :)  Calling this function with <code class="code">flip</code>
+    set to non-zero reverses the chunks's usual channels. If <code class="code">flip</code> is zero,
+    the effect is unregistered.
+<p>
+
+    This uses the Mix_RegisterEffect() API internally, and thus is probably
+    more CPU intensive than having the user just plug in his speakers
+    correctly. Mix_SetReverseStereo() returns without registering the effect
+    function if the audio device is not configured for stereo output.
+<p>
+
+    If you specify Mix.channel_post (-2) for <code class="code">channel</code>, then this the effect is used
+    on the final mixed stream before sending it on to the audio device (a
+    posteffect).
+<p>
+
+     Note that an audio device in mono mode is a no-op, but this call will
+     return successful in that case.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALreserve_channels"></a>reserve_channels : <code class="type">int -> int</code></pre><div class="info">
+<code class="code">reserve_channels n -&gt; n_reserved</code>
+    Reserve the first channels (0..n-1) for the application: Don't allocate them
+    dynamically for the next sample if requested with a
+    <code class="code">Mix.first_available_channel</code> (-1).<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_channel"></a>group_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> bool</code></pre><div class="info">
+<code class="code">group_channel channel tag -&gt; true/false</code>
+    Attach a tag to a channel. A tag can e assigned to several mixer channels to
+    for groups of channels.
+<p>
+
+    If <code class="code">tag</code> = -1, the tag is removed, but better use <code class="code">ungroup_channel</code> instead.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_channels"></a>group_channels : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> bool</code></pre><div class="info">
+<code class="code">group_channels first_channel last_channel tag -&gt; true/false</code>
+    Attach a tag to a range of consecutive channels.
+<p>
+
+    If <code class="code">tag</code> = -1, the tag is removed, but better use <code class="code">ungroup_channels</code> instead.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALungroup_channel"></a>ungroup_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool</code></pre><div class="info">
+<code class="code">ungroup_channel channel -&gt; true/false</code>
+    Remove a tag from the channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALungroup_channels"></a>ungroup_channels : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool</code></pre><div class="info">
+<code class="code">ungroup_channels first_channel last_channel -&gt; true/false</code>
+    Remove a tag from the range of channels.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_available"></a>group_available : <code class="type">int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">group_available tag -&gt; channel</code>
+    Finds the first available channel in a group of channels.
+    Returns -1 if none are available.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_count"></a>group_count : <code class="type">int -> int</code></pre><div class="info">
+<code class="code">group_count tag -&gt; n </code>
+    Returns the number of channels in a group.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_available_channel_count"></a>get_available_channel_count : <code class="type">unit -> int</code></pre><div class="info">
+Returns the total number of available channels.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_oldest"></a>group_oldest : <code class="type">int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">group_oldest tag -&gt; channel</code>
+    Returns the "oldest" sample playng in a group of channels.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALgroup_newer"></a>group_newer : <code class="type">int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">group_newer tag -&gt; channel</code>
+    Returns the "newer" (last) sample playng in a group of channels.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_in_music"></a>fade_in_music : <code class="type"><a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a> -> int -> int -> bool</code></pre><div class="info">
+<code class="code">fade_in_music music_t loops ms -&gt; true/false</code>
+    Fades in music over <code class="code">ms</code> milliseconds. See <code class="code">play_music</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_in_music_pos"></a>fade_in_music_pos : <code class="type"><a href="Sdl_mixer.html#TYPEmusic_t">Sdl_mixer.music_t</a> -> int -> int -> float -> bool</code></pre><div class="info">
+<code class="code">fade_in_music_pos music_t loops ms position -&gt; true/false</code>
+    Fades in music over <code class="code">ms</code> milliseconds, starting with exact position. See <code class="code">play_music</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_in_channel"></a>fade_in_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">fade_in_channel channel chunk loops ms -&gt; true/false</code>
+    Fades in channel / audio chunk over <code class="code">ms</code> milliseconds. See <code class="code">play_channel</code>.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_in_channel_timed"></a>fade_in_channel_timed : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -><br>       <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> int -> int -> <a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a></code></pre><div class="info">
+<code class="code">fade_in_channel_timed channel chunk loops ms ticks -&gt; true/false</code>
+    Fades in channel / audio chunk over <code class="code">ms</code> milliseconds, for at most <code class="code">ticks</code>
+    milliseconds.. See <code class="code">play_channel_timed</code><br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALvolume"></a>volume : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> int</code></pre><div class="info">
+<code class="code">volume channel volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_volume"></a>set_volume : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> int</code></pre><div class="info">
+<code class="code">set_volume channel volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_volume"></a>get_volume : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int</code></pre><div class="info">
+Retrieves current volume of the channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALvolume_chunk"></a>volume_chunk : <code class="type"><a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> int</code></pre><div class="info">
+<code class="code">volume_chunk chunk volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified audio chunk.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_chunk_volume"></a>set_chunk_volume : <code class="type"><a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int -> int</code></pre><div class="info">
+<code class="code">set_chunk_volume chunk volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the specified audio chunk.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_chunk_volume"></a>get_chunk_volume : <code class="type"><a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a> -> int</code></pre><div class="info">
+Retrieves current volume of the audio chunk.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALvolume_music"></a>volume_music : <code class="type">int -> int</code></pre><div class="info">
+<code class="code">volume_music volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the playing music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_music_volume"></a>set_music_volume : <code class="type">int -> int</code></pre><div class="info">
+<code class="code">set_music_volume volume -&gt; previous_volume</code>
+    Sets a volume (0..128) for the playing music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_music_volume"></a>get_music_volume : <code class="type">unit -> int</code></pre><div class="info">
+Retrieves the volume of currently playing music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALhalt_channel"></a>halt_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> unit</code></pre><div class="info">
+Halts playing of the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALhalt_group"></a>halt_group : <code class="type">int -> unit</code></pre><div class="info">
+<code class="code">halt_group tag</code>
+    Halts playing of the specified channel group.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALhalt_music"></a>halt_music : <code class="type">unit -> unit</code></pre><div class="info">
+Halts playing the music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALexpire_channel"></a>expire_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> bool</code></pre><div class="info">
+<code class="code">expire_channel channel ticks -&gt; true/false</code>
+    Changes the expiration delay for a particluar channel.
+<p>
+
+    The sample will stop playing after the <code class="code">ticks</code> milliseconds have elapsed.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALremove_channel_expiration"></a>remove_channel_expiration : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool</code></pre><div class="info">
+<code class="code">expire_channel channel -&gt; true/false</code>
+    Removes the expiration time for a particular channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_out_channel"></a>fade_out_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> int -> bool</code></pre><div class="info">
+<code class="code">fade_out_channel channel ms -&gt; true/false</code>
+    Halts the channel, fading it out till it's silent. 
+    The fading will take <code class="code">ms</code> milliseconds.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_out_group"></a>fade_out_group : <code class="type">int -> int -> bool</code></pre><div class="info">
+<code class="code">fade_out_group tag ms -&gt; true/false</code>
+    Halts the channel group, fading it out till it's silent. 
+    The fading will take <code class="code">ms</code> milliseconds.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfade_out_music"></a>fade_out_music : <code class="type">int -> bool</code></pre><div class="info">
+<code class="code">fade_out_music ms -&gt; true/false</code>
+    Halts the music, fading it out till it's silent. 
+    The fading will take <code class="code">ms</code> milliseconds.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfading_music"></a>fading_music : <code class="type">unit -> <a href="Sdl_mixer.html#TYPEfading_type">Sdl_mixer.fading_type</a></code></pre><div class="info">
+Queries the fading status of the music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALfading_channel"></a>fading_channel : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEfading_type">Sdl_mixer.fading_type</a></code></pre><div class="info">
+Queries the fading status of the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_music_fading"></a>get_music_fading : <code class="type">unit -> <a href="Sdl_mixer.html#TYPEfading_type">Sdl_mixer.fading_type</a></code></pre><div class="info">
+Queries the fading status of the music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_channel_fading"></a>get_channel_fading : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEfading_type">Sdl_mixer.fading_type</a></code></pre><div class="info">
+Queries the fading status of the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALpause"></a>pause : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> unit</code></pre><div class="info">
+Pauses the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALresume"></a>resume : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> unit</code></pre><div class="info">
+Resumes a playback of the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALpaused"></a>paused : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool</code></pre><div class="info">
+Queries the pause state of the specified channel.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALpause_music"></a>pause_music : <code class="type">unit -> unit</code></pre><div class="info">
+Pauses the music.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALresume_music"></a>resume_music : <code class="type">unit -> unit</code></pre><div class="info">
+Resumes the music playback.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALrewind_music"></a>rewind_music : <code class="type">unit -> unit</code></pre><div class="info">
+Restarts the music playback from the beginning.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALpaused_music"></a>paused_music : <code class="type">unit -> bool</code></pre><div class="info">
+Queries whether the music is currently paused.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_music_position"></a>set_music_position : <code class="type">float -> bool</code></pre><div class="info">
+<code class="code">set_music_position pos -&gt; true/false</code>
+    Sets the current position in the music stream.
+    This function is rumored to be implemented only for OGG and MOD music
+    formats.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALplaying"></a>playing : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> bool</code></pre><div class="info">
+Queries whether the channel is currently playing.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALplaying_music"></a>playing_music : <code class="type">unit -> bool</code></pre><div class="info">
+Queries whether the music is currently playing.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALset_music_cmd"></a>set_music_cmd : <code class="type">string -> bool</code></pre><div class="info">
+Stops music and sets external music playback command.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALget_chunk"></a>get_chunk : <code class="type"><a href="Sdl_mixer.html#TYPEchannel">Sdl_mixer.channel</a> -> <a href="Sdl_mixer.html#TYPEchunk_t">Sdl_mixer.chunk_t</a></code></pre><div class="info">
+Retrieves the chunk_t currently associated with the specified mixer channel.
+    TODO: this probably messes up when the channel is invalid or there is no
+    chunk associated (Mix_GetChunk returns NULL), and should return <code class="code">chunk_t option</code> instead.<br>
+</div>
+<pre><span class="keyword">val</span> <a name="VALclose_audio"></a>close_audio : <code class="type">unit -> unit</code></pre><div class="info">
+Closes the mixer, halting all playing audio.<br>
+</div>
+</body></html>

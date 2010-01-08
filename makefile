@@ -62,4 +62,4 @@ clean:
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader clean
 
 htmldoc:
-	ocamldoc -html lib/sdl.mli lib/glcaml.mli lib/win.mli -d doc
+	ocamldoc -v -I lib -html lib/sdl.mli lib/glcaml.mli lib/win.mli lib/sdl_mixer.mli -d doc
