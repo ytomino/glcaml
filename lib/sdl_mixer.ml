@@ -18,7 +18,7 @@
 open Sdl
 open Audio
 
-type byte_array = (int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t 
+type byte_array = (int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
 type init_flag =
     | FLAC
@@ -93,9 +93,9 @@ external reserve_channels : int -> int = "sdlmixer_reserve_channels"
 
 external group_channel : channel -> int -> bool = "sdlmixer_group_channel"
 external group_channels : channel -> channel -> int -> bool = "sdlmixer_group_channels"
-let      ungroup_channel ch 
+let      ungroup_channel ch
          = group_channel ch (-1)
-let      ungroup_channels ch_start ch_end 
+let      ungroup_channels ch_start ch_end
          = group_channels ch_start ch_end (-1)
 
 external group_available : int -> channel = "sdlmixer_group_available"

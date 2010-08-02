@@ -1,13 +1,13 @@
 (*
  * Copyright (C) 2007, 2008 Elliott OTI
  *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided 
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided
  * that the following conditions are met:
- *  - Redistributions of source code must retain the above copyright notice, this list of conditions 
+ *  - Redistributions of source code must retain the above copyright notice, this list of conditions
  *    and the following disclaimer.
- *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+ *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions
  *    and the following disclaimer in the documentation and/or other materials provided with the distribution.
- *  - The name Elliott Oti may not be used to endorse or promote products derived from this software 
+ *  - The name Elliott Oti may not be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -23,11 +23,11 @@
  *)
 
 (*********************** Windowing ****************************************)
-(* 
- * To prepare an Ocaml graphics window for use with OpenGL the following hack is used. 
- * The method is similar, but not identical, on both Windows and X11. 
+(*
+ * To prepare an Ocaml graphics window for use with OpenGL the following hack is used.
+ * The method is similar, but not identical, on both Windows and X11.
  * After opening the window with Graphics.open_graph (), the function init_opengl ()
- * has to be called. This function gives the window a (hopefully) unique name. Then 
+ * has to be called. This function gives the window a (hopefully) unique name. Then
  * some C code is called which searches through all available windows for a window
  * with that particular name, gets pointers to its internal structure (both Win32 and
  * Xlib allow this) and sets it up for use as an OpenGL surface.
@@ -49,14 +49,14 @@ external init_gl' : string -> unit = "stub_init_gl" "stub_init_gl"
 external swap_buffers : unit -> unit = "stub_swap_buffers" "stub_swap_buffers"
 
 let init_opengl () =
-	let _  = Random.self_init () in
-	let title = Printf.sprintf "%d.%d" (Random.int 1000000) (Random.int 1000000) in
-	Graphics.set_window_title title;
-	init_gl' title;
-	Graphics.set_window_title "";;
+  let _  = Random.self_init () in
+  let title = Printf.sprintf "%d.%d" (Random.int 1000000) (Random.int 1000000) in
+  Graphics.set_window_title title;
+  init_gl' title;
+  Graphics.set_window_title "";;
 
 (* Sleep for n microseconds *)
 external usleep: int -> unit = "stub_usleep"
 
-	
+
 

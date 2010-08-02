@@ -2,7 +2,7 @@ open Printf
 open Sdl
 open Sdl_mixer
 
-(* 
+(*
  * example of using SDL_mixer
  *
  * as this is also something like a live test, it attempts to use most of the features.
@@ -21,7 +21,7 @@ let p fmt = ksprintf print_newlined fmt
 
 (* flatten list of strings using separator *)
 let rec flatten l sep =
-    match l with 
+    match l with
     | [] -> ""
     | [x] -> x
     | h :: t -> h ^ sep ^ (flatten t sep)
@@ -42,7 +42,7 @@ let main () =
     p "Music decoders: %s" (flatten decoders_music ", ");
 
     (* optional: allocate a bunch of channels *)
-    let alloc_channels = 11 in 
+    let alloc_channels = 11 in
     p "Intially available %d channels" (Mix.get_available_channel_count ());
     p "Allocating %d channels" alloc_channels;
     p "Allocated: %d channels" (Mix.allocate_channels alloc_channels);
@@ -113,7 +113,7 @@ let main () =
 
     (* play around with panning / etc *)
     (* channel_post means that panning is a post-process effect and as a result will
-     * be applied to all the sounds. 
+     * be applied to all the sounds.
      *)
 
     ignore ( Mix.set_panning Mix.channel_post 255 0 );
@@ -122,7 +122,7 @@ let main () =
     Unix.sleep 1;
     ignore ( Mix.set_panning Mix.channel_post 0 255 );
     Unix.sleep 1;
-    
+
     ignore ( Mix.set_panning Mix.channel_post 255 255 );
     Mix.halt_channel 1;
 

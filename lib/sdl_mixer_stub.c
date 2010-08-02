@@ -306,7 +306,7 @@ value sdlmixer_set_panning (value channel, value left, value right)
 {
     int res = Mix_SetPanning(Int_val(channel), Int_val(left), Int_val(right));
     return Val_bool(res);
-    
+
 }
 
 
@@ -547,4 +547,4 @@ int main(int argc, char **argv)
    caml_main(argv);
    return 0;
 }
-#endif 
+#endif

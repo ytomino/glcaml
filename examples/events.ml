@@ -7,7 +7,7 @@ open Printf
 let rec handle_events quit =
     if not quit then begin
         let e = poll_event () in
-		let bquit = 
+    let bquit =
         match e with
             | NoEvent -> false
             | Active appstate -> printf "ActiveEvent\n" ; false
@@ -28,11 +28,11 @@ let rec handle_events quit =
             | Resize r -> printf "Resize\n" ; false
             | Quit -> printf "Quit\n" ; true
             | _ -> printf "Unknown match\n" ; false
-		in
-		flush stdout;
-		handle_events bquit
+    in
+    flush stdout;
+    handle_events bquit
     end
-;;    
+;;
 
 
 let main () =
@@ -40,5 +40,5 @@ let main () =
     let w = 100 and h = 100 and bpp = 32 in
     let _ = set_video_mode w h bpp [SWSURFACE]in
     handle_events false
-        
-let _ = main ()    
+
+let _ = main ()

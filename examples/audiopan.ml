@@ -5,19 +5,19 @@ open Event
 
 let sample_list = ref []
 
-let mixaudio buf = 
+let mixaudio buf =
     let f s =
         match s with (sample, pos) ->
         let sample_left = (Bigarray.Array1.dim sample) - pos  in
         let buf_len = (Bigarray.Array1.dim buf) in
-        if sample_left > buf_len then 
+        if sample_left > buf_len then
         begin
-		let shifted_buffer = fx_pan (-.1.0) 1.0 (Bigarray.Array1.sub sample pos buf_len) in
+    let shifted_buffer = fx_pan (-.1.0) 1.0 (Bigarray.Array1.sub sample pos buf_len) in
                 mix_audio buf shifted_buffer mix_maxvolume;
-                (sample, pos + buf_len); 
+                (sample, pos + buf_len);
         end
         else
-                (sample, 0)        
+                (sample, 0)
     in
     sample_list := List.map f !sample_list
 
@@ -28,24 +28,24 @@ let play_sound file =
         sample_list := !sample_list @ [(sample, 0)]
 
 
-(* Wait until a key is pressed or the window is closed *)	
+(* Wait until a key is pressed or the window is closed *)
 let rec handle_events quit =
-	if not quit then begin
-		match poll_event () with
-			| Key k -> handle_events true;
-			| Quit ->  handle_events true;
-      		| _ -> handle_events false
-	end
+  if not quit then begin
+    match poll_event () with
+      | Key k -> handle_events true;
+      | Quit ->  handle_events true;
+          | _ -> handle_events false
+  end
 
 
 let main() =
-    let leave () = 
+    let leave () =
         print_string ("Usage: " ^ Sys.argv.(0) ^ " <file.wav>");
         Sdl.quit ();
         ()
     in
     if Array.length Sys.argv < 2 then leave () else begin
-        Sdl.init [Sdl.AUDIO];    
+        Sdl.init [Sdl.AUDIO];
         let _ = open_audio {frequency=22050; format=S16; channels=STEREO; silence = 0; samples=512; size=0} mixaudio in
             pause_audio false;
             for i = 1 to ((Array.length Sys.argv) - 1) do
@@ -53,7 +53,7 @@ let main() =
             done;
           handle_events false;
             close_audio ();
-    end    
+    end
 
 
 

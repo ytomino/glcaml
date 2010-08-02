@@ -8,7 +8,7 @@ Requirements:
 2. Make, version 3.79.1 or higher
 3. SDL (http://libsdl.org) must be installed in order to use SDLCaml.
 However some examples do not require the use of SDL and may be compiled
-and run without SDL 
+and run without SDL
 4. OpenGL drivers must be installed in order to view the examples that use OpenGL
 
 If you are running Unix or have the MinGW installation of OCaml,
@@ -16,22 +16,22 @@ and have SDL installed (http://libsdl.org), edit the makefile.
 For Unix the makefile can be used unaltered. On Windows the line
 # MAKE = make WIN32=true should be uncommented.
 
-To build the examples, type 
-	make
-This will compile the various examples located in subdirectory /examples	
+To build the examples, type
+    make
+This will compile the various examples located in subdirectory /examples
 If you do not have SDL installed type
-	make nosdl	
+    make nosdl
 This will compile all the examples located in subdirectory /examples that are
-NOT dependent on SDL	
+NOT dependent on SDL
 
 The binaries will be placed in subdirectory /bin
 
 To make the documentation, type
-	make htmldoc
-The documentation will be placed in subdirectory /doc	
+    make htmldoc
+The documentation will be placed in subdirectory /doc
 
 To remove compiled binaries and object files run
-	make clean
+    make clean
 
 USING GLCAML IN A SEPARATE PROJECT
 
@@ -39,10 +39,10 @@ Requirements for using GLCaml in a project:
 1. The Ocaml compiler (http://caml.inria.fr), version 3.01 or higher
 
 Usage:
-GLCaml consists of the following files: 
-	glcaml.ml
-	glcaml.mli
-	glcaml_stub.c
+GLCaml consists of the following files:
+    glcaml.ml
+    glcaml.mli
+    glcaml_stub.c
 These files are located in the /lib subdirectory of this package.
 To use GLCaml in an OCaml project, add these three files to your project
 makefiles. You may move them to any suitable directory or location, as
@@ -64,26 +64,26 @@ It should work, but has not been tested on
 
 REGENERATING GLCAML
 
-GLCaml consists of the following files: 
-	glcaml.ml
-	glcaml.mli
-	glcaml_stub.c
+GLCaml consists of the following files:
+    glcaml.ml
+    glcaml.mli
+    glcaml_stub.c
 These files are located in the /lib subdirectory of this package.
 They may be regenerated using the files located in the /glgen directory:
 using the following commands (from the shell or command prompt):
-	make
-The generated files will be located in /glgen/output and may be copied to 
-/lib	
+    make
+The generated files will be located in /glgen/output and may be copied to
+/lib
 
 
 SDLCAML
 
 This package comes with SDLCaml, a compact drop-in binding for LibSDL.
-SDLCaml can be used as a small, fast replacement for OcamlSDL.	
+SDLCaml can be used as a small, fast replacement for OcamlSDL.
 It contains the following files
-	sdlcaml.ml
-	sdlcaml.mli
-	sdlcaml_stub.c
+    sdlcaml.ml
+    sdlcaml.mli
+    sdlcaml_stub.c
 located in the /lib subdirectory
 Generated, comprehensive documentation is located in the /doc directory
 The /examples subdirectory contains a number of SDL tutorials, translated into
@@ -96,7 +96,7 @@ WIN
 This package also comes with Win, a small library that enables OpenGL
 calls to be used from the Ocaml Graphics module, without requiring the presence
 of SDL. It contains the following files
-	win.ml
-	win.mli
-	win_stub.c
-located in the /lib subdirectory	
+    win.ml
+    win.mli
+    win_stub.c
+located in the /lib subdirectory

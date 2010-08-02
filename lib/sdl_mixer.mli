@@ -56,8 +56,8 @@ type channel = int
 
 module Mix : sig
 
-(* 
- * minor semantic helper variables 
+(*
+ * minor semantic helper variables
  *)
 
 val any_channel : int             (* -1, for play_channel, etc *)
@@ -78,7 +78,7 @@ val quit : unit -> unit
 
 
 (** Retrieves a text representation of the used SDL_Mixer library, e.g 1.2.11 *)
-val get_version : unit -> string 
+val get_version : unit -> string
 
 (** Retrieves a string containing a description of most recent Mix error.
     Essentially the same as Sdl.get_error () *)
@@ -102,7 +102,7 @@ val load_mus : string -> music_t
 val load_music : string -> music_t
 
 (** Releases allocated sound chunk *)
-val free_chunk : chunk_t -> unit 
+val free_chunk : chunk_t -> unit
 
 (** Releases allocated music file *)
 val free_music : music_t -> unit
@@ -147,22 +147,22 @@ val get_music_type : music_t option -> music_type
 (** [set_panning channel pan_left pan_right -> trye/false]
     Set the panning of a channel. The [pan_left] and [pan_right] channels are specified
     as integers between 0 and 255, quietest to loudest, respectively.
-  
+
     Technically, this is just individual volume control for a sample with
     two (stereo) channels, so it can be used for more than just panning.
     If you want real panning, call it like this:
-  
+
     Mix_SetPanning(channel, left, 255 - left);
-  
+
     Setting [channel] to Mix.channel_post (-2) registers this as a posteffect, and
     the panning will be done to the final mixed stream before passing it on
     to the audio device.
-  
+
     This uses the Mix_RegisterEffect() API internally, and returns without
     registering the effect function if the audio device is not configured
     for stereo output. Setting both (left) and (right) to 255 causes this
     effect to be unregistered, since that is the data's normal state.
-  
+
     Note that an audio device in mono mode is a no-op, but this call will return
     success in that case.
     *)
@@ -183,11 +183,11 @@ val set_panning : channel -> int -> int -> bool
     all produce the same effect, 6 through 10 are equal, etc). Setting (angle)
     and [distance] to 0 unregisters this effect, since the data would be
     unchanged.
- 
+
     If you need more precise positional audio, consider using OpenAL for
     spatialized effects instead of SDL_mixer. This is only meant to be a
     basic effect for simple "3D" games.
- 
+
     If the audio device is configured for mono output, then you won't get
     any effectiveness from the angle; however, distance attenuation on the
     channel will still occur. While this effect will function with stereo
@@ -195,11 +195,11 @@ val set_panning : channel -> int -> int -> bool
     so when they are mixed through this effect, the positioning will sound
     correct. You can convert them to mono through SDL before giving them to
     the mixer in the first place if you like.
- 
+
     Setting [channel] to Mix.channel_post (-2) registers this as a posteffect, and
     the positioning will be done to the final mixed stream before passing it
     on to the audio device.
- 
+
     This is a convenience wrapper over Mix_SetDistance() and Mix_SetPanning().
 *)
 val set_position : channel -> int -> int -> bool
@@ -250,7 +250,7 @@ val set_distance : channel -> int -> bool
     posteffect).
 
      Note that an audio device in mono mode is a no-op, but this call will
-     return successful in that case. 
+     return successful in that case.
 *)
 val set_reverse_stereo : channel -> bool -> bool
 
@@ -382,17 +382,17 @@ val expire_channel : channel -> int -> bool
 val remove_channel_expiration : channel -> bool
 
 (** [fade_out_channel channel ms -> true/false]
-    Halts the channel, fading it out till it's silent. 
+    Halts the channel, fading it out till it's silent.
     The fading will take [ms] milliseconds.*)
 val fade_out_channel : channel -> int -> bool
 
 (** [fade_out_group tag ms -> true/false]
-    Halts the channel group, fading it out till it's silent. 
+    Halts the channel group, fading it out till it's silent.
     The fading will take [ms] milliseconds.*)
 val fade_out_group : int -> int -> bool
 
 (** [fade_out_music ms -> true/false]
-    Halts the music, fading it out till it's silent. 
+    Halts the music, fading it out till it's silent.
     The fading will take [ms] milliseconds.*)
 val fade_out_music : int -> bool
 
