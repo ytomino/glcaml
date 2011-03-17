@@ -420,7 +420,12 @@ module SDLGL : sig
     ACCUM_RED_SIZE  | (** Size of the accumulation buffer red component, in bits *)
     ACCUM_GREEN_SIZE| (** Size of the accumulation buffer green component, in bits *)
     ACCUM_BLUE_SIZE | (** Size of the accumulation buffer blue component, in bits *)
-    ACCUM_ALPHA_SIZE  (** Size of the accumulation buffer alpha component, in bits *)
+    ACCUM_ALPHA_SIZE |  (** Size of the accumulation buffer alpha component, in bits *)
+    STEREO |
+    MULTISAMPLEBUFFERS |
+    MULTISAMPLESAMPLES |
+    ACCELERATED_VISUAL |
+    SWAP_CONTROL (** vsync *)
 
   (** [swap_buffers]
     Swap OpenGL framebuffers/Update Display *)

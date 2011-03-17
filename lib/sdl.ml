@@ -193,7 +193,12 @@ type gl_attr =
   ACCUM_RED_SIZE |
   ACCUM_GREEN_SIZE |
   ACCUM_BLUE_SIZE |
-  ACCUM_ALPHA_SIZE
+  ACCUM_ALPHA_SIZE |
+  STEREO |
+  MULTISAMPLEBUFFERS |
+  MULTISAMPLESAMPLES |
+  ACCELERATED_VISUAL |
+  SWAP_CONTROL (** vsync *)
 
   external swap_buffers : unit -> unit = "sdlstub_GL_swap_buffers"
 
