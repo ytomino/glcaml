@@ -540,11 +540,3 @@ value sdlmixer_close_audio (value u)
     Mix_CloseAudio();
     return Val_unit;
 }
-
-#ifdef __APPLE__
-int main(int argc, char **argv)
-{
-   caml_main(argv);
-   return 0;
-}
-#endif
