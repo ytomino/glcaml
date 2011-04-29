@@ -39,7 +39,19 @@ void set_audiospec(SDL_AudioSpec *in, int freq, int format, int channels, int sa
     in->userdata = NULL;
 }
 
-#include "caml.h"
+
+/*  CAML - C interface */
+#include <caml/mlvalues.h>
+#include <caml/memory.h>
+#include <caml/alloc.h>
+#include <caml/fail.h>
+#include <caml/callback.h>
+#include <caml/bigarray.h>
+
+
+/*  Caml list manipulations */
+#define NIL_tag 0
+#define CONS_tag 1
 
 value nil(void)
 {
@@ -57,6 +69,29 @@ value cons(value x,value l)
     CAMLreturn (m);
 }
 
+int is_nil(value l)
+{
+    CAMLparam1(l);
+    CAMLreturn (Is_long(l));
+}
+
+int is_not_nil(value l)
+{
+    CAMLparam1(l);
+    CAMLreturn (Is_block(l));
+}
+
+value hd(value l)
+{
+    CAMLparam1(l);
+    CAMLreturn (Field(l,0));
+}
+
+value tl(value l)
+{
+    CAMLparam1(l);
+    CAMLreturn (Field(l,1));
+}
 
 /*  conversion between OCAMLSDL flags and C SDL flags */
 #define TIMER_tag 0
