@@ -7,8 +7,10 @@ GL_SOURCE=$(LIBDIR)/glcaml_stub.c $(LIBDIR)/glcaml.mli $(LIBDIR)/glcaml.ml
 # glcaml + sdlcalm
 ifndef NOSDL
 
-    CLIBS=SDL SDL_mixer
-    SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml $(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
+    CLIBS=SDL SDL_mixer SDL_ttf
+    SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml \
+        $(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml \
+        $(LIBDIR)/sdl_ttf_stub.c $(LIBDIR)/sdl_ttf.mli $(LIBDIR)/sdl_ttf.ml
 
     ifdef NOSDLMIXER
     CLIBS=SDL
