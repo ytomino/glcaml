@@ -32,7 +32,7 @@ HGLRC  ghGlrc = NULL;
 #endif
 
 #ifdef __unix__
-Window local_find_window (Display *display, Window root, char *name)
+static Window local_find_window (Display *display, Window root, char *name)
 {
     Window parent;
     Window *children;

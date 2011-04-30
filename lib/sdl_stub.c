@@ -29,7 +29,7 @@
 
 /* Ugly: SDL_AudioSpec has a field called "callback" which caml/callback.h redefines to caml_callback.
 So this function has to come before the caml #includes*/
-void set_audiospec(SDL_AudioSpec *in, int freq, int format, int channels, int samples, void (*callback)(void *userdata, Uint8 *stream, int len))
+static void set_audiospec(SDL_AudioSpec *in, int freq, int format, int channels, int samples, void (*callback)(void *userdata, Uint8 *stream, int len))
 {
     in->freq = freq;
     in->format = format;
@@ -53,13 +53,13 @@ void set_audiospec(SDL_AudioSpec *in, int freq, int format, int channels, int sa
 #define NIL_tag 0
 #define CONS_tag 1
 
-value nil(void)
+static value nil(void)
 {
     CAMLparam0();
     CAMLreturn (Val_int(0));
 }
 
-value cons(value x,value l)
+static value cons(value x,value l)
 {
     CAMLparam2(x,l);
     CAMLlocal1(m);
@@ -69,25 +69,25 @@ value cons(value x,value l)
     CAMLreturn (m);
 }
 
-int is_nil(value l)
+static __attribute__((unused)) int is_nil(value l)
 {
     CAMLparam1(l);
     CAMLreturn (Is_long(l));
 }
 
-int is_not_nil(value l)
+static int is_not_nil(value l)
 {
     CAMLparam1(l);
     CAMLreturn (Is_block(l));
 }
 
-value hd(value l)
+static value hd(value l)
 {
     CAMLparam1(l);
     CAMLreturn (Field(l,0));
 }
 
-value tl(value l)
+static value tl(value l)
 {
     CAMLparam1(l);
     CAMLreturn (Field(l,1));
@@ -103,7 +103,7 @@ value tl(value l)
 #define EVENTTHREAD_tag 6
 #define EVERYTHING_tag 7
 
-int init_flag_val(value flag_list)
+static int init_flag_val(value flag_list)
 {
     CAMLparam1(flag_list);
     int flag = 0;
@@ -141,7 +141,7 @@ int init_flag_val(value flag_list)
 #define RESIZABLE_tag 12
 #define NOFRAME_tag 13
 
-int video_flag_val(value flag_list)
+static int video_flag_val(value flag_list)
 {
     CAMLparam1(flag_list);
     int flag = 0;
@@ -169,7 +169,7 @@ int video_flag_val(value flag_list)
     CAMLreturn (flag);
 }
 
-value val_video_flag(int flags)
+static value val_video_flag(int flags)
 {
     CAMLparam0();
     value l = nil();
@@ -189,7 +189,7 @@ value val_video_flag(int flags)
 
 /* raising SDL_failure exception */
 
-void raise_failure() {
+static void raise_failure() {
     raise_with_string(*caml_named_value("SDL_failure"), SDL_GetError());
 }
 
@@ -211,7 +211,7 @@ value sdlstub_get_error(value u){
     CAMLparam1(u);
     CAMLlocal1(result);
     char *s = SDL_GetError();
-    Store_field (result, 0, copy_string(s));
+    result = copy_string(s);
     CAMLreturn (result);
 }
 
@@ -263,7 +263,7 @@ value sdlstub_save_bmp(value s, value vfile) {
 }
 
 /* Code by Jeff Molofee's openGL tutorial */
-SDL_Surface * GLLoadBMP(char *filename)
+static SDL_Surface * GLLoadBMP(char *filename)
 {
     Uint8 *rowhi, *rowlo;
     Uint8 *tmpbuf, tmpch;
@@ -594,7 +594,7 @@ value sdlstub_update_rects(value s, value vn, value arr){
     int i;
     SDL_Rect* rects;
 
-    if (Wosize_val(arr) < n) invalid_argument("update_rects");
+    if (Wosize_val(arr) < (unsigned)n) invalid_argument("update_rects");
     rects = (SDL_Rect*) malloc(n * sizeof(SDL_Rect));
     for (i = 0; i < n; i++) {
         v = Field(arr,i);
@@ -614,12 +614,12 @@ value sdlstub_flip(value s) {
     CAMLreturn(Val_unit);
 }
 
-SDL_Rect* rect_from_option(value v,SDL_Rect* r) {
+static SDL_Rect* rect_from_option(value v,SDL_Rect* r) {
     CAMLparam1(v);
-    value vr;
+    CAMLlocal1(vr);
     if (v == Val_int(0)) {
     /* None */
-        return (NULL);
+        CAMLreturnT(SDL_Rect *, NULL);
     } else {
     /* Some */
         vr = Field(v,0);
@@ -627,18 +627,19 @@ SDL_Rect* rect_from_option(value v,SDL_Rect* r) {
         r->y = Int_val(Field(vr,1));
         r->w = Int_val(Field(vr,2));
         r->h = Int_val(Field(vr,3));
-        return (r);
+        CAMLreturnT(SDL_Rect *, r);
     }
 }
 
 /* assumption: v = Some rect  and  r is not NULL */
-void update_rect_option(value v, SDL_Rect* r) {
+static void update_rect_option(value v, SDL_Rect* r) {
     CAMLparam1(v);
     value vr = Field(v,0);
     modify(&Field(vr,0), Val_int(r->x));
     modify(&Field(vr,1), Val_int(r->y));
     modify(&Field(vr,2), Val_int(r->w));
     modify(&Field(vr,3), Val_int(r->h));
+    CAMLreturn0;
 }
 
 value sdlstub_blit_surface(value src, value srcr, value dst, value dstr) {
@@ -665,7 +666,7 @@ value sdlstub_set_colors(value s, value arr, value vfirst, value vn) {
     value v;
     SDL_Color* colors;
 
-    if (ncolors < 0 || ncolors > Wosize_val(arr)) invalid_argument("set_colors");
+    if ((unsigned)ncolors > Wosize_val(arr)) invalid_argument("set_colors");
     colors = (SDL_Color*) malloc(ncolors * sizeof(SDL_Color));
     if (colors == NULL) raise_out_of_memory();
     for (i=0; i<ncolors; i++) {
@@ -692,27 +693,26 @@ value sdlstub_warp_mouse(value x, value y)
     CAMLparam2(x,y);
     int lx = Int_val(x);
     int ly = Int_val(y);
-    SDL_WarpMouse(x,y);
+    SDL_WarpMouse(lx, ly);
     CAMLreturn(Val_unit);
 }
 
 /* --------------------- events -------------------------------- */
 #define FLAG_TO_MOD_SIZE 12
 
-int ML_flags_to_mask(value flags, int flag_to_cvalue[])
+static int ML_flags_to_mask(value flags, int flag_to_cvalue[])
 {
-    int i,n;
     int mask=0;
-    CAMLparam0();
+    CAMLparam1(flags);
     while(Is_block(flags))
     {
         mask |= flag_to_cvalue[Int_val(Field(flags, 0))];
         flags=Field(flags, 1);
     }
-    CAMLreturn(mask);
+    CAMLreturnT(int, mask);
 }
 
-value carray_to_ML_list(int carray[], int arr_size)
+static value carray_to_ML_list(int carray[], int arr_size)
 {
     int i;
     CAMLparam0();
@@ -733,7 +733,7 @@ value carray_to_ML_list(int carray[], int arr_size)
     CAMLreturn(toreturn);
 }
 
-value mask_to_ML_flags(int mask, int flag_to_cvalue[], int arr_size)
+static value mask_to_ML_flags(int mask, int flag_to_cvalue[], int arr_size)
 {
 #ifdef _WIN32
     int flagar[1024];
@@ -751,7 +751,7 @@ value mask_to_ML_flags(int mask, int flag_to_cvalue[], int arr_size)
 }
 
 
-int key_to_flag[] =
+static int key_to_flag[] =
 {
     0, 0,0,0,0,0,0,0,
     2, 3, 0,0,
@@ -772,7 +772,7 @@ int key_to_flag[] =
     232
 };
 
-int flag_to_key[] =
+static int flag_to_key[] =
 {
     0,0,8,9,12,13,19,27,32,33,34,35,36,38,39,40,41,42,43,44,45,46,47,48,49,50,51,52,53,54,55,56,57,58,59,60,61,62,63,64,
     91,92,93,94,95,96,97,98,99,100,101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,127,
@@ -781,11 +781,11 @@ int flag_to_key[] =
     300,301,302,303,304,305,306,307,308,309,310,311,312,313,314,315,316,317,318,319,320,321,322
 };
 
-int flag_to_mod[] = {
+static int flag_to_mod[] = {
     0x0000,0x0001,0x0002,0x0040,0x0080,0x0100,0x0200,0x0400,0x0800,0x1000,0x2000,0x4000,0x8000
 };
 
-int flag_to_appstate[] = {
+static int flag_to_appstate[] = {
     0x01, 0x02, 0x04
 };
 
@@ -798,11 +798,10 @@ value sdlstub_get_app_state(value u)
     flag_to_appstate, FLAG_TO_APPSTATE_SIZE));
 }
 
-value SDL_event_to_ML_tevent(SDL_Event event)
+static value SDL_event_to_ML_tevent(SDL_Event event)
 {
     CAMLparam0 ();
     CAMLlocal2(ML_event, to_return);
-    int i;
 
     switch (event.type)
     {
@@ -838,12 +837,7 @@ value SDL_event_to_ML_tevent(SDL_Event event)
     case SDL_MOUSEMOTION:
     {
         ML_event=alloc(5,0);
-        switch(event.motion.state)
-        {
-        case 0: Store_field(ML_event, 0, Val_int(0));break;
-        case 1: Store_field(ML_event, 0, Val_int(1));break;
-        default: Store_field(ML_event, 0, Val_int(2));break;
-        }
+        Store_field(ML_event, 0, Val_int(event.motion.state));
         Store_field(ML_event, 1, Val_int(event.motion.x));
         Store_field(ML_event, 2, Val_int(event.motion.y));
         Store_field(ML_event, 3, Val_int(event.motion.xrel));
@@ -996,12 +990,7 @@ value sdlstub_get_mouse_state(value u)
     int x,y,but;
     toreturn=alloc(3,0);
     but=SDL_GetMouseState(&x,&y);
-    switch(but)
-    {
-        case 0: Store_field(toreturn, 0, Val_int(0));break;
-        case 1: Store_field(toreturn, 0, Val_int(1));break;
-        default: Store_field(toreturn, 0, Val_int(2));break;
-    }
+    Store_field(toreturn, 0, Val_int(but));
     Store_field(toreturn, 1, Val_int(x));
     Store_field(toreturn, 2, Val_int(y));
     CAMLreturn(toreturn);
@@ -1114,7 +1103,7 @@ value sdlstub_GL_swap_buffers(value u) {
     CAMLreturn(Val_unit);
 }
 
-SDL_GLattr  SDL_GLAttrArray[] =
+static SDL_GLattr  SDL_GLAttrArray[] =
 {
     SDL_GL_RED_SIZE ,
     SDL_GL_GREEN_SIZE ,
@@ -1127,7 +1116,12 @@ SDL_GLattr  SDL_GLAttrArray[] =
     SDL_GL_ACCUM_RED_SIZE ,
     SDL_GL_ACCUM_GREEN_SIZE ,
     SDL_GL_ACCUM_BLUE_SIZE ,
-    SDL_GL_ACCUM_ALPHA_SIZE
+    SDL_GL_ACCUM_ALPHA_SIZE,
+    SDL_GL_STEREO,
+    SDL_GL_MULTISAMPLEBUFFERS,
+    SDL_GL_MULTISAMPLESAMPLES,
+    SDL_GL_ACCELERATED_VISUAL,
+    SDL_GL_SWAP_CONTROL
 };
 
 value sdlstub_set_attribute(value a, value v)
@@ -1135,10 +1129,8 @@ value sdlstub_set_attribute(value a, value v)
     CAMLparam2(a,v);
     int attr = Int_val(a);
     int val = Int_val(v);
-    if(attr < sizeof(SDL_GLAttrArray)){
-        SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
-        SDL_GL_SetAttribute(sdlattr, val);
-    }
+    SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
+    SDL_GL_SetAttribute(sdlattr, val);
     CAMLreturn(Val_unit);
 }
 
@@ -1147,15 +1139,13 @@ value sdlstub_get_attribute(value a)
     CAMLparam1(a);
     int attr = Int_val(a);
     int val = 0;
-    if(attr < sizeof(SDL_GLAttrArray)){
-        SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
-        SDL_GL_GetAttribute(sdlattr, &val);
-    }
+    SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
+    SDL_GL_GetAttribute(sdlattr, &val);
     CAMLreturn(Val_int(val));
 }
 
 /* audio */
-static void __audio_callback(void *userdata, unsigned char *stream, int len)
+static void __audio_callback(__attribute__((unused)) void *userdata, unsigned char *stream, int len)
 {
     caml_callback(*caml_named_value("ml_setaudiocallback"), alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, stream, len));
 }
@@ -1263,14 +1253,14 @@ value sdlstub_convert_audio(value from_format, value from_channels, value from_f
     CAMLreturn (alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, wav_cvt.buf, wav_len * wav_cvt.len_mult));
 }
 
-value sdlstub_convert_audio_byte(value * argv, int n){
+value sdlstub_convert_audio_byte(value * argv, __attribute__((unused)) int n){
     return sdlstub_convert_audio (argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 }
 
 /* Audio effects */
 
 // Author: A. Umbach sdl@lokigames.com
-int fxShift(double pitch, Uint8 *source, Uint8 *target, int len) {
+static int fxShift(double pitch, Uint8 *source, Uint8 *target, int len) {
     int i, j, k;
     double l;
     double pa = 0;
@@ -1298,7 +1288,7 @@ value fxstub_shift(value shift, value source, value target)
 }
 
 // Author: A. Umbach sdl@lokigames.com
-void fxPan(double pan, double vol, Uint8 *buf, Uint8 *out, int len) {
+static void fxPan(double pan, double vol, Uint8 *buf, Uint8 *out, int len) {
     int i;
     double left_vol =  - vol * ( -1.0 + pan ) / 2.0;
     double right_vol = vol * ( 1.0 + pan ) / 2.0;
