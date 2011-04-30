@@ -357,6 +357,14 @@ module Video : sig
     Set the position of the mouse cursor (generates a mouse motion event). *)
   val warp_mouse : int -> int -> unit
 
+  (** Mouse cursor *)
+  type cursor
+
+  val create_cursor: byte_array -> byte_array -> int -> int -> int -> int -> cursor
+  val set_cursor: cursor -> unit
+  val get_cursor: unit -> cursor
+  val free_cursor: cursor -> unit
+
   (** [string_of_pixels surface -> string]
     Returns a copy of the raw pixel data in a surface as a string. *)
   val string_of_pixels : surface -> string

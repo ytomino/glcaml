@@ -157,6 +157,14 @@ module Video = struct
   = "sdlstub_show_cursor"
   external warp_mouse : int -> int -> unit
     = "sdlstub_warp_mouse"
+
+  type cursor
+
+  external create_cursor: byte_array -> byte_array -> int -> int -> int -> int -> cursor = "sdlstub_create_cursor_byte" "sdlstub_create_cursor"
+  external set_cursor: cursor -> unit = "sdlstub_set_cursor"
+  external get_cursor: unit -> cursor = "sdlstub_get_cursor"
+  external free_cursor: cursor -> unit = "sdlstub_free_cursor"
+
   external string_of_pixels : surface -> string = "sdlstub_string_of_pixels"
 
 end
