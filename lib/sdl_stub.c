@@ -616,10 +616,10 @@ value sdlstub_flip(value s) {
 
 static SDL_Rect* rect_from_option(value v,SDL_Rect* r) {
     CAMLparam1(v);
-    value vr;
+    CAMLlocal1(vr);
     if (v == Val_int(0)) {
     /* None */
-        return (NULL);
+        CAMLreturnT(SDL_Rect *, NULL);
     } else {
     /* Some */
         vr = Field(v,0);
@@ -627,7 +627,7 @@ static SDL_Rect* rect_from_option(value v,SDL_Rect* r) {
         r->y = Int_val(Field(vr,1));
         r->w = Int_val(Field(vr,2));
         r->h = Int_val(Field(vr,3));
-        return (r);
+        CAMLreturnT(SDL_Rect *, r);
     }
 }
 
@@ -639,6 +639,7 @@ static void update_rect_option(value v, SDL_Rect* r) {
     modify(&Field(vr,1), Val_int(r->y));
     modify(&Field(vr,2), Val_int(r->w));
     modify(&Field(vr,3), Val_int(r->h));
+    CAMLreturn0;
 }
 
 value sdlstub_blit_surface(value src, value srcr, value dst, value dstr) {
@@ -703,13 +704,13 @@ static int ML_flags_to_mask(value flags, int flag_to_cvalue[])
 {
     int i,n;
     int mask=0;
-    CAMLparam0();
+    CAMLparam1(flags);
     while(Is_block(flags))
     {
         mask |= flag_to_cvalue[Int_val(Field(flags, 0))];
         flags=Field(flags, 1);
     }
-    CAMLreturn(mask);
+    CAMLreturnT(int, mask);
 }
 
 static value carray_to_ML_list(int carray[], int arr_size)
