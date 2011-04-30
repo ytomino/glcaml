@@ -702,7 +702,6 @@ value sdlstub_warp_mouse(value x, value y)
 
 static int ML_flags_to_mask(value flags, int flag_to_cvalue[])
 {
-    int i,n;
     int mask=0;
     CAMLparam1(flags);
     while(Is_block(flags))
@@ -803,7 +802,6 @@ static value SDL_event_to_ML_tevent(SDL_Event event)
 {
     CAMLparam0 ();
     CAMLlocal2(ML_event, to_return);
-    int i;
 
     switch (event.type)
     {
