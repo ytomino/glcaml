@@ -211,7 +211,7 @@ value sdlstub_get_error(value u){
     CAMLparam1(u);
     CAMLlocal1(result);
     char *s = SDL_GetError();
-    Store_field (result, 0, copy_string(s));
+    result = copy_string(s);
     CAMLreturn (result);
 }
 
