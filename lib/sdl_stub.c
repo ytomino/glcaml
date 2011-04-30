@@ -594,7 +594,7 @@ value sdlstub_update_rects(value s, value vn, value arr){
     int i;
     SDL_Rect* rects;
 
-    if (Wosize_val(arr) < n) invalid_argument("update_rects");
+    if (Wosize_val(arr) < (unsigned)n) invalid_argument("update_rects");
     rects = (SDL_Rect*) malloc(n * sizeof(SDL_Rect));
     for (i = 0; i < n; i++) {
         v = Field(arr,i);
@@ -665,7 +665,7 @@ value sdlstub_set_colors(value s, value arr, value vfirst, value vn) {
     value v;
     SDL_Color* colors;
 
-    if (ncolors < 0 || ncolors > Wosize_val(arr)) invalid_argument("set_colors");
+    if ((unsigned)ncolors > Wosize_val(arr)) invalid_argument("set_colors");
     colors = (SDL_Color*) malloc(ncolors * sizeof(SDL_Color));
     if (colors == NULL) raise_out_of_memory();
     for (i=0; i<ncolors; i++) {
