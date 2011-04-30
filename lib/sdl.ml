@@ -219,7 +219,6 @@ type gl_attr =
 end
 (**************************** End Open GL support **************************************)
 
-
 (***************************** Events. *************************************************)
 module Event  = struct
 
@@ -363,6 +362,20 @@ module Timer = struct
 
 end
 (***************************** End Timer. ******************************************************)
+
+
+(********************************* Joystick. *********************************)
+module Joystick = struct
+
+  type joystick
+
+  external num_joysticks: unit -> int = "sdlstub_num_joysticks"
+  external joystick_open: int -> joystick = "sdlstub_joystick_open"
+  external joystick_close: joystick -> unit = "sdlstub_joystick_close"
+  external joystick_event_state: Event.que_dis_ena -> Event.que_dis_ena = "sdlstub_joystick_event_state"
+
+end
+(******************************* End Joystick. *******************************)
 
 
 (****************************** Audio ****************************)

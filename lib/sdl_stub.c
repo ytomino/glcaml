@@ -1263,6 +1263,39 @@ value sdldraw_get_pixel(value s, value vx, value vy) {
     CAMLreturn(rs);
 }
 
+/* joystick */
+
+value sdlstub_num_joysticks(value unit)
+{
+    CAMLparam1(unit);
+    int result = SDL_NumJoysticks();
+    CAMLreturn(Val_int(result));
+}
+
+value sdlstub_joystick_open(value index)
+{
+    CAMLparam1(index);
+    SDL_Joystick *result = SDL_JoystickOpen(Int_val(index));
+    if(result == NULL){
+        raise_failure();
+    }
+    CAMLreturn((value)result);
+}
+
+value sdlstub_joystick_close(value joy)
+{
+    CAMLparam1(joy);
+    SDL_JoystickClose((SDL_Joystick *)joy);
+    CAMLreturn(Val_unit);
+}
+
+value sdlstub_joystick_event_state(value enable)
+{
+    CAMLparam1(enable);
+    CAMLreturn(Val_int(SDL_JoystickEventState(Int_val(enable)-1)+1));
+}
+
+/* for libSDLmain */
 
 #ifdef __APPLE__
 int main(int argc, char **argv)

@@ -690,6 +690,20 @@ module Timer : sig
 end
 
 
+(* ------------------------------- Joystick.------------------------------- *)
+(** Joystick event handling *)
+module Joystick: sig
+
+  type joystick
+
+  val num_joysticks: unit -> int
+  val joystick_open: int -> joystick
+  val joystick_close: joystick -> unit
+  val joystick_event_state: Event.que_dis_ena -> Event.que_dis_ena
+
+end
+
+
 (* ------------------------------------------- Audio.------------------------------------------------- *)
 (** Low-level audio (only types in here) *)
 module Audio : sig
