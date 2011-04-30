@@ -1,36 +1,39 @@
 LIBDIR=lib
 SRCDIR=examples
 BINDIR=bin
-LIBS=graphics unix bigarray
-GL_SOURCE=$(LIBDIR)/glcaml_stub.c $(LIBDIR)/glcaml.mli $(LIBDIR)/glcaml.ml
+BUILDDIR=build
 
-# glcaml + sdlcalm
-ifndef NOSDL
-
-    CLIBS=SDL SDL_mixer
-    SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml $(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
-
-    ifdef NOSDLMIXER
-    CLIBS=SDL
-    SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
-    endif
-endif
-
-# glcaml only
 ifdef NOSDL
-	WIN_SOURCE=$(LIBDIR)/win_stub.c $(LIBDIR)/win.mli $(LIBDIR)/win.ml
-	SDL_SOURCE=
-	CLIBS=GL
-	ifdef WIN32
-	CLIBS=opengl32 gdi32
-	endif
+# glcaml only
+LIBS=graphics unix bigarray glcaml glwin
+else
+# glcaml + sdlcaml
+LIBS=unix bigarray glcaml sdl sdl_mixer
 endif
-
 
 EXAMPLE=$(SRCDIR)/$(MLFILE).ml
-CC=gcc
-SOURCES=$(WIN_SOURCE) $(SDL_SOURCE) $(GL_SOURCE) $(EXAMPLE)
-RESULT=$(BINDIR)/$(MLFILE)
--include OCamlMakefile
 
-# vim: set syn=make :
+CMO=$(BUILDDIR)/$(MLFILE).cmo
+BYTEEXE=$(BINDIR)/$(MLFILE).byte.exe
+
+CMX=$(BUILDDIR)/$(MLFILE).cmx
+OPTEXE=$(BINDIR)/$(MLFILE).opt.exe
+
+export CAML_LD_LIBRARY_PATH=$(BUILDDIR)/stublibs
+
+.PHONY: build clean
+
+build: $(BYTEEXE) $(OPTEXE)
+
+$(BYTEEXE): $(EXAMPLE)
+	ocamlc -c -I $(BUILDDIR) -o $(CMO) $(EXAMPLE)
+	ocamlc -I $(BUILDDIR) -o $@ $(addsuffix .cma,$(LIBS)) $(CMO)
+
+$(OPTEXE): $(EXAMPLE)
+	ocamlopt -c -I $(BUILDDIR) -o $(CMX) $(EXAMPLE)
+	ocamlopt -I $(BUILDDIR) -o $@ $(addsuffix .cmxa,$(LIBS)) $(CMX)
+
+clean:
+	-rm $(BUILDDIR)/$(MLFILE).cmi
+	-rm $(CMO) $(BYTEEXE)
+	-rm $(CMX) $(BUILDDIR)/$(MLFILE).o $(OPTEXE)

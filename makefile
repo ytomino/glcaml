@@ -1,12 +1,18 @@
 MAKE=make
-# Uncomment the following line on WIN32
-# MAKE=make WIN32=true
 
-all: sdlmixer sdl nosdl
+.PHONY: all nosdl sdl sdlmixer clean
 
-sdlmixer: 
-	$(MAKE) -f makefile.inc MLFILE=mixer
+all: build/glcaml.cma nosdl sdl sdlmixer
 
+build/glcaml.cma:
+	make -C lib -f makefile install DESTDIR=$(abspath build)
+
+nosdl:
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader
 
 sdl:
 	$(MAKE) -f makefile.inc MLFILE=audiopan
@@ -28,14 +34,17 @@ sdl:
 	$(MAKE) -f makefile.inc MLFILE=lesson08
 	$(MAKE) -f makefile.inc MLFILE=lesson09
 
-nosdl:	
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader
-	
+sdlmixer: 
+	$(MAKE) -f makefile.inc MLFILE=mixer
+
 clean:
+	# nosdl
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum clean
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim clean
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera clean
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker clean
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader clean
+	# sdl
 	$(MAKE) -f makefile.inc MLFILE=audiopan clean
 	$(MAKE) -f makefile.inc MLFILE=audiopitch clean
 	$(MAKE) -f makefile.inc MLFILE=audiopitchpan clean
@@ -54,12 +63,12 @@ clean:
 	$(MAKE) -f makefile.inc MLFILE=lesson07 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson08 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson09 clean
+	# mixer
 	$(MAKE) -f makefile.inc MLFILE=mixer clean
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum clean
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim clean
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera clean
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker clean
-	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader clean
+	# libs
+	make -C lib -f makefile clean uninstall DESTDIR=$(abspath build)
+	-rmdir build/stublibs
+	-rmdir build
 
 htmldoc:
 	ocamldoc -v -I lib -html lib/sdl.mli lib/glcaml.mli lib/win.mli lib/sdl_mixer.mli -d doc
