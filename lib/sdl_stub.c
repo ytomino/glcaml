@@ -1116,7 +1116,12 @@ static SDL_GLattr  SDL_GLAttrArray[] =
     SDL_GL_ACCUM_RED_SIZE ,
     SDL_GL_ACCUM_GREEN_SIZE ,
     SDL_GL_ACCUM_BLUE_SIZE ,
-    SDL_GL_ACCUM_ALPHA_SIZE
+    SDL_GL_ACCUM_ALPHA_SIZE,
+    SDL_GL_STEREO,
+    SDL_GL_MULTISAMPLEBUFFERS,
+    SDL_GL_MULTISAMPLESAMPLES,
+    SDL_GL_ACCELERATED_VISUAL,
+    SDL_GL_SWAP_CONTROL
 };
 
 value sdlstub_set_attribute(value a, value v)
@@ -1124,10 +1129,8 @@ value sdlstub_set_attribute(value a, value v)
     CAMLparam2(a,v);
     int attr = Int_val(a);
     int val = Int_val(v);
-    if(attr < sizeof(SDL_GLAttrArray)){
-        SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
-        SDL_GL_SetAttribute(sdlattr, val);
-    }
+    SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
+    SDL_GL_SetAttribute(sdlattr, val);
     CAMLreturn(Val_unit);
 }
 
@@ -1136,10 +1139,8 @@ value sdlstub_get_attribute(value a)
     CAMLparam1(a);
     int attr = Int_val(a);
     int val = 0;
-    if(attr < sizeof(SDL_GLAttrArray)){
-        SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
-        SDL_GL_GetAttribute(sdlattr, &val);
-    }
+    SDL_GLattr  sdlattr = SDL_GLAttrArray[attr];
+    SDL_GL_GetAttribute(sdlattr, &val);
     CAMLreturn(Val_int(val));
 }
 
