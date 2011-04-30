@@ -69,7 +69,7 @@ static value cons(value x,value l)
     CAMLreturn (m);
 }
 
-static int is_nil(value l)
+static __attribute__((unused)) int is_nil(value l)
 {
     CAMLparam1(l);
     CAMLreturn (Is_long(l));
@@ -1155,7 +1155,7 @@ value sdlstub_get_attribute(value a)
 }
 
 /* audio */
-static void __audio_callback(void *userdata, unsigned char *stream, int len)
+static void __audio_callback(__attribute__((unused)) void *userdata, unsigned char *stream, int len)
 {
     caml_callback(*caml_named_value("ml_setaudiocallback"), alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, stream, len));
 }
@@ -1263,7 +1263,7 @@ value sdlstub_convert_audio(value from_format, value from_channels, value from_f
     CAMLreturn (alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, wav_cvt.buf, wav_len * wav_cvt.len_mult));
 }
 
-value sdlstub_convert_audio_byte(value * argv, int n){
+value sdlstub_convert_audio_byte(value * argv, __attribute__((unused)) int n){
     return sdlstub_convert_audio (argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 }
 
