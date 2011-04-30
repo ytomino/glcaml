@@ -693,7 +693,7 @@ value sdlstub_warp_mouse(value x, value y)
     CAMLparam2(x,y);
     int lx = Int_val(x);
     int ly = Int_val(y);
-    SDL_WarpMouse(x,y);
+    SDL_WarpMouse(lx, ly);
     CAMLreturn(Val_unit);
 }
 
@@ -837,12 +837,7 @@ static value SDL_event_to_ML_tevent(SDL_Event event)
     case SDL_MOUSEMOTION:
     {
         ML_event=alloc(5,0);
-        switch(event.motion.state)
-        {
-        case 0: Store_field(ML_event, 0, Val_int(0));break;
-        case 1: Store_field(ML_event, 0, Val_int(1));break;
-        default: Store_field(ML_event, 0, Val_int(2));break;
-        }
+        Store_field(ML_event, 0, Val_int(event.motion.state));
         Store_field(ML_event, 1, Val_int(event.motion.x));
         Store_field(ML_event, 2, Val_int(event.motion.y));
         Store_field(ML_event, 3, Val_int(event.motion.xrel));
@@ -995,12 +990,7 @@ value sdlstub_get_mouse_state(value u)
     int x,y,but;
     toreturn=alloc(3,0);
     but=SDL_GetMouseState(&x,&y);
-    switch(but)
-    {
-        case 0: Store_field(toreturn, 0, Val_int(0));break;
-        case 1: Store_field(toreturn, 0, Val_int(1));break;
-        default: Store_field(toreturn, 0, Val_int(2));break;
-    }
+    Store_field(toreturn, 0, Val_int(but));
     Store_field(toreturn, 1, Val_int(x));
     Store_field(toreturn, 2, Val_int(y));
     CAMLreturn(toreturn);

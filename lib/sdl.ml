@@ -222,6 +222,8 @@ module Event  = struct
 
   external get_app_state : unit -> (app_state list) = "sdlstub_get_app_state"
 
+  external get_mouse_state: unit -> int * int * int = "sdlstub_get_mouse_state"
+
   (* SDLKey enum *)
   type key = K_UNKNOWN | K_FIRST | K_BACKSPACE | K_TAB | K_CLEAR | K_RETURN | K_PAUSE | K_ESCAPE | K_SPACE | K_EXCLAIM | K_QUOTEDBL | K_HASH | K_DOLLAR | K_AMPERSAND | K_QUOTE | K_LEFTPAREN | K_RIGHTPAREN | K_ASTERISK | K_PLUS | K_COMMA | K_MINUS | K_PERIOD | K_SLASH
   | K_0 | K_1 | K_2 | K_3 | K_4 | K_5 | K_6 | K_7 | K_8 | K_9 | K_COLON | K_SEMICOLON | K_LESS | K_EQUALS | K_GREATER | K_QUESTION | K_AT
@@ -270,7 +272,7 @@ module Event  = struct
   type mouse_button =  LEFT | MIDDLE | RIGHT | WHEELUP | WHEELDOWN
 
   type mouse_motion_event = {
-    mousestate : press_release;
+    mousestate : int;
     mx : int;
     my : int;
     mxrel : int;
