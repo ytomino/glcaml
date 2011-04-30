@@ -20,3 +20,16 @@ Contacts
 --------
 
 Einar Lielmanis, einars@gmail.com
+
+
+ytomino version
+---------------
+
+I agree Einar's opinion.
+
+- adding simple makefile instead of OCamlMakefile (for Windows and OSX)
+- adding cursor and joystick support
+- adding SDL_image support
+  (including Sdl_image_savepng module to take a screen capture as .png file)
+- adding SDL_ttf support
+- adding another version SDL_mixer support instead of Einar's
