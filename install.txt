@@ -61,6 +61,18 @@ $(DESTDIR)/
 	stublibs/
 		dllmlsdl.so
 
+Sdl_image and Sdl_image_savepng module installed by makefile-sdl_image
+
+$(DESTDIR)/
+	libmlsdl_image.a
+	sdl_image.a
+	sdl_image.cma
+	sdl_image.cmi
+	sdl_image.cmxa
+	sdl_image_savepng.cmi
+	stublibs/
+		dllmlsdl_image.so
+
 Sdl_mixer module installed by makefile-sdl_mixer
 
 $(DESTDIR)/
@@ -71,3 +83,14 @@ $(DESTDIR)/
 	sdl_mixer.cmxa
 	stublibs/
 		dllmlsdl_mixer.so
+
+Sdl_ttf module installed by makefile-sdl_ttf
+
+$(DESTDIR)/
+	libmlsdl_ttf.a
+	sdl_ttf.a
+	sdl_ttf.cma
+	sdl_ttf.cmi
+	sdl_ttf.cmxa
+	stublibs/
+		dllmlsdl_ttf.so

@@ -9,5 +9,9 @@ ifneq ($(OCAMLC),gcamlc)
 endif
 	echo "**** SDL ****"
 	make -f makefile-sdl $@
+	echo "**** SDL_image ****"
+	make -f makefile-sdl_image $@
 	echo "**** SDL_mixer ****"
 	make -f makefile-sdl_mixer $@
+	echo "**** SDL_ttf ****"
+	make -f makefile-sdl_ttf $@

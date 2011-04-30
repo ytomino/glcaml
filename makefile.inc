@@ -7,8 +7,8 @@ ifdef NOSDL
 # glcaml only
 LIBS=graphics unix bigarray glcaml glwin
 else
-# glcaml + sdlcaml
-LIBS=unix bigarray glcaml sdl sdl_mixer
+# glcaml + sdlcalm
+LIBS=unix bigarray glcaml sdl sdl_mixer sdl_ttf
 endif
 
 EXAMPLE=$(SRCDIR)/$(MLFILE).ml

@@ -1,457 +1,476 @@
-(* SDLCaml, an Objective Caml interface for the SDL library *)
-(* SDL_Mixer support module *)
+(* Objective Caml interface for SDL_mixer with SDLCaml *)
+(* based on SDL_mixer.h 1.2.11 *)
+
+open Sdl;;
+
+(* This function gets the version of the dynamically linked SDL_mixer library.
+   it should NOT be used to fill a version structure, instead you should
+   use the SDL_MIXER_VERSION() macro. *)
+val linked_version: unit -> int * int * int;;
+
+type init_flags = INIT_FLAC | INIT_MOD | INIT_MP3 | INIT_OGG;;
+
+(* Loads dynamic libraries and prepares them for use.  Flags should be
+   one or more flags from MIX_InitFlags OR'd together.
+   It returns the flags successfully initialized, or 0 on failure. *)
+val init: init_flags list -> unit;;
+
+(* Unloads libraries loaded with Mix_Init *)
+val quit: unit -> unit;;
+
+(* The default mixer has 8 simultaneous mixing channels *)
+val channels: int;;
+
+(* Good default values for a PC soundcard *)
+val default_frequency: int;;
+val default_format: Audio.sample_type;;
+val default_channels: int;;
+val max_volume: int;;
+
+(* The internal format for an audio chunk *)
+type chunk;;
+
+(* The different fading types supported *)
+type fading = NO_FADING | FADING_OUT | FADING_IN;;
+
+type music_type = MUS_NONE | MUS_CMD | MUS_WAV | MUS_MOD | MUS_MID | MUS_OGG | MUS_MP3 | MUS_MP3_MAD | MUS_FLAC;;
+
+(* The internal format for a music chunk interpreted via mikmod *)
+type music;;
+
+(* Open the mixer with a certain audio format *)
+val open_audio: frequency: int -> format: Audio.sample_type -> channels: int -> chunksize: int -> unit;;
+
+(* Dynamically change the number of channels managed by the mixer.
+   If decreasing the number of channels, the upper channels are
+   stopped.
+   This function returns the new number of allocated channels. *)
+val allocate_channels: numchans: int -> int;;
+
+(* Find out what the actual audio device parameters are.
+   This function returns 1 if the audio has been opened, 0 otherwise. *)
+val query_spec: unit -> int * Audio.sample_type * int;;
+
+(* Load a wave file or a music (.mod .s3m .it .xm) file *)
+(* val load_wav_rw: src: rwops -> freesrc: int -> chunk;; *)
+val load_wav: file: string -> chunk;;
+val load_mus: file: string -> music;;
+
+(* Load a music file from an SDL_RWop object (Ogg and MikMod specific currently)
+   Matt Campbell (matt@campbellhome.dhs.org) April 2000 *)
+(* val load_mus_rw: rw: rwops -> music;; *)
+
+(* Load a wave file of the mixer format from a memory buffer *)
+val quick_load_wav: mem: byte_array -> chunk;;
+
+(* Load raw audio data of the mixer format from a memory buffer *)
+val quick_load_raw: mem: byte_array -> chunk;;
+
+(* Free an audio chunk previously loaded *)
+val free_chunk: chunk: chunk -> unit;;
+val free_music: music: music -> unit;;
+
+(* Get a list of chunk/music decoders that this build of SDL_mixer provides.
+   This list can change between builds AND runs of the program, if external
+   libraries that add functionality become available.
+   You must successfully call Mix_OpenAudio() before calling these functions.
+   This API is only available in SDL_mixer 1.2.9 and later.
+
+   // usage...
+   int i;
+   const int total = Mix_GetNumChunkDecoders();
+   for (i = 0; i < total; i++)
+       printf("Supported chunk decoder: [%s]\n", Mix_GetChunkDecoder(i));
+
+   Appearing in this list doesn't promise your specific audio file will
+   decode...but it's handy to know if you have, say, a functioning Timidity
+   install.
+
+   These return values are static, read-only data; do not modify or free it.
+   The pointers remain valid until you call Mix_CloseAudio(). *)
+val get_num_chunk_decoders: unit -> int;;
+val get_chunk_decoder: (* index: *) int -> string;;
+val get_num_music_decoders: unit -> int;;
+val get_music_decoder: (* index: *) int -> string;;
+
+(* Find out the music format of a mixer music, or the currently playing
+   music, if 'music' is NULL. *)
+val get_music_type: music: music -> music_type;;
+
+(* Set a function that is called after all mixing is performed.
+   This can be used to provide real-time visual display of the audio stream
+   or add a custom mixer filter for the stream data. *)
+val set_post_mix: mix_func: (byte_array -> unit) -> unit;;
+
+(* Add your own music player or additional mixer function.
+   If 'mix_func' is NULL, the default music player is re-enabled. *)
+(* val hook_music: mix_func: (byte_array -> unit) -> unit;; *)
+
+(* Add your own callback when the music has finished playing.
+   This callback is only called if the music finishes naturally. *)
+(* val hook_music_finished: music_finished: (unit -> unit) -> unit;; *)
+
+(* Get a pointer to the user data for the current music hook *)
+(* val get_music_hook_data: unit -> (byte_array -> unit);; *)
+
+(* Add your own callback when a channel has finished playing. NULL
+ * to disable callback. The callback may be called from the mixer's audio 
+ * callback or it could be called as a result of Mix_HaltChannel(), etc.
+ * do not call SDL_LockAudio() from this callback; you will either be 
+ * inside the audio callback, or SDL_mixer will explicitly lock the audio
+ * before calling your callback. *)
+(* val channel_finished: channel_finished: (int -> unit) -> unit;; *)
+
+(* Special Effects API by ryan c. gordon. (icculus@icculus.org) *)
+
+val channel_post: int;;
+
+(* This is the format of a special effect callback:
+ *
+ *   myeffect(int chan, void *stream, int len, void *udata);
+ *
+ * (chan) is the channel number that your effect is affecting. (stream) is
+ *  the buffer of data to work upon. (len) is the size of (stream), and
+ *  (udata) is a user-defined bit of data, which you pass as the last arg of
+ *  Mix_RegisterEffect(), and is passed back unmolested to your callback.
+ *  Your effect changes the contents of (stream) based on whatever parameters
+ *  are significant, or just leaves it be, if you prefer. You can do whatever
+ *  you like to the buffer, though, and it will continue in its changed state
+ *  down the mixing pipeline, through any other effect functions, then finally
+ *  to be mixed with the rest of the channels and music for the final output
+ *  stream.
+ *
+ * DO NOT EVER call SDL_LockAudio() from your callback function! *)
+type effect_func_t = int -> byte_array -> unit;;
+
+(* This is a callback that signifies that a channel has finished all its
+ * loops and has completed playback. This gets called if the buffer
+ * plays out normally, or if you call Mix_HaltChannel(), implicitly stop
+ * a channel via Mix_AllocateChannels(), or unregister a callback while
+ * it's still playing.
+ *
+ * DO NOT EVER call SDL_LockAudio() from your callback function! *)
+type effect_done_t = int -> unit;;
+
+(* Register a special effect function. At mixing time, the channel data is
+ *  copied into a buffer and passed through each registered effect function.
+ *  After it passes through all the functions, it is mixed into the final
+ *  output stream. The copy to buffer is performed once, then each effect
+ *  function performs on the output of the previous effect. Understand that
+ *  this extra copy to a buffer is not performed if there are no effects
+ *  registered for a given chunk, which saves CPU cycles, and any given
+ *  effect will be extra cycles, too, so it is crucial that your code run
+ *  fast. Also note that the data that your function is given is in the
+ *  format of the sound device, and not the format you gave to Mix_OpenAudio(),
+ *  although they may in reality be the same. This is an unfortunate but
+ *  necessary speed concern. Use Mix_QuerySpec() to determine if you can
+ *  handle the data before you register your effect, and take appropriate
+ *  actions.
+ * You may also specify a callback (Mix_EffectDone_t) that is called when
+ *  the channel finishes playing. This gives you a more fine-grained control
+ *  than Mix_ChannelFinished(), in case you need to free effect-specific
+ *  resources, etc. If you don't need this, you can specify NULL.
+ * You may set the callbacks before or after calling Mix_PlayChannel().
+ * Things like Mix_SetPanning() are just internal special effect functions,
+ *  so if you are using that, you've already incurred the overhead of a copy
+ *  to a separate buffer, and that these effects will be in the queue with
+ *  any functions you've registered. The list of registered effects for a
+ *  channel is reset when a chunk finishes playing, so you need to explicitly
+ *  set them with each call to Mix_PlayChannel*().
+ * You may also register a special effect function that is to be run after
+ *  final mixing occurs. The rules for these callbacks are identical to those
+ *  in Mix_RegisterEffect, but they are run after all the channels and the
+ *  music have been mixed into a single stream, whereas channel-specific
+ *  effects run on a given channel before any other mixing occurs. These
+ *  global effect callbacks are call "posteffects". Posteffects only have
+ *  their Mix_EffectDone_t function called when they are unregistered (since
+ *  the main output stream is never "done" in the same sense as a channel).
+ *  You must unregister them manually when you've had enough. Your callback
+ *  will be told that the channel being mixed is (MIX_CHANNEL_POST) if the
+ *  processing is considered a posteffect.
+ *
+ * After all these effects have finished processing, the callback registered
+ *  through Mix_SetPostMix() runs, and then the stream goes to the audio
+ *  device. 
+ *
+ * DO NOT EVER call SDL_LockAudio() from your callback function!
+ *
+ * returns zero if error (no such channel), nonzero if added.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val register_effect: chan: int -> f: effect_func_t -> d: effect_done_t -> unit;;
+
+(* You may not need to call this explicitly, unless you need to stop an
+ *  effect from processing in the middle of a chunk's playback.
+ * Posteffects are never implicitly unregistered as they are for channels,
+ *  but they may be explicitly unregistered through this function by
+ *  specifying MIX_CHANNEL_POST for a channel.
+ * returns zero if error (no such channel or effect), nonzero if removed.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+(* val unregister_effect: channel: int -> f: effect_func_t -> unit;; *)
+
+(* You may not need to call this explicitly, unless you need to stop all
+ *  effects from processing in the middle of a chunk's playback. Note that
+ *  this will also shut off some internal effect processing, since
+ *  Mix_SetPanning() and others may use this API under the hood. This is
+ *  called internally when a channel completes playback.
+ * Posteffects are never implicitly unregistered as they are for channels,
+ *  but they may be explicitly unregistered through this function by
+ *  specifying MIX_CHANNEL_POST for a channel.
+ * returns zero if error (no such channel), nonzero if all effects removed.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val unregister_all_effects: channel: int -> unit;;
+
+val effects_max_speed: string;;
+
+(* These are the internally-defined mixing effects. They use the same API that
+ *  effects defined in the application use, but are provided here as a
+ *  convenience. Some effects can reduce their quality or use more memory in
+ *  the name of speed; to enable this, make sure the environment variable
+ *  MIX_EFFECTSMAXSPEED (see above) is defined before you call
+ *  Mix_OpenAudio(). *)
+
+(* Set the panning of a channel. The left and right channels are specified
+ *  as integers between 0 and 255, quietest to loudest, respectively.
+ *
+ * Technically, this is just individual volume control for a sample with
+ *  two (stereo) channels, so it can be used for more than just panning.
+ *  If you want real panning, call it like this:
+ *
+ *   Mix_SetPanning(channel, left, 255 - left);
+ *
+ * ...which isn't so hard.
+ *
+ * Setting (channel) to MIX_CHANNEL_POST registers this as a posteffect, and
+ *  the panning will be done to the final mixed stream before passing it on
+ *  to the audio device.
+ *
+ * This uses the Mix_RegisterEffect() API internally, and returns without
+ *  registering the effect function if the audio device is not configured
+ *  for stereo output. Setting both (left) and (right) to 255 causes this
+ *  effect to be unregistered, since that is the data's normal state.
+ *
+ * returns zero if error (no such channel or Mix_RegisterEffect() fails),
+ *  nonzero if panning effect enabled. Note that an audio device in mono
+ *  mode is a no-op, but this call will return successful in that case.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val set_panning: channel: int -> left: int -> right: int -> unit;;
+
+(* Set the position of a channel. (angle) is an integer from 0 to 360, that
+ *  specifies the location of the sound in relation to the listener. (angle)
+ *  will be reduced as neccesary (540 becomes 180 degrees, -100 becomes 260).
+ *  Angle 0 is due north, and rotates clockwise as the value increases.
+ *  For efficiency, the precision of this effect may be limited (angles 1
+ *  through 7 might all produce the same effect, 8 through 15 are equal, etc).
+ *  (distance) is an integer between 0 and 255 that specifies the space
+ *  between the sound and the listener. The larger the number, the further
+ *  away the sound is. Using 255 does not guarantee that the channel will be
+ *  culled from the mixing process or be completely silent. For efficiency,
+ *  the precision of this effect may be limited (distance 0 through 5 might
+ *  all produce the same effect, 6 through 10 are equal, etc). Setting (angle)
+ *  and (distance) to 0 unregisters this effect, since the data would be
+ *  unchanged.
+ *
+ * If you need more precise positional audio, consider using OpenAL for
+ *  spatialized effects instead of SDL_mixer. This is only meant to be a
+ *  basic effect for simple "3D" games.
+ *
+ * If the audio device is configured for mono output, then you won't get
+ *  any effectiveness from the angle; however, distance attenuation on the
+ *  channel will still occur. While this effect will function with stereo
+ *  voices, it makes more sense to use voices with only one channel of sound,
+ *  so when they are mixed through this effect, the positioning will sound
+ *  correct. You can convert them to mono through SDL before giving them to
+ *  the mixer in the first place if you like.
+ *
+ * Setting (channel) to MIX_CHANNEL_POST registers this as a posteffect, and
+ *  the positioning will be done to the final mixed stream before passing it
+ *  on to the audio device.
+ *
+ * This is a convenience wrapper over Mix_SetDistance() and Mix_SetPanning().
+ *
+ * returns zero if error (no such channel or Mix_RegisterEffect() fails),
+ *  nonzero if position effect is enabled.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val set_position: channel: int -> angle: int -> distance: int -> unit;;
+
+(* Set the "distance" of a channel. (distance) is an integer from 0 to 255
+ *  that specifies the location of the sound in relation to the listener.
+ *  Distance 0 is overlapping the listener, and 255 is as far away as possible
+ *  A distance of 255 does not guarantee silence; in such a case, you might
+ *  want to try changing the chunk's volume, or just cull the sample from the
+ *  mixing process with Mix_HaltChannel().
+ * For efficiency, the precision of this effect may be limited (distances 1
+ *  through 7 might all produce the same effect, 8 through 15 are equal, etc).
+ *  (distance) is an integer between 0 and 255 that specifies the space
+ *  between the sound and the listener. The larger the number, the further
+ *  away the sound is.
+ * Setting (distance) to 0 unregisters this effect, since the data would be
+ *  unchanged.
+ * If you need more precise positional audio, consider using OpenAL for
+ *  spatialized effects instead of SDL_mixer. This is only meant to be a
+ *  basic effect for simple "3D" games.
+ *
+ * Setting (channel) to MIX_CHANNEL_POST registers this as a posteffect, and
+ *  the distance attenuation will be done to the final mixed stream before
+ *  passing it on to the audio device.
+ *
+ * This uses the Mix_RegisterEffect() API internally.
+ *
+ * returns zero if error (no such channel or Mix_RegisterEffect() fails),
+ *  nonzero if position effect is enabled.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val set_distance: channel: int -> distance: int -> unit;;
 
 (*
- * currently not implemented:
- *
- *  - Mix_QuickLoad_(WAV,RAW) to load audio from the memory
- *  - Mix_Load(WAV,MUS)_RW for loading from SDL_RWops
- *  - Mix_SetPostMix callback
- *  - Mix_HookMusic
- *  - Mix_HookMusicFinished
- *  - Mix_GetMusicHookData
- *  - Mix_ChannelFinished
- *
- *  - Mix_*Effect*
- *
+ * !!! FIXME : Haven't implemented, since the effect goes past the
+ *              end of the sound buffer. Will have to think about this.
+ *               --ryan.
  *)
-
-open Sdl
-open Audio
-
-(** Initialization flags *)
-type init_flag =
-    | FLAC (** Initialize FLAC decoder *)
-    | MOD  (** Initialize MOD  decoder (via mikmod library) *)
-    | MP3  (** Initialize MP3 decoder *)
-    | OGG  (** Initialize OGG decoder *)
-
-(** Fading status query return codes *)
-type fading_type =
-    | NO_FADING
-    | FADING_OUT
-    | FADING_IN
-
-(** Music type query return codes *)
-type music_type =
-    | MUS_NONE
-    | MUS_CMD
-    | MUS_WAV
-    | MUS_MOD
-    | MUS_MID
-    | MUS_OGG
-    | MUS_MP3
-    | MUS_MP3_MAD
-    | MUS_FLAC
-
-(** Pointer-wrapped representation of audio chunk *)
-type chunk_t
-
-(** Pointer-wrapped representation of music file *)
-type music_t
-
-(** Channel number type. -1 usually corresponds to "all channels" or "any
-    channel", depending on context. *)
-type channel = int
-
-module Mix : sig
-
-(*
- * minor semantic helper variables
+(* Causes an echo effect to be mixed into a sound. (echo) is the amount
+ *  of echo to mix. 0 is no echo, 255 is infinite (and probably not
+ *  what you want).
+ *
+ * Setting (channel) to MIX_CHANNEL_POST registers this as a posteffect, and
+ *  the reverbing will be done to the final mixed stream before passing it on
+ *  to the audio device.
+ *
+ * This uses the Mix_RegisterEffect() API internally. If you specify an echo
+ *  of zero, the effect is unregistered, as the data is already in that state.
+ *
+ * returns zero if error (no such channel or Mix_RegisterEffect() fails),
+ *  nonzero if reversing effect is enabled.
+ *  Error messages can be retrieved from Mix_GetError().
  *)
+(* val set_reverb: channel: int -> echo: int -> unit;; *)
+
+(* Causes a channel to reverse its stereo. This is handy if the user has his
+ *  speakers hooked up backwards, or you would like to have a minor bit of
+ *  psychedelia in your sound code.  :)  Calling this function with (flip)
+ *  set to non-zero reverses the chunks's usual channels. If (flip) is zero,
+ *  the effect is unregistered.
+ *
+ * This uses the Mix_RegisterEffect() API internally, and thus is probably
+ *  more CPU intensive than having the user just plug in his speakers
+ *  correctly. Mix_SetReverseStereo() returns without registering the effect
+ *  function if the audio device is not configured for stereo output.
+ *
+ * If you specify MIX_CHANNEL_POST for (channel), then this the effect is used
+ *  on the final mixed stream before sending it on to the audio device (a
+ *  posteffect).
+ *
+ * returns zero if error (no such channel or Mix_RegisterEffect() fails),
+ *  nonzero if reversing effect is enabled. Note that an audio device in mono
+ *  mode is a no-op, but this call will return successful in that case.
+ *  Error messages can be retrieved from Mix_GetError(). *)
+val set_reverse_stereo: channel: int -> flip: bool -> unit;;
+
+(* end of effects API. --ryan. *)
+
+(* Reserve the first channels (0 -> n-1) for the application, i.e. don't allocate
+   them dynamically to the next sample if requested with a -1 value below.
+   Returns the number of reserved channels. *)
+val reserve_channels: (* num: *) int -> int;;
+
+(* Channel grouping functions *)
+
+(* Attach a tag to a channel. A tag can be assigned to several mixer
+   channels, to form groups of channels.
+   If 'tag' is -1, the tag is removed (actually -1 is the tag used to
+   represent the group of all the channels).
+   Returns true if everything was OK. *)
+val group_channel: which: int -> tag: int -> unit;;
+(* Assign several consecutive channels to a group *)
+val group_channels: from: int -> until: int -> tag: int -> unit;;
+(* Finds the first available channel in a group of channels,
+   returning -1 if none are available. *)
+val group_available: tag: int -> bool;;
+(* Returns the number of channels in a group. This is also a subtle
+   way to get the total number of channels when 'tag' is -1 *)
+val group_count: tag: int -> int;;
+(* Finds the "oldest" sample playing in a group of channels *)
+val group_oldest: tag: int -> int;;
+(* Finds the "most recent" (i.e. last) sample playing in a group of channels *)
+val group_newer: tag: int -> int;;
+
+(* Play an audio chunk on a specific channel.
+   If the specified channel is -1, play on the first free channel.
+   If 'loops' is greater than zero, loop the sound that many times.
+   If 'loops' is -1, loop inifinitely (~65000 times).
+   Returns which channel was used to play the sound. *)
+val play_channel: channel: int -> chunk: chunk -> loops: int -> int;;
+(* The same as above, but the sound is played at most 'ticks' milliseconds *)
+val play_channel_timed: channel: int -> chunk: chunk -> loops: int -> ticks: int -> int;;
+val play_music: music: music -> loops: int -> int;;
+
+(* Fade in music or a channel over "ms" milliseconds, same semantics as the "Play" functions *)
+val fade_in_music: music: music -> loops: int -> ms: int -> unit;;
+val fade_in_music_pos: music: music -> loops: int -> ms: int -> position: float -> unit;;
+val fade_in_channel: channel: int -> chunk: chunk -> loops: int -> ms: int -> unit;;
+val fade_in_channel_timed: channel: int -> chunk: chunk -> loops: int -> ms: int -> ticks: int -> unit;;
+
+(* Set the volume in the range of 0-128 of a specific channel or chunk.
+   If the specified channel is -1, set volume for all channels.
+   Returns the original volume.
+   If the specified volume is -1, just return the current volume. *)
+val volume: channel: int -> volume: int -> int;;
+val volume_chunk: chunk: chunk -> volume: int -> int;;
+val volume_music: volume: int -> int;;
+
+(* Halt playing of a particular channel *)
+val halt_channel: channel: int -> unit;;
+val halt_group: tag: int -> unit;;
+val halt_music: unit -> unit;;
+
+(* Change the expiration delay for a particular channel.
+   The sample will stop playing after the 'ticks' milliseconds have elapsed,
+   or remove the expiration if 'ticks' is -1 *)
+val expire_channel: channel: int -> ticks: int -> unit;;
+
+(* Halt a channel, fading it out progressively till it's silent
+   The ms parameter indicates the number of milliseconds the fading
+   will take. *)
+val fade_out_channel: which: int -> ms: int -> unit;;
+val fade_out_group: tag: int -> ms: int -> unit;;
+val fade_out_music: ms: int -> unit;;
+
+(* Query the fading status of a channel *)
+val fading_music: unit -> fading;;
+val fading_channel: which: int -> fading;;
+
+(* Pause/Resume a particular channel *)
+val pause: channel: int -> unit;;
+val resume: channel: int -> unit;;
+val paused: channel: int -> bool;;
+
+(* Pause/Resume the music stream *)
+val pause_music: unit -> unit;;
+val resume_music: unit -> unit;;
+val rewind_music: unit -> unit;;
+val paused_music: unit -> bool;;
+
+(* Set the current position in the music stream.
+   This returns 0 if successful, or -1 if it failed or isn't implemented.
+   This function is only implemented for MOD music formats (set pattern
+   order number) and for OGG music (set position in seconds), at the
+   moment. *)
+val set_music_position: position: float -> unit;;
+
+(* Check the status of a specific channel.
+   If the specified channel is -1, check all channels. *)
+val playing: channel: int -> bool;;
+val playing_music: unit -> bool;;
+
+(* Stop music and set external music playback command *)
+val set_music_cmd: command: string -> unit;;
+
+(* Synchro value is set by MikMod from modules while playing *)
+val set_synchro_value: value: int -> unit;;
+val get_synchro_value: unit -> int;;
+
+(* Get the Mix_Chunk currently associated with a mixer channel
+    Returns NULL if it's an invalid channel, or there's no chunk associated. *)
+val get_chunk: channel: int -> chunk;;
+
+(* Close the mixer, halting all playing audio *)
+val close_audio: unit -> unit;;
 
-val any_channel : int             (* -1, for play_channel, etc *)
-val first_available_channel : int (* -1, ditto *)
-val all_channels : int            (* -1, expire_channel, etc *)
-
-val channel_post : int            (* -2, MIX_CHANNEL_POST, for panning/effects *)
-
-val loop_forever : int            (* -1, fade_in_music, etc *)
-val play_once    : int            (*  0, fade_in_music, etc *)
-
-
-(** Loads dynamic libraries and prepares them for use. *)
-val init : init_flag list -> unit
-
-(** Unloads libraries loaded by with Mix.init *)
-val quit : unit -> unit
-
-
-(** Retrieves a text representation of the used SDL_Mixer library, e.g 1.2.11 *)
-val get_version : unit -> string
-
-(** Retrieves a string containing a description of most recent Mix error.
-    Essentially the same as Sdl.get_error () *)
-val get_last_error : unit -> string
-
-(** [open_audio frequency format channels chunksize -> unit]
-    Opens the mixer with certain audio format. *)
-val open_audio : int -> Sdl.Audio.sample_type -> Sdl.Audio.channel_type -> int -> unit
-val allocate_channels : int -> int
-
-(** [load_wav file -> chunk_t]
-    Load a wave file *)
-val load_wav : string -> chunk_t
-
-(** [load_mus file -> music_t]
-    Load a music (.mod .s3m .it .xm) file *)
-val load_mus : string -> music_t
-
-(** [load_mus file -> music_t]
-    Load a music (.mod .s3m .it .xm) file *)
-val load_music : string -> music_t
-
-(** Releases allocated sound chunk *)
-val free_chunk : chunk_t -> unit
-
-(** Releases allocated music file *)
-val free_music : music_t -> unit
-
-(** [play_channel channel chunk loops -> channel]
-   Plays an audio chunk on a specific channel.
-   If specified channel is [Mix.first_available_channel] (-1), play on first free
-   channel.
-   If [loops] is greater than zero, loop the sound that many times.
-   If [loops] is Mix.loop_forever (-1), loop infinitely (~65000 times?)
-*)
-val play_channel : channel -> chunk_t -> int -> channel
-
-(** [play_channel_timed channel chunk loops ticks -> channel]
-   Play an audio chunk on a specific channel for at most [ticks] seconds.
-   If specified channel is [Mix.first_available_channel] (-1), play on first free
-   channel.
-   If [loops] is greater than zero, loop the sound that many times.
-   If [loops] is Mix.loop_forever (-1), loop infinitely (~65000 times?)
-*)
-
-val play_channel_timed : channel -> chunk_t -> int -> int -> channel
-
-(** [play_music music loops -> true/false]
-   Play a music file (opened with [load_mus]) on a specific channel.
-   If [loops] is greater than zero, loop the sound that many times.
-   If [loops] is Mix.loop_forever (-1), loop infinitely (~65000 times?)
-*)
-val play_music : music_t -> int -> bool
-
-
-(** Retrieves a list of formats supported for audio chunks. *)
-val get_chunk_decoders : unit -> string list
-
-(** Retrieves a list of formats supported for music files. *)
-val get_music_decoders : unit -> string list
-
-(** Retrieves currently playing music type if music = None.
-    Retrieves a music type for the Some music_t *)
-val get_music_type : music_t option -> music_type
-
-(** [set_panning channel pan_left pan_right -> trye/false]
-    Set the panning of a channel. The [pan_left] and [pan_right] channels are specified
-    as integers between 0 and 255, quietest to loudest, respectively.
-
-    Technically, this is just individual volume control for a sample with
-    two (stereo) channels, so it can be used for more than just panning.
-    If you want real panning, call it like this:
-
-    Mix_SetPanning(channel, left, 255 - left);
-
-    Setting [channel] to Mix.channel_post (-2) registers this as a posteffect, and
-    the panning will be done to the final mixed stream before passing it on
-    to the audio device.
-
-    This uses the Mix_RegisterEffect() API internally, and returns without
-    registering the effect function if the audio device is not configured
-    for stereo output. Setting both (left) and (right) to 255 causes this
-    effect to be unregistered, since that is the data's normal state.
-
-    Note that an audio device in mono mode is a no-op, but this call will return
-    success in that case.
-    *)
-val set_panning : channel -> int -> int -> bool
-
-(** [set_position channel angle distance -> true/false]
-    Set the position of a channel. [angle] is an integer from 0 to 360, that
-    specifies the location of the sound in relation to the listener. [angle]
-    will be reduced as neccesary (540 becomes 180 degrees, -100 becomes 260).
-    Angle 0 is due north, and rotates clockwise as the value increases.
-    For efficiency, the precision of this effect may be limited (angles 1
-    through 7 might all produce the same effect, 8 through 15 are equal, etc).
-    [distance] is an integer between 0 and 255 that specifies the space
-    between the sound and the listener. The larger the number, the further
-    away the sound is. Using 255 does not guarantee that the channel will be
-    culled from the mixing process or be completely silent. For efficiency,
-    the precision of this effect may be limited (distance 0 through 5 might
-    all produce the same effect, 6 through 10 are equal, etc). Setting (angle)
-    and [distance] to 0 unregisters this effect, since the data would be
-    unchanged.
-
-    If you need more precise positional audio, consider using OpenAL for
-    spatialized effects instead of SDL_mixer. This is only meant to be a
-    basic effect for simple "3D" games.
-
-    If the audio device is configured for mono output, then you won't get
-    any effectiveness from the angle; however, distance attenuation on the
-    channel will still occur. While this effect will function with stereo
-    voices, it makes more sense to use voices with only one channel of sound,
-    so when they are mixed through this effect, the positioning will sound
-    correct. You can convert them to mono through SDL before giving them to
-    the mixer in the first place if you like.
-
-    Setting [channel] to Mix.channel_post (-2) registers this as a posteffect, and
-    the positioning will be done to the final mixed stream before passing it
-    on to the audio device.
-
-    This is a convenience wrapper over Mix_SetDistance() and Mix_SetPanning().
-*)
-val set_position : channel -> int -> int -> bool
-
-(** [set_distance channel distance -> true/false]
-    Set the "distance" of a channel. [distance] is an integer from 0 to 255
-    that specifies the location of the sound in relation to the listener.
-    Distance 0 is overlapping the listener, and 255 is as far away as possible
-    A distance of 255 does not guarantee silence; in such a case, you might
-    want to try changing the chunk's volume, or just cull the sample from the
-    mixing process with Mix_HaltChannel().
-
-    For efficiency, the precision of this effect may be limited (distances 1
-    through 7 might all produce the same effect, 8 through 15 are equal, etc).
-    [distance] is an integer between 0 and 255 that specifies the space
-    between the sound and the listener. The larger the number, the further
-    away the sound is.
-
-    Setting [distance] to 0 unregisters this effect, since the data would be
-    unchanged.
-
-    If you need more precise positional audio, consider using OpenAL for
-    spatialized effects instead of SDL_mixer. This is only meant to be a
-    basic effect for simple "3D" games.
-
-    Setting [channel] to Mix.channel_post (-2) registers this as a posteffect, and
-    the distance attenuation will be done to the final mixed stream before
-    passing it on to the audio device.
-
- *)
-val set_distance : channel -> int -> bool
-
-
-(** [set_reverse_stereo channel flip -> true/false]
-    Causes a channel to reverse its stereo. This is handy if the user has his
-    speakers hooked up backwards, or you would like to have a minor bit of
-    psychedelia in your sound code.  :)  Calling this function with [flip]
-    set to non-zero reverses the chunks's usual channels. If [flip] is zero,
-    the effect is unregistered.
-
-    This uses the Mix_RegisterEffect() API internally, and thus is probably
-    more CPU intensive than having the user just plug in his speakers
-    correctly. Mix_SetReverseStereo() returns without registering the effect
-    function if the audio device is not configured for stereo output.
-
-    If you specify Mix.channel_post (-2) for [channel], then this the effect is used
-    on the final mixed stream before sending it on to the audio device (a
-    posteffect).
-
-     Note that an audio device in mono mode is a no-op, but this call will
-     return successful in that case.
-*)
-val set_reverse_stereo : channel -> bool -> bool
-
-(** [reserve_channels n -> n_reserved]
-    Reserve the first channels (0..n-1) for the application: Don't allocate them
-    dynamically for the next sample if requested with a
-    [Mix.first_available_channel] (-1).
-    *)
-val reserve_channels : int -> int
-
-(** [group_channel channel tag -> true/false]
-    Attach a tag to a channel. A tag can e assigned to several mixer channels to
-    for groups of channels.
-
-    If [tag] = -1, the tag is removed, but better use [ungroup_channel] instead.
-    *)
-val group_channel : channel -> int -> bool
-
-(** [group_channels first_channel last_channel tag -> true/false]
-    Attach a tag to a range of consecutive channels.
-
-    If [tag] = -1, the tag is removed, but better use [ungroup_channels] instead.
-    *)
-val group_channels : channel -> channel -> int -> bool
-
-(** [ungroup_channel channel -> true/false]
-    Remove a tag from the channel. *)
-val ungroup_channel : channel -> bool
-
-(** [ungroup_channels first_channel last_channel -> true/false]
-    Remove a tag from the range of channels. *)
-val ungroup_channels : channel -> channel -> bool
-
-(** [group_available tag -> channel]
-    Finds the first available channel in a group of channels.
-    Returns -1 if none are available. *)
-val group_available : int -> channel
-
-(** [group_count tag -> n ]
-    Returns the number of channels in a group. *)
-val group_count : int -> int
-
-(** Returns the total number of available channels. *)
-val get_available_channel_count : unit -> int
-
-(** [group_oldest tag -> channel]
-    Returns the "oldest" sample playng in a group of channels. *)
-val group_oldest : int -> channel
-
-(** [group_newer tag -> channel]
-    Returns the "newer" (last) sample playng in a group of channels. *)
-val group_newer : int -> channel
-
-(** [fade_in_music music_t loops ms -> true/false]
-    Fades in music over [ms] milliseconds. See [play_music].
-    *)
-val fade_in_music : music_t -> int -> int -> bool
-
-(** [fade_in_music_pos music_t loops ms position -> true/false]
-    Fades in music over [ms] milliseconds, starting with exact position. See [play_music].
-    *)
-val fade_in_music_pos : music_t -> int -> int -> float -> bool
-
-(** [fade_in_channel channel chunk loops ms -> true/false]
-    Fades in channel / audio chunk over [ms] milliseconds. See [play_channel].
-    *)
-val fade_in_channel : channel -> chunk_t -> int -> int -> channel
-
-(** [fade_in_channel_timed channel chunk loops ms ticks -> true/false]
-    Fades in channel / audio chunk over [ms] milliseconds, for at most [ticks]
-    milliseconds.. See [play_channel_timed]
-    *)
-val fade_in_channel_timed : channel -> chunk_t -> int -> int -> int -> channel
-
-(** [volume channel volume -> previous_volume]
-    Sets a volume (0..128) for the specified channel. *)
-val volume : channel -> int -> int
-
-(** [set_volume channel volume -> previous_volume]
-    Sets a volume (0..128) for the specified channel. *)
-val set_volume : channel -> int -> int
-
-(** Retrieves current volume of the channel. *)
-val get_volume : channel -> int
-
-(** [volume_chunk chunk volume -> previous_volume]
-    Sets a volume (0..128) for the specified audio chunk. *)
-val volume_chunk : chunk_t -> int -> int
-
-(** [set_chunk_volume chunk volume -> previous_volume]
-    Sets a volume (0..128) for the specified audio chunk. *)
-val set_chunk_volume : chunk_t -> int -> int
-
-(** Retrieves current volume of the audio chunk. *)
-val get_chunk_volume : chunk_t -> int
-
-(** [volume_music volume -> previous_volume]
-    Sets a volume (0..128) for the playing music. *)
-val volume_music : int -> int
-
-(** [set_music_volume volume -> previous_volume]
-    Sets a volume (0..128) for the playing music. *)
-val set_music_volume : int -> int
-
-(** Retrieves the volume of currently playing music. *)
-val get_music_volume : unit -> int
-
-
-(** Halts playing of the specified channel. *)
-val halt_channel : channel -> unit
-
-(** [halt_group tag]
-    Halts playing of the specified channel group. *)
-val halt_group : int -> unit
-
-(** Halts playing the music. *)
-val halt_music : unit -> unit
-
-(** [expire_channel channel ticks -> true/false]
-    Changes the expiration delay for a particluar channel.
-
-    The sample will stop playing after the [ticks] milliseconds have elapsed.
-    *)
-val expire_channel : channel -> int -> bool
-
-(** [expire_channel channel -> true/false]
-    Removes the expiration time for a particular channel.
-    *)
-val remove_channel_expiration : channel -> bool
-
-(** [fade_out_channel channel ms -> true/false]
-    Halts the channel, fading it out till it's silent.
-    The fading will take [ms] milliseconds.*)
-val fade_out_channel : channel -> int -> bool
-
-(** [fade_out_group tag ms -> true/false]
-    Halts the channel group, fading it out till it's silent.
-    The fading will take [ms] milliseconds.*)
-val fade_out_group : int -> int -> bool
-
-(** [fade_out_music ms -> true/false]
-    Halts the music, fading it out till it's silent.
-    The fading will take [ms] milliseconds.*)
-val fade_out_music : int -> bool
-
-(** Queries the fading status of the music. *)
-val fading_music : unit -> fading_type
-
-(** Queries the fading status of the specified channel. *)
-val fading_channel : channel -> fading_type
-
-(** Queries the fading status of the music. *)
-val get_music_fading : unit -> fading_type
-
-(** Queries the fading status of the specified channel. *)
-val get_channel_fading : channel -> fading_type
-
-(** Pauses the specified channel. *)
-val pause : channel -> unit
-
-(** Resumes a playback of the specified channel. *)
-val resume : channel -> unit
-
-(** Queries the pause state of the specified channel. *)
-val paused : channel -> bool
-
-(** Pauses the music. *)
-val pause_music : unit -> unit
-
-(** Resumes the music playback. *)
-val resume_music : unit -> unit
-
-(** Restarts the music playback from the beginning. *)
-val rewind_music : unit -> unit
-
-(** Queries whether the music is currently paused. *)
-val paused_music : unit -> bool
-
-
-(** [set_music_position pos -> true/false]
-    Sets the current position in the music stream.
-    This function is rumored to be implemented only for OGG and MOD music
-    formats. *)
-val set_music_position : float -> bool
-
-(** Queries whether the channel is currently playing. *)
-val playing : channel -> bool
-
-(** Queries whether the music is currently playing. *)
-val playing_music : unit -> bool
-
-(** Stops music and sets external music playback command. *)
-val set_music_cmd : string -> bool
-
-(** Retrieves the chunk_t currently associated with the specified mixer channel.
-    TODO: this probably messes up when the channel is invalid or there is no
-    chunk associated (Mix_GetChunk returns NULL), and should return [chunk_t option] instead.
-   *)
-val get_chunk : channel -> chunk_t
-
-(** Closes the mixer, halting all playing audio. *)
-val close_audio : unit -> unit
-
-end

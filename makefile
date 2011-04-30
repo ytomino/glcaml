@@ -1,8 +1,8 @@
 MAKE=make
 
-.PHONY: all nosdl sdl sdlmixer clean
+.PHONY: all nosdl sdl sdlmixer sdlttf clean
 
-all: build/glcaml.cma nosdl sdl sdlmixer
+all: build/glcaml.cma nosdl sdl sdlmixer sdlttf
 
 build/glcaml.cma:
 	make -C lib -f makefile install DESTDIR=$(abspath build)
@@ -37,6 +37,9 @@ sdl:
 sdlmixer: 
 	$(MAKE) -f makefile.inc MLFILE=mixer
 
+sdlttf:
+	$(MAKE) -f makefile.inc MLFILE=test_ttf
+
 clean:
 	# nosdl
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum clean
@@ -65,6 +68,8 @@ clean:
 	$(MAKE) -f makefile.inc MLFILE=lesson09 clean
 	# mixer
 	$(MAKE) -f makefile.inc MLFILE=mixer clean
+	# ttf
+	$(MAKE) -f makefile.inc MLFILE=test_ttf clean
 	# libs
 	make -C lib -f makefile clean uninstall DESTDIR=$(abspath build)
 	-rmdir build/stublibs

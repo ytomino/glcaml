@@ -1,562 +1,718 @@
-/*
- * sdlcaml - Objective Caml interface for the SDL library
- * SDL Mixer interface
- * Copyright (C) 2010 Einar Lielmanis, einars@gmail.com
- *
- * This library is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Library General Public
- * License version 2, as published by the Free Software Foundation.
- *
- * This library is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
- *
- * See the GNU Library General Public License version 2 for more details
- * (enclosed in the file LGPL).
- */
-
-
-#include <stdio.h>
-
-#include <SDL/SDL.h>
+#if defined(USE_FRAMEWORK)
+#include <SDL_mixer/SDL_mixer.h>
+#else
 #include <SDL/SDL_mixer.h>
+#endif
+#include "caml/callback.h"
+#include "caml/mlvalues.h"
+#include "caml/memory.h"
+#include "caml/fail.h"
+#include "caml/alloc.h"
+#include "caml/bigarray.h"
 
+/* utilities */
 
-/*  CAML - C interface */
-#include <caml/mlvalues.h>
-#include <caml/memory.h>
-#include <caml/alloc.h>
-#include <caml/fail.h>
-#include <caml/callback.h>
-#include <caml/bigarray.h>
-
-
-/*  Caml list manipulations */
-#define NIL_tag 0
-#define CONS_tag 1
-
-#define is_nil Is_long
 #define is_not_nil Is_block
-#define hd(x) Field(x, 0)
-#define tl(x) Field(x, 1)
+#define hd(v) Field((v), 0)
+#define tl(v) Field((v), 1)
 
-#define Opt_arg(v, conv, def) (Is_block(v) ? conv(Field((v), 0)) : (def))
-
-
-// thanks to OCamlSDL for the insight.
-// Mix_Chunk and Mix_Music get stuffed into Abstract_tag values
-// and treated as simple blobs in ocaml.
-static value abstract_ptr(void *p)
+static value cons(value x, value l)
 {
-    value v = alloc_small(1, Abstract_tag);
-    Field(v, 0) = Val_bp(p);
-    return v;
+	CAMLparam2(x, l);
+	CAMLlocal1(m);
+	m = alloc_small(2, Tag_cons);
+	Field(m, 0) = x;
+	Field(m, 1) = l;
+	CAMLreturn(m);
 }
 
-static void nullify_abstract(value v)
+/* MIX_InitFlags */
+
+static int const initflags_table[] = {
+    MIX_INIT_FLAC,
+    MIX_INIT_MOD,
+    MIX_INIT_MP3,
+    MIX_INIT_OGG
+};
+
+static inline int Initflags_val(value initflags)
 {
-    Field(v, 0) = Val_bp(NULL);
+	int result = 0;
+	while(is_not_nil(initflags)){
+		result |= initflags_table[Int_val(hd(initflags))];
+		initflags = tl(initflags);
+	}
+	return result;
 }
 
-#define SDL_CHUNK(chunk) ((Mix_Chunk *)Field((chunk), 0))
-#define ML_CHUNK(chunk) abstract_ptr(chunk)
-#define SDL_MUSIC(chunk) ((Mix_Music *)Field((chunk), 0))
-#define ML_MUSIC(chunk) abstract_ptr(chunk)
+/* Audio.sample_type */
 
+static int const sample_table[] = {
+	AUDIO_U8,
+	AUDIO_S8,
+	AUDIO_U16,
+	AUDIO_S16,
+	AUDIO_U16LSB,
+	AUDIO_S16LSB,
+	AUDIO_U16MSB,
+	AUDIO_S16MSB
+};
 
-
-value sdlmixer_get_version (value u)
+static value Val_sample_type(Uint16 format)
 {
-    CAMLparam1(u);
-
-    char tmp[250];
-    const SDL_version* version;
-    version = Mix_Linked_Version();
-    snprintf(tmp, 250, "%d.%d.%d", version->major, version->minor, version->patch);
-
-    CAMLreturn (copy_string(tmp));
+	int i;
+	for(i = 0; i < 8; ++i){
+		if(sample_table[i] == format){
+			return Val_int(i);
+		}
+	}
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+	return Val_int(5); /* AUDIO_S16LSB */
+#else
+	return Val_int(7); /* AUDIO_S16MSB */
+#endif
 }
 
-#define FLAC_tag 0
-#define MOD_tag  1
-#define MP3_tag  2
-#define OGG_tag  3
-
-int _sdlmixer_init_flag_val (value flag_list)
+static inline Uint16 Sample_type_val(value v)
 {
-    CAMLparam1(flag_list);
-
-    int flag = 0;
-    value l = flag_list;
-    while (is_not_nil(l))
-    {
-        switch (Int_val(hd(l)))
-        {
-        case FLAC_tag: flag |= MIX_INIT_FLAC; break;
-        case MOD_tag : flag |= MIX_INIT_MOD; break;
-        case MP3_tag : flag |= MIX_INIT_MP3; break;
-        case OGG_tag : flag |= MIX_INIT_OGG; break;
-        }
-        l = tl(l);
-    }
-
-    CAMLreturn (flag);
+	return sample_table[Int_val(v)];
 }
 
+/* fading type */
 
-int _sdlmixer_fading_to_caml (Mix_Fading f)
+static inline value Val_Mix_Fading(Mix_Fading fading)
 {
-    switch (f) {
-        case MIX_NO_FADING: return 0;
-        case MIX_FADING_OUT: return 1;
-        case MIX_FADING_IN: return 2;
-    }
-    return 0;
+	return Val_int(fading);
 }
 
-value sdlmixer_get_last_error (value u)
+/* music_type type */
+
+static inline value Val_Mix_MusicType(Mix_MusicType music_type)
 {
-    CAMLparam1(u);
-    CAMLreturn (copy_string(Mix_GetError()));
+	return Val_int(music_type);
 }
 
+/* chunk type (unmanaged) */
 
-value sdlmixer_init (value vf)
+static inline value Val_Mix_Chunk(Mix_Chunk *chunk)
 {
-    CAMLparam1(vf);
-    int flags = _sdlmixer_init_flag_val(vf);
-    int res = Mix_Init(flags);
-
-    if (res == 0) {
-        caml_failwith (SDL_GetError());
-    }
-
-    CAMLreturn (Val_unit);
+	return (value)chunk;
 }
 
-
-value sdlmixer_open_audio (value freq, value format, value channels, value chunksize)
+static inline Mix_Chunk *Mix_Chunk_val(value v)
 {
-    CAMLparam4 (freq, format, channels, chunksize);
-    int res = Mix_OpenAudio(Int_val(freq), Int_val(format), Int_val(channels), Int_val(chunksize));
-
-    if (res != 0) {
-        caml_failwith (SDL_GetError());
-    }
-    CAMLreturn (Val_unit);
+	return (Mix_Chunk *)v;
 }
 
+/* music type (unmanaged) */
 
-value sdlmixer_quit (value u)
+static inline value Val_Mix_Music(Mix_Music *music)
 {
-    Mix_Quit();
-    return Val_unit;
+	return (value)music;
 }
 
-
-value sdlmixer_allocate_channels (value c)
+static inline Mix_Music *Mix_Music_val(value v)
 {
-    int new_channels = Mix_AllocateChannels(Int_val(c));
-    return Val_int(new_channels);
+	return (Mix_Music *)v;
 }
 
+/* exception */
 
-value sdlmixer_load_wav (value file_name)
+static void raise_failure(void)
 {
-    CAMLparam1 (file_name);
-
-    Mix_Chunk *chunk = Mix_LoadWAV(String_val(file_name));
-    if (chunk == NULL) {
-        caml_failwith(SDL_GetError());
-    }
-
-    CAMLreturn (abstract_ptr(chunk));
+	raise_with_string(*caml_named_value("SDL_failure"), Mix_GetError());
 }
 
-value sdlmixer_load_mus (value file_name)
-{
-    CAMLparam1 (file_name);
-    Mix_Music *music = Mix_LoadMUS(String_val(file_name));
-    if (music == NULL) {
-        caml_failwith(SDL_GetError());
-    }
-    CAMLreturn (ML_CHUNK(music));
+/* utilitiy primitive */
 
+CAMLprim value sdlmixerutil_little_endian(value unit)
+{
+	CAMLparam1(unit);
+	value result;
+#if SDL_BYTEORDER == SDL_LIL_ENDIAN
+	result = Val_true;
+#else
+	result = Val_false;
+#endif
+	CAMLreturn(result);
 }
 
-value sdlmixer_free_chunk (value chunk)
+/* primitives */
+
+CAMLprim value sdlmixerstub_linked_version(value unit)
 {
-    CAMLparam1 (chunk);
-    Mix_FreeChunk (SDL_CHUNK(chunk));
-    nullify_abstract(chunk);
-    CAMLreturn (Val_unit);
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	SDL_version const *version = Mix_Linked_Version();
+	result = alloc(3, 0);
+	Store_field(result, 0, Val_int(version->major));
+	Store_field(result, 1, Val_int(version->minor));
+	Store_field(result, 2, Val_int(version->patch));
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_free_music (value music_chunk)
+CAMLprim value sdlmixerstub_init(value flags)
 {
-    CAMLparam1 (music_chunk);
-    Mix_FreeMusic(SDL_MUSIC(music_chunk));
-    nullify_abstract(music_chunk);
-    CAMLreturn (Val_unit);
+	CAMLparam1(flags);
+	Mix_Init(Initflags_val(flags));
+	CAMLreturn(Val_unit);
 }
 
-
-value sdlmixer_play_channel (value channel, value chunk, value loops)
+CAMLprim value sdlmixerstub_quit(value unit)
 {
-    CAMLparam3 (channel, chunk, loops);
-    int ch = Mix_PlayChannel(Int_val(channel), SDL_CHUNK(chunk), Int_val(loops));
-    CAMLreturn(Val_int(ch));
-
+	CAMLparam1(unit);
+	Mix_Quit();
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_play_channel_timed (value channel, value chunk, value loops, value ms)
+CAMLprim value sdlmixerstub_open_audio(value frequency, value format, value channels, value chunksize)
 {
-    CAMLparam4 (channel, chunk, loops, ms);
-    int res = Mix_PlayChannelTimed(Int_val(channel), SDL_CHUNK(chunk), Int_val(loops), Int_val(ms));
-    CAMLreturn(Val_bool(res == 0));
-
+	CAMLparam4(frequency, format, channels, chunksize);
+	if(Mix_OpenAudio(Int_val(frequency), Sample_type_val(format), Int_val(channels), Int_val(chunksize)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_volume (value channel, value volume)
+CAMLprim value sdlmixerstub_allocate_channels(value numchans)
 {
-    int vol = Mix_Volume (Int_val(channel), Int_val(volume));
-    return Val_int(vol);
+	CAMLparam1(numchans);
+	int channel = Mix_AllocateChannels(Int_val(numchans));
+	value result = Val_int(channel);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_volume_chunk (value chunk, value volume)
+CAMLprim value sdlmixerstub_query_spec(value unit)
 {
-    CAMLparam2 (chunk, volume);
-    int vol = Mix_VolumeChunk (SDL_CHUNK(chunk), Int_val(volume));
-    CAMLreturn (Val_int(vol));
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	int frequency;
+	Uint16 format;
+	int channels;
+	if(! Mix_QuerySpec(&frequency, &format, &channels)){
+		raise_failure();
+	}
+	result = caml_alloc_tuple(3);
+	Field(result, 0) = Val_int(frequency);
+	Field(result, 1) = Val_sample_type(format);
+	Field(result, 2) = Val_int(channels);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_volume_music (value volume)
+CAMLprim value sdlmixerstub_load_wav(value file)
 {
-    int vol = Mix_VolumeMusic (Int_val(volume));
-    return Val_int(vol);
+	CAMLparam1(file);
+	Mix_Chunk *chunk = Mix_LoadWAV(String_val(file));
+	if(chunk == NULL){
+		raise_failure();
+	}
+	value result = Val_Mix_Chunk(chunk);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_play_music (value music_chunk, value loops)
+CAMLprim value sdlmixerstub_load_mus(value file)
 {
-    CAMLparam2 (music_chunk, loops);
-    int res = Mix_PlayMusic(SDL_MUSIC(music_chunk), Int_val(loops));
-    CAMLreturn(Val_bool(res == 0));
+	CAMLparam1(file);
+	Mix_Music *music = Mix_LoadMUS(String_val(file));
+	if(music == NULL){
+		raise_failure();
+	}
+	value result = Val_Mix_Music(music);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_get_chunk_decoders (value u)
+CAMLprim value sdlmixerstub_quick_load_wav(value mem)
 {
-    CAMLparam1 (u);
-    CAMLlocal2 (r, t);
-    int i;
-    const char* decoder_name;
-
-    int decoder_count = Mix_GetNumChunkDecoders();
-    if (decoder_count == 0) {
-        r = Val_int(0);
-    } else {
-        r = alloc(2, 0);
-        decoder_name = Mix_GetChunkDecoder(0);
-        Store_field(r, 0, copy_string(decoder_name));
-        t = r;
-        for (i = 1; i < decoder_count; i++) {
-            Field(t, 1) = alloc(2, 0);
-            t = Field(t, 1);
-            decoder_name = Mix_GetChunkDecoder(i);
-            Store_field(t, 0, copy_string(decoder_name));
-        }
-        Store_field(t, 1, Val_int(0));
-    }
-
-    CAMLreturn (r);
+	CAMLparam1(mem);
+	Mix_Chunk *chunk = Mix_QuickLoad_WAV(Caml_ba_data_val(mem));
+	value result = Val_Mix_Chunk(chunk);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_get_music_decoders (value u)
+CAMLprim value sdlmixerstub_quick_load_raw(value mem)
 {
-    CAMLparam1 (u);
-    CAMLlocal2 (r, t);
-    int i;
-    const char* decoder_name;
-
-    int decoder_count = Mix_GetNumMusicDecoders();
-    if (decoder_count == 0) {
-        r = Val_int(0);
-    } else {
-        r = alloc(2, 0);
-        decoder_name = Mix_GetMusicDecoder(0);
-        Store_field(r, 0, copy_string(decoder_name));
-        t = r;
-        for (i = 1; i < decoder_count; i++) {
-            Field(t, 1) = alloc(2, 0);
-            t = Field(t, 1);
-            decoder_name = Mix_GetMusicDecoder(i);
-            Store_field(t, 0, copy_string(decoder_name));
-        }
-        Store_field(t, 1, Val_int(0));
-    }
-
-    CAMLreturn (r);
+	CAMLparam1(mem);
+	Mix_Chunk *chunk = Mix_QuickLoad_RAW(Caml_ba_data_val(mem), Caml_ba_array_val(mem)->dim[0]);
+	value result = Val_Mix_Chunk(chunk);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_get_music_type (value opt_music)
+CAMLprim value sdlmixerstub_free_chunk(value chunk)
 {
-    Mix_Music *music = Opt_arg(opt_music, SDL_MUSIC, NULL);
-    int music_type = 0;
-    switch (Mix_GetMusicType(music)) {
-    case MUS_CMD     : music_type = 1; break;
-    case MUS_WAV     : music_type = 2; break;
-    case MUS_MOD     : music_type = 3; break;
-    case MUS_MID     : music_type = 4; break;
-    case MUS_OGG     : music_type = 5; break;
-    case MUS_MP3     : music_type = 6; break;
-    case MUS_MP3_MAD : music_type = 7; break;
-    case MUS_FLAC    : music_type = 8; break;
-    }
-    return Val_int(music_type);
+	CAMLparam1(chunk);
+	Mix_FreeChunk(Mix_Chunk_val(chunk));
+	CAMLreturn(Val_unit);
 }
 
-
-value sdlmixer_set_panning (value channel, value left, value right)
+CAMLprim value sdlmixerstub_free_music(value music)
 {
-    int res = Mix_SetPanning(Int_val(channel), Int_val(left), Int_val(right));
-    return Val_bool(res);
-
+	CAMLparam1(music);
+	Mix_FreeMusic(Mix_Music_val(music));
+	CAMLreturn(Val_unit);
 }
 
-
-value sdlmixer_set_position (value channel, value angle, value distance)
+CAMLprim value sdlmixerstub_get_num_chunk_decoders(value unit)
 {
-    int res = Mix_SetPosition(Int_val(channel), Int_val(angle), Int_val(distance));
-    return Val_bool(res);
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	result = Val_int(Mix_GetNumChunkDecoders());
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_set_distance (value channel, value distance)
+CAMLprim value sdlmixerstub_get_chunk_decoder(value index)
 {
-    int res = Mix_SetDistance(Int_val(channel), Int_val(distance));
-    return Val_bool(res);
+	CAMLparam1(index);
+	CAMLlocal1(result);
+	result = caml_copy_string(Mix_GetChunkDecoder(Int_val(index)));
+	CAMLreturn(result);
 }
 
-value sdlmixer_set_reverse_stereo (value channel, value flip)
+CAMLprim value sdlmixerstub_get_num_music_decoders(value unit)
 {
-    int res = Mix_SetReverseStereo(Int_val(channel), Bool_val(flip));
-    return Val_bool(res);
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	result = Val_int(Mix_GetNumMusicDecoders());
+	CAMLreturn(result);
 }
 
-value sdlmixer_reserve_channels (value channel_count)
+CAMLprim value sdlmixerstub_get_music_decoder(value index)
 {
-    int reserved_channels = Mix_ReserveChannels(Int_val(channel_count));
-    return Val_int(reserved_channels);
-
+	CAMLparam1(index);
+	CAMLlocal1(result);
+	result = caml_copy_string(Mix_GetMusicDecoder(Int_val(index)));
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_group_channel (value channel, value tag)
+CAMLprim value sdlmixerstub_get_music_type(value music)
 {
-    int res = Mix_GroupChannel(Int_val(channel), Int_val(tag));
-    return Val_bool(res);
+	CAMLparam1(music);
+	Mix_MusicType music_type = Mix_GetMusicType(Mix_Music_val(music));
+	value result = Val_Mix_MusicType(music_type);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_group_channels (value channel_start, value channel_end, value tag)
+static void MixFunc(void *udata, Uint8 *stream, int len)
 {
-    int res = Mix_GroupChannels(Int_val(channel_start), Int_val(channel_end), Int_val(tag));
-    return Val_bool(res);
+	CAMLparam0();
+	CAMLlocal2(mix_func, byte_array);
+	mix_func = (value)udata;
+	byte_array = alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, stream, len);
+	caml_callback(mix_func, byte_array);
+	CAMLreturn0;
 }
 
-value sdlmixer_group_available (value tag)
+static value mix_func = Val_unit;
+static int mix_func_registered = 0;
+
+CAMLprim value sdlmixerstub_set_post_mix(value the_mix_func)
 {
-    int channel = Mix_GroupAvailable(Int_val(tag));
-    return Val_int(channel);
+	CAMLparam1(mix_func);
+	if(! mix_func_registered){
+		mix_func_registered = 1;
+		caml_register_global_root(&mix_func);
+	}
+	mix_func = the_mix_func;
+	if(the_mix_func != Val_unit){
+		Mix_SetPostMix(MixFunc, (void *)the_mix_func);
+	}else{
+		Mix_SetPostMix(NULL, NULL);
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_group_count (value tag)
+static void EffectFunc(int chan, void *stream, int len, void *udata)
 {
-    int channel_count = Mix_GroupCount(Int_val(tag));
-    return Val_int(channel_count);
+	CAMLparam0();
+	CAMLlocal3(list, f, byte_array);
+	list = (value)udata;
+	f = hd(list);
+	byte_array = alloc_bigarray_dims(BIGARRAY_UINT8 | BIGARRAY_C_LAYOUT, 1, stream, len);
+	caml_callback2(f, Val_int(chan), byte_array);
+	CAMLreturn0;
 }
 
-value sdlmixer_group_oldest (value tag)
+static void EffectDone(int chan, void *udata)
 {
-    int channel = Mix_GroupOldest(Int_val(tag));
-    return Val_int(channel);
+	CAMLparam0();
+	CAMLlocal2(list, d);
+	list = (value)udata;
+	d = hd(tl(list));
+	caml_callback(d, Val_int(chan));
+	CAMLreturn0;
 }
 
-value sdlmixer_group_newer (value tag)
+static value effect_list = Val_emptylist;
+static int effect_list_registered = 0;
+
+CAMLprim value sdlmixerstub_register_effect(value chan, value f, value d)
 {
-    int channel = Mix_GroupNewer(Int_val(tag));
-    return Val_int(channel);
+	CAMLparam3(chan, f, d);
+	Mix_EffectFunc_t c_f;
+	Mix_EffectDone_t c_d;
+	if(! effect_list_registered){
+		effect_list_registered = 1;
+		caml_register_global_root(&effect_list);
+	}
+	effect_list = cons(d, effect_list);
+	effect_list = cons(f, effect_list);
+	c_f = Is_block(f) ? EffectFunc : NULL;
+	c_d = Is_block(d) ? EffectDone : NULL;
+	Mix_RegisterEffect(Int_val(chan), c_f, c_d, (void *)effect_list);
+	CAMLreturn(Val_unit);
 }
 
-
-
-value sdlmixer_fade_in_music (value music, value loops, value ms)
+CAMLprim value sdlmixerstub_unregister_all_effects(value channel)
 {
-    CAMLparam3 (music, loops, ms);
-    int res = Mix_FadeInMusic (SDL_MUSIC(music), Int_val(loops), Int_val(ms));
-    CAMLreturn (Val_bool(res == 0));
+	CAMLparam1(channel);
+	Mix_UnregisterAllEffects(Int_val(channel));
+	effect_list = Val_emptylist;
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_fade_in_music_pos (value music, value loops, value ms, value pos)
+CAMLprim value sdlmixerstub_set_panning(value channel, value left, value right)
 {
-    CAMLparam4 (music, loops, ms, pos);
-    int res = Mix_FadeInMusicPos (SDL_MUSIC(music), Int_val(loops), Int_val(ms), Double_val(pos));
-    CAMLreturn (Val_bool(res == 0));
+	CAMLparam3(channel, left, right);
+	if(! Mix_SetPanning(Int_val(channel), Int_val(left), Int_val(right))){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_fade_in_channel (value channel, value chunk, value loops, value ms)
+CAMLprim value sdlmixerstub_set_position(value channel, value angle, value distance)
 {
-    CAMLparam4 (channel, chunk, loops, ms);
-    int ch = Mix_FadeInChannel (Int_val(ch), SDL_CHUNK(chunk), Int_val(loops), Int_val(ms));
-    CAMLreturn (Val_int(ch));
+	CAMLparam3(channel, angle, distance);
+	if(! Mix_SetPosition(Int_val(channel), Int_val(angle), Int_val(distance))){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_fade_in_channel_timed (value channel, value chunk, value loops, value ms, value ticks)
+CAMLprim value sdlmixerstub_set_distance(value channel, value distance)
 {
-    CAMLparam5 (channel, chunk, loops, ms, ticks);
-    int ch = Mix_FadeInChannelTimed (Int_val(ch), SDL_CHUNK(chunk), Int_val(loops), Int_val(ms), Int_val(ticks));
-    CAMLreturn (Val_int(ch));
+	CAMLparam2(channel, distance);
+	if(! Mix_SetDistance(Int_val(channel), Int_val(distance))){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_halt_channel (value channel)
+CAMLprim value sdlmixerstub_set_reverse_stereo(value channel, value flip)
 {
-    Mix_HaltChannel(Int_val(channel));
-    return Val_unit;
+	CAMLparam2(channel, flip);
+	if(! Mix_SetReverseStereo(Int_val(channel), Bool_val(flip))){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_halt_group (value tag)
+CAMLprim value sdlmixerstub_reserve_channels(value num)
 {
-    Mix_HaltChannel(Int_val(tag));
-    return Val_unit;
+	CAMLparam1(num);
+	value result = Val_int(Mix_ReserveChannels(Int_val(num)));
+	CAMLreturn(result);
 }
 
-value sdlmixer_halt_music (value u)
+CAMLprim value sdlmixerstub_group_channel(value which, value tag)
 {
-    Mix_HaltMusic();
-    return Val_unit;
+	CAMLparam2(which, tag);
+	if(! Mix_GroupChannel(Int_val(which), Int_val(tag))){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-
-value sdlmixer_expire_channel (value channel, value ticks)
+CAMLprim value sdlmixerstub_group_channels(value from, value to, value tag)
 {
-    int res = Mix_ExpireChannel(Int_val(channel), Int_val(ticks));
-    return Val_bool(res != 0);
-
+	CAMLparam3(from, to, tag);
+	if(Mix_GroupChannels(Int_val(from), Int_val(to), Int_val(tag)) != to - from + 1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_fade_out_channel (value channel, value ms)
+CAMLprim value sdlmixerstub_group_available(value tag)
 {
-    int res = Mix_FadeOutChannel(Int_val(channel), Int_val(ms));
-    return Val_bool(res);
+	CAMLparam1(tag);
+	int available = Mix_GroupAvailable(Int_val(tag));
+	value result = Val_bool(available);
+	CAMLreturn(result);
 }
 
-value sdlmixer_fade_out_group (value group, value ms)
+CAMLprim value sdlmixerstub_group_count(value tag)
 {
-    int res = Mix_FadeOutGroup(Int_val(group), Int_val(ms));
-    return Val_bool(res);
+	CAMLparam1(tag);
+	int count = Mix_GroupCount(Int_val(tag));
+	value result = Val_int(count);
+	CAMLreturn(result);
 }
 
-value sdlmixer_fade_out_music (value ms)
+CAMLprim value sdlmixerstub_group_oldest(value tag)
 {
-    CAMLparam1 (ms);
-    int res = Mix_FadeOutMusic(Int_val(ms));
-    return Val_bool(res);
+	CAMLparam1(tag);
+	int found_channel = Mix_GroupOldest(Int_val(tag));
+	value result = Val_int(found_channel);
+	CAMLreturn(result);
 }
 
-value sdlmixer_fading_music (value u)
+CAMLprim value sdlmixerstub_group_newer(value tag)
 {
-    Mix_Fading f = Mix_FadingMusic();
-    return Val_int(_sdlmixer_fading_to_caml(f));
+	CAMLparam1(tag);
+	int found_channel = Mix_GroupNewer(Int_val(tag));
+	value result = Val_int(found_channel);
+	CAMLreturn(result);
 }
 
-value sdlmixer_fading_channel (value channel)
+CAMLprim value sdlmixerstub_play_channel_timed(value channel, value chunk, value loops, value ticks)
 {
-    Mix_Fading f = Mix_FadingChannel(Int_val(channel));
-    return Val_int(_sdlmixer_fading_to_caml(f));
+	CAMLparam4(channel, chunk, loops, ticks);
+	int playing_channel = Mix_PlayChannelTimed(Int_val(channel), Mix_Chunk_val(chunk), Int_val(loops), Int_val(ticks));
+	value result = Val_int(playing_channel);
+	CAMLreturn(result);
 }
 
-
-value sdlmixer_pause (value channel)
+CAMLprim value sdlmixerstub_play_music(value music, value loops)
 {
-    Mix_Pause(Int_val(channel));
-    return Val_unit;
+	CAMLparam2(music, loops);
+	int playing_channel = Mix_PlayMusic(Mix_Music_val(music), Int_val(loops));
+	value result = Val_int(playing_channel);
+	CAMLreturn(result);
 }
 
-value sdlmixer_resume (value channel)
+CAMLprim value sdlmixerstub_fade_in_music(value music, value loops, value ms)
 {
-    Mix_Resume(Int_val(channel));
-    return Val_unit;
+	CAMLparam3(music, loops, ms);
+	if(Mix_FadeInMusic(Mix_Music_val(music), Int_val(loops), Int_val(ms)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_paused (value channel)
+CAMLprim value sdlmixerstub_fade_in_music_pos(value music, value loops, value ms, value position)
 {
-    int res = Mix_Paused(Int_val(channel));
-    return Val_bool(res);
+	CAMLparam4(music, loops, ms, position);
+	if(Mix_FadeInMusicPos(Mix_Music_val(music), Int_val(loops), Int_val(ms), Double_val(position)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_pause_music (value u)
+CAMLprim value sdlmixerstub_fade_in_channel_timed(value channel, value chunk, value loops, value ms, value ticks)
 {
-    Mix_PauseMusic();
-    return Val_unit;
+	CAMLparam5(channel, chunk, loops, ms, ticks);
+	if(Mix_FadeInChannelTimed(Int_val(channel), Mix_Chunk_val(chunk), Int_val(loops), Int_val(ms), Int_val(ticks)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_resume_music (value u)
+CAMLprim value sdlmixerstub_volume(value channel, value volume)
 {
-    Mix_ResumeMusic();
-    return Val_unit;
+	CAMLparam2(channel, volume);
+	int old = Mix_Volume(Int_val(channel), Int_val(volume));
+	value result = Val_int(old);
+	CAMLreturn(result);
 }
 
-value sdlmixer_rewind_music (value u)
+CAMLprim value sdlmixerstub_volume_chunk(value chunk, value volume)
 {
-    Mix_RewindMusic();
-    return Val_unit;
+	CAMLparam2(chunk, volume);
+	int old = Mix_VolumeChunk(Mix_Chunk_val(chunk), Int_val(volume));
+	value result = Val_int(old);
+	CAMLreturn(result);
 }
 
-value sdlmixer_paused_music (value u)
+CAMLprim value sdlmixerstub_volume_music(value volume)
 {
-    int res = Mix_PausedMusic();
-    return Val_bool(res);
+	CAMLparam1(volume);
+	int old = Mix_VolumeMusic(Int_val(volume));
+	value result = Val_int(old);
+	CAMLreturn(result);
 }
 
-value sdlmixer_set_music_position (value position)
+CAMLprim value sdlmixerstub_halt_channel(value channel)
 {
-    int res = Mix_SetMusicPosition(Double_val(position));
-    return Val_bool(res == 0);
+	CAMLparam1(channel);
+	Mix_HaltChannel(Int_val(channel));
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_playing (value channel)
+CAMLprim value sdlmixerstub_halt_group(value tag)
 {
-    int res = Mix_Playing(Int_val(channel));
-    return Val_bool(res);
+	CAMLparam1(tag);
+	Mix_HaltGroup(Int_val(tag));
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_playing_music (value u)
+CAMLprim value sdlmixerstub_halt_music(value unit)
 {
-    int res = Mix_PlayingMusic();
-    return Val_bool(res);
+	CAMLparam1(unit);
+	Mix_HaltMusic();
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_set_music_cmd (value command)
+CAMLprim value sdlmixerstub_expire_channel(value channel, value ticks)
 {
-    int res = Mix_SetMusicCMD(String_val(command));
-    return Val_bool(res == 0);
+	CAMLparam2(channel, ticks);
+	Mix_ExpireChannel(Int_val(channel), Int_val(ticks));
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_get_chunk (value channel)
+CAMLprim value sdlmixerstub_fade_out_channel(value which, value ms)
 {
-    CAMLparam1(channel);
-    Mix_Chunk* chunk = Mix_GetChunk(Int_val(channel));
-    CAMLreturn (ML_CHUNK(chunk));
+	CAMLparam2(which, ms);
+	Mix_FadeOutChannel(Int_val(which), Int_val(ms));
+	CAMLreturn(Val_unit);
 }
 
-value sdlmixer_close_audio (value u)
+CAMLprim value sdlmixerstub_fade_out_group(value tag, value ms)
 {
-    Mix_CloseAudio();
-    return Val_unit;
+	CAMLparam2(tag, ms);
+	Mix_FadeOutGroup(Int_val(tag), Int_val(ms));
+	CAMLreturn(Val_unit);
 }
+
+CAMLprim value sdlmixerstub_fade_out_music(value ms)
+{
+	CAMLparam1(ms);
+	Mix_FadeOutMusic(Int_val(ms));
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_fading_music(value unit)
+{
+	CAMLparam1(unit);
+	Mix_Fading fading = Mix_FadingMusic();
+	value result = Val_Mix_Fading(fading);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_fading_channel(value which)
+{
+	CAMLparam1(which);
+	Mix_Fading fading = Mix_FadingChannel(Int_val(which));
+	value result = Val_Mix_Fading(fading);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_pause(value channel)
+{
+	CAMLparam1(channel);
+	Mix_Pause(channel);
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_resume(value channel)
+{
+	CAMLparam1(channel);
+	Mix_Resume(channel);
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_paused(value channel)
+{
+	CAMLparam1(channel);
+	CAMLlocal1(result);
+	int playing = Mix_Paused(Int_val(channel));
+	result = Val_bool(playing);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_pause_music(value unit)
+{
+	CAMLparam1(unit);
+	Mix_PauseMusic();
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_resume_music(value unit)
+{
+	CAMLparam1(unit);
+	Mix_ResumeMusic();
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_rewind_music(value unit)
+{
+	CAMLparam1(unit);
+	Mix_RewindMusic();
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_paused_music(value unit)
+{
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	int playing = Mix_PausedMusic();
+	result = Val_bool(playing);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_set_music_position(value position)
+{
+	CAMLparam1(position);
+	if(Mix_SetMusicPosition(Double_val(position)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_playing(value channel)
+{
+	CAMLparam1(channel);
+	CAMLlocal1(result);
+	int playing = Mix_Playing(channel);
+	result = Val_bool(playing);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_playing_music(value unit)
+{
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	int playing = Mix_PlayingMusic();
+	result = Val_bool(playing);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_set_music_cmd(value command)
+{
+	CAMLparam1(command);
+	if(Mix_SetMusicCMD(String_val(command)) == -1){
+		raise_failure();
+	}
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_set_synchro_value(value the_value)
+{
+	CAMLparam1(the_value);
+	Mix_SetSynchroValue(the_value);
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_get_synchro_value(value unit)
+{
+	CAMLparam1(unit);
+	int the_value = Mix_GetSynchroValue();
+	value result = Val_int(the_value);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_get_chunk(value channel)
+{
+	CAMLparam1(channel);
+	Mix_Chunk *chunk = Mix_GetChunk(Int_val(channel));
+	if(chunk == NULL){
+		raise_failure();
+	}
+	value result = Val_Mix_Chunk(chunk);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_close_audio(value unit)
+{
+	CAMLparam1(unit);
+	Mix_CloseAudio();
+	CAMLreturn(Val_unit);
+}
+
