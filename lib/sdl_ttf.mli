@@ -1,8 +1,14 @@
 (* Objective Caml interface for SDL_ttf with SDLCaml *)
+(* based on SDL_ttf.h 2.0.10 *)
 
 open Sdl;;
 
 type uint16_array = (int, Bigarray.int16_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
+
+(* This function gets the version of the dynamically linked SDL_ttf library.
+   it should NOT be used to fill a version structure, instead you should
+   use the SDL_TTF_VERSION() macro. *)
+val linked_version: unit -> int * int * int;;
 
 (* ZERO WIDTH NO-BREAKSPACE (Unicode byte order mark) *)
 val unicode_bom_native: int;;
@@ -30,12 +36,17 @@ val open_font_index: file: string -> ptsize: int -> index: int -> font;;
  
 (* Set and retrieve the font style
    This font style is implemented by modifying the font glyphs, and
-   doesn't reflect any inherent properties of the truetype font file.
-*)
+   doesn't reflect any inherent properties of the truetype font file. *)
 type font_style = STYLE_BOLD | STYLE_ITALIC | STYLE_UNDERLINE;;
 
 val get_font_style: font: font -> font_style list;;
-val set_font_style: font: font -> font_style list -> unit;;
+val set_font_style: font: font -> (* style: *) font_style list -> unit;;
+
+(* Set and retrieve FreeType hinter settings *)
+type hinting = HINTING_NORMAL | HINTING_LIGHT | HINTING_MONO | HINTING_NONE;;
+
+val get_font_hinting: font: font -> hinting;;
+val set_font_hinting: font: font -> (* hinting: *) hinting -> unit;;
 
 (* Get the total height of the font - usually equal to point size *)
 val font_height: font: font -> int;;
@@ -51,6 +62,10 @@ val font_descent: font: font -> int;;
 (* Get the recommended spacing between lines of text for this font *)
 val font_line_skip: font: font -> int;;
 
+(* Get/Set whether or not kerning is allowed for this font *)
+val get_font_kerning: font: font -> bool;;
+val set_font_kerning: font: font -> (* allowed: *) bool -> unit;;
+
 (* Get the number of faces of the font *)
 val font_faces: font: font -> int;;
 
@@ -58,6 +73,9 @@ val font_faces: font: font -> int;;
 val font_face_is_fixed_width: font: font -> bool;;
 val font_face_family_name: font: font -> string;;
 val font_face_style_name: font: font -> string;;
+
+(* Check wether a glyph is provided by the font or not *)
+val glyph_is_provided: font: font -> ch: int -> bool;;
 
 (* Get the metrics (dimensions) of a glyph
    To understand what these metrics mean, here is a useful link:

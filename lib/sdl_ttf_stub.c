@@ -11,11 +11,9 @@
 
 /* utilities */
 
-#define nil()      Val_emptylist
-#define is_nil     Is_long
 #define is_not_nil Is_block
-#define hd(v)      Field((v), 0)
-#define tl(v)      Field((v), 1)
+#define hd(v) Field((v), 0)
+#define tl(v) Field((v), 1)
 
 static value cons(value x, value l)
 {
@@ -90,6 +88,18 @@ static int Style_val(value style)
 	return result;
 }
 
+/* hinting */
+
+static value Val_hinting(int hinting)
+{
+	return Val_int(hinting);
+}
+
+static int Hinting_val(value hinting)
+{
+	return Int_val(hinting);
+}
+
 /* exception */
 
 static void raise_failure(void)
@@ -98,6 +108,18 @@ static void raise_failure(void)
 }
 
 /* primitives */
+
+CAMLprim value sdlttfstub_linked_version(value unit)
+{
+	CAMLparam1(unit);
+	CAMLlocal1(result);
+	SDL_version const *version = TTF_Linked_Version();
+	result = alloc(3, 0);
+	Store_field(result, 0, Val_int(version->major));
+	Store_field(result, 1, Val_int(version->minor));
+	Store_field(result, 2, Val_int(version->patch));
+	CAMLreturn(result);
+}
 
 CAMLprim value sdlttfstub_byte_swapped_unicode(value swapped)
 {
@@ -150,6 +172,21 @@ CAMLprim value sdlttfstub_set_font_style(value font, value style)
 	CAMLreturn(Val_unit);
 }
 
+CAMLprim value sdlttfstub_get_font_hinting(value font)
+{
+	CAMLparam1(font);
+	int hinting = TTF_GetFontHinting(TTF_Font_val(font));
+	value result = Val_hinting(hinting);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlttfstub_set_font_hinting(value font, value hinting)
+{
+	CAMLparam2(font, hinting);
+	TTF_SetFontHinting(TTF_Font_val(font), Hinting_val(hinting));
+	CAMLreturn(Val_unit);
+}
+
 CAMLprim value sdlttfstub_font_height(value font)
 {
 	CAMLparam1(font);
@@ -178,6 +215,21 @@ CAMLprim value sdlttfstub_font_line_skip(value font)
 	CAMLreturn(result);
 }
 
+CAMLprim value sdlttfstub_get_font_kerning(value font)
+{
+	CAMLparam1(font);
+	int allowed = TTF_GetFontKerning(TTF_Font_val(font));
+	value result = Val_bool(allowed);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlttfstub_set_font_kerning(value font, value allowed)
+{
+	CAMLparam2(font, allowed);
+	TTF_SetFontKerning(TTF_Font_val(font), Bool_val(allowed));
+	CAMLreturn(Val_unit);
+}
+
 CAMLprim value sdlttfstub_font_faces(value font)
 {
 	CAMLparam1(font);
@@ -203,6 +255,13 @@ CAMLprim value sdlttfstub_font_face_style_name(value font)
 {
 	CAMLparam1(font);
 	value result = caml_copy_string(TTF_FontFaceStyleName(TTF_Font_val(font)));
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlttfstub_glyph_is_provided(value font, value ch)
+{
+	CAMLparam2(font, ch);
+	value result = Val_bool(TTF_GlyphIsProvided(TTF_Font_val(font), Int_val(ch)));
 	CAMLreturn(result);
 }
 
