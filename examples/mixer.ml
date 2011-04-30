@@ -1,6 +1,6 @@
 open Printf
 open Sdl
-open Sdl_mixer
+module Mix = Sdl_mixer
 
 (*
  * example of using SDL_mixer
@@ -26,27 +26,47 @@ let rec flatten l sep =
     | [x] -> x
     | h :: t -> h ^ sep ^ (flatten t sep)
 
+let get_chunk_decoders () =
+    let rec loop i rs =
+        if i < 0 then rs else
+        loop (i - 1) (Mix.get_chunk_decoder i :: rs)
+    in
+    loop (Mix.get_num_chunk_decoders () - 1) []
+
+let get_music_decoders () =
+    let rec loop i rs =
+        if i < 0 then rs else
+        loop (i - 1) (Mix.get_music_decoder i :: rs)
+    in
+    loop (Mix.get_num_music_decoders () - 1) []
+
+let get_available_channel_count () = Mix.group_count ~tag:(-1)
+
+let get_music_fading = Mix.fading_music
+
+let get_channel_fading = Mix.fading_channel
 
 let main () =
 
     Sdl.init [AUDIO];
-    Mix.init [MP3; OGG];
+    Mix.init [Mix.INIT_MP3; Mix.INIT_OGG];
 
-    p "SDL_mixer version %s" (Mix.get_version ());
+    let major, minor, patch = Mix.linked_version () in
+    p "SDL_mixer version %d.%d.%d" major minor patch;
 
-    Mix.open_audio 44100 Audio.S16 Audio.STEREO 512;
+    Mix.open_audio ~frequency:44100 ~format:Audio.S16 ~channels:2 ~chunksize:512;
 
-    let decoders_chunk = Mix.get_chunk_decoders () in
-    let decoders_music = Mix.get_music_decoders () in
+    let decoders_chunk = get_chunk_decoders () in
+    let decoders_music = get_music_decoders () in
     p "Chunk decoders: %s" (flatten decoders_chunk ", ");
     p "Music decoders: %s" (flatten decoders_music ", ");
 
     (* optional: allocate a bunch of channels *)
     let alloc_channels = 11 in
-    p "Intially available %d channels" (Mix.get_available_channel_count ());
+    p "Intially available %d channels" (get_available_channel_count ());
     p "Allocating %d channels" alloc_channels;
     p "Allocated: %d channels" (Mix.allocate_channels alloc_channels);
-    p "Now available %d channels" (Mix.get_available_channel_count ());
+    p "Now available %d channels" (get_available_channel_count ());
 
     (* optional: reserve a bunch of channels for application *)
 
@@ -57,45 +77,49 @@ let main () =
     (* load some music and sound *)
 
     let snd = Mix.load_wav "data/warning.wav" in
-    let mus = Mix.load_music "data/sample.xm" in
+    let mus = Mix.load_mus "data/sample.xm" in
 
     (* fade in the music, start looping the sound on channel #2 *)
 
-    p "Music %s playing" (if Mix.fade_in_music mus Mix.loop_forever 5000 then "is" else "NOT");
-    p "Audio on channel %d" (Mix.play_channel 2 snd Mix.loop_forever);
+    p "Music %s playing" (
+        try Mix.fade_in_music ~music:mus ~loops:(-1) ~ms:5000; "is" with
+        | SDL_failure _ -> "NOT");
+    p "Audio on channel %d" (Mix.play_channel ~channel:2 ~chunk:snd ~loops:(-1));
 
     (* optional: group the channels with tag (any number). In this case, tag = 2010 *)
 
-    p "Grouping channels: %s" (if Mix.group_channel 1 2010 then "ok" else "failed");
+    p "Grouping channels: %s" (
+        try Mix.group_channel ~which:1 ~tag:2010; "ok" with
+        | SDL_failure _ -> "failed");
     p "There is %d channel in group tagged 2010" (Mix.group_count 2010);
 
 
 
     p "Now playing: %s" (
-        match Mix.get_music_type None with
-        | MUS_NONE -> "None"
-        | MUS_CMD -> "CMD"
-        | MUS_WAV -> "WAV"
-        | MUS_MOD -> "MOD"
-        | MUS_MID -> "MID"
-        | MUS_OGG -> "OGG"
-        | MUS_MP3 -> "MP3"
-        | MUS_MP3_MAD -> "MP3_MAD"
-        | MUS_FLAC -> "MP3_MAD"
+        match Mix.get_music_type mus with
+        | Mix.MUS_NONE -> "None"
+        | Mix.MUS_CMD -> "CMD"
+        | Mix.MUS_WAV -> "WAV"
+        | Mix.MUS_MOD -> "MOD"
+        | Mix.MUS_MID -> "MID"
+        | Mix.MUS_OGG -> "OGG"
+        | Mix.MUS_MP3 -> "MP3"
+        | Mix.MUS_MP3_MAD -> "MP3_MAD"
+        | Mix.MUS_FLAC -> "FLAC"
     );
 
     p "Music is %s" (
-        match Mix.get_music_fading () with
-        | NO_FADING -> "not fading"
-        | FADING_IN -> "fading in"
-        | FADING_OUT -> "fading out"
+        match get_music_fading () with
+        | Mix.NO_FADING -> "not fading"
+        | Mix.FADING_IN -> "fading in"
+        | Mix.FADING_OUT -> "fading out"
     );
 
     p "Sound is %s" (
-        match Mix.get_channel_fading 2 with
-        | NO_FADING -> "not fading"
-        | FADING_IN -> "fading in"
-        | FADING_OUT -> "fading out"
+        match get_channel_fading 2 with
+        | Mix.NO_FADING -> "not fading"
+        | Mix.FADING_IN -> "fading in"
+        | Mix.FADING_OUT -> "fading out"
     );
     p "Sound is %s" (
         if Mix.paused_music () then "paused" else "playing"
