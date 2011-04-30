@@ -46,14 +46,14 @@
 // thanks to OCamlSDL for the insight.
 // Mix_Chunk and Mix_Music get stuffed into Abstract_tag values
 // and treated as simple blobs in ocaml.
-value abstract_ptr(void *p)
+static value abstract_ptr(void *p)
 {
     value v = alloc_small(1, Abstract_tag);
     Field(v, 0) = Val_bp(p);
     return v;
 }
 
-void nullify_abstract(value v)
+static void nullify_abstract(value v)
 {
     Field(v, 0) = Val_bp(NULL);
 }
