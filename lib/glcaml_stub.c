@@ -110,6 +110,7 @@ static void init_lib()
 {
     if(lib)return;
     lib = dlopen("libGL.dylib",RTLD_LAZY);
+    if(lib == NULL) lib = dlopen("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib", RTLD_LAZY);
     if(lib == NULL) failwith("error loading libGL.dylib");
 }
 
@@ -3653,7 +3654,7 @@ value glstub_glDrawElements(value v0, value v1, value v2, value v3)
     GLenum lv0 = Int_val(v0);
     GLsizei lv1 = Int_val(v1);
     GLenum lv2 = Int_val(v2);
-    GLvoid* lv3 = (GLvoid *)(Is_long(v3) ? Long_val(v3) : (Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+    GLvoid* lv3 = (Is_long(v3) ? (GLvoid *)Long_val(v3) : (Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
     LOAD_FUNCTION(glDrawElements);
     (*stub_glDrawElements)(lv0, lv1, lv2, lv3);
     CAMLreturn(Val_unit);
@@ -17440,7 +17441,7 @@ value glstub_glVertexAttribPointer(value v0, value v1, value v2, value v3, value
     GLenum lv2 = Int_val(v2);
     GLboolean lv3 = Bool_val(v3);
     GLsizei lv4 = Int_val(v4);
-    GLvoid* lv5 = (GLvoid *)(Is_long(v5) ? Long_val(v5) : (Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+    GLvoid* lv5 = (Is_long(v5) ? (GLvoid *)Long_val(v5) : (Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
     LOAD_FUNCTION(glVertexAttribPointer);
     (*stub_glVertexAttribPointer)(lv0, lv1, lv2, lv3, lv4, lv5);
     CAMLreturn(Val_unit);
