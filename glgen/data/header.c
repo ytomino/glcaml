@@ -127,29 +127,29 @@ value unsafe_coercion(value v)
 }
 
 
-#define DECLARE_FUNCTION(func, args, ret)                                               \
-typedef ret APIENTRY (*pstub_##func)args;                                               \
-static pstub_##func stub_##func = NULL;                                                 \
+#define DECLARE_FUNCTION(func, args, ret)                               \
+typedef ret APIENTRY (*pstub_##func)args;                               \
+static pstub_##func stub_##func = NULL;                                 \
 static int loaded_##func = 0;
 
 
 
-#define LOAD_FUNCTION(func)                                                                     \
-        if(!loaded_##func)                                                                                      \
-        {                                                                                                                       \
-                init_lib ();                                                                                    \
+#define LOAD_FUNCTION(func)                                             \
+        if(!loaded_##func)                                              \
+        {                                                               \
+                init_lib ();                                            \
                 stub_##func = (pstub_##func)get_proc_address(#func);    \
-                if(stub_##func)                                                                                 \
-                {                                                                                                               \
-                        loaded_##func = 1;                                                                      \
-                }                                                                                                               \
-                else                                                                                                    \
-                {                                                                                                               \
-                        char fn[256], buf[300];                                                         \
-                        strncpy(fn, #func, 255);                                                        \
-                        sprintf(buf, "Unable to load %s", fn);                  \
-                        caml_failwith(buf);                                                                     \
-                }                                                                                                               \
+                if(stub_##func)                                         \
+                {                                                       \
+                        loaded_##func = 1;                              \
+                }                                                       \
+                else                                                    \
+                {                                                       \
+                        char fn[256], buf[300];                         \
+                        strncpy(fn, #func, 255);                        \
+                        sprintf(buf, "Unable to load %s", fn);          \
+                        caml_failwith(buf);                             \
+                }                                                       \
         }
 
 
