@@ -4897,7 +4897,7 @@
 	void glVertexAttrib4ubv (GLuint index, const GLubyte* v)
 	void glVertexAttrib4uiv (GLuint index, const GLuint* v)
 	void glVertexAttrib4usv (GLuint index, const GLushort* v)
-	void glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
+	void glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, GLuint pointer)
 --GL_VERSION_2_1	
 --http://www.opengl.org/documentation/specs/version2.1/glspec21.pdf
 	GL_CURRENT_RASTER_SECONDARY_COLOR 0x845F
