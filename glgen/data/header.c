@@ -1,16 +1,16 @@
 /*
  * GLCaml - Objective Caml interface for OpenGL 1.1, 1.2, 1.3, 1.4, 1.5, 2.0 and 2.1
- * plus extensions: 
+ * plus extensions:
  *
  * Copyright (C) 2007, 2008 Elliott OTI
  *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided 
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided
  * that the following conditions are met:
- *  - Redistributions of source code must retain the above copyright notice, this list of conditions 
+ *  - Redistributions of source code must retain the above copyright notice, this list of conditions
  *    and the following disclaimer.
- *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
+ *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions
  *    and the following disclaimer in the documentation and/or other materials provided with the distribution.
- *  - The name Elliott Oti may not be used to endorse or promote products derived from this software 
+ *  - The name Elliott Oti may not be used to endorse or promote products derived from this software
  *    without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,8 +26,8 @@
  */
 
 #include <stdio.h>
-#include <string.h> 
- 
+#include <string.h>
+
 #include <caml/mlvalues.h>
 #include <caml/memory.h>
 #include <caml/alloc.h>
@@ -62,14 +62,14 @@ static HMODULE lib=NULL;
 
 static void init_lib()
 {
-	if(lib)return;
-	lib = LoadLibrary("opengl32.dll");
-	if(lib == NULL) failwith("error loading opengl32.dll");
+        if(lib)return;
+        lib = LoadLibrary("opengl32.dll");
+        if(lib == NULL) failwith("error loading opengl32.dll");
 }
 
 static void *get_proc_address(char *fname)
 {
-	return GetProcAddress(lib, fname);
+        return GetProcAddress(lib, fname);
 }
 
 #endif
@@ -85,14 +85,14 @@ static void* lib=NULL;
 
 static void init_lib()
 {
-	if(lib)return;
-	lib = dlopen("libGL.so.1",RTLD_LAZY);
-	if(lib == NULL) failwith("error loading libGL.so.1");
+        if(lib)return;
+        lib = dlopen("libGL.so.1",RTLD_LAZY);
+        if(lib == NULL) failwith("error loading libGL.so.1");
 }
 
 static void *get_proc_address(char *fname)
 {
-	return dlsym(lib, fname);
+        return dlsym(lib, fname);
 }
 
 #endif
@@ -108,14 +108,14 @@ static void* lib=NULL;
 
 static void init_lib()
 {
-	if(lib)return;
-	lib = dlopen("libGL.dylib",RTLD_LAZY);
-	if(lib == NULL) failwith("error loading libGL.dylib");
+        if(lib)return;
+        lib = dlopen("libGL.dylib",RTLD_LAZY);
+        if(lib == NULL) failwith("error loading libGL.dylib");
 }
 
 static void *get_proc_address(char *fname)
 {
-	return dlsym(lib, fname);
+        return dlsym(lib, fname);
 }
 #endif
 
@@ -126,30 +126,30 @@ value unsafe_coercion(value v)
 }
 
 
-#define DECLARE_FUNCTION(func, args, ret)						\
-typedef ret APIENTRY (*pstub_##func)args;						\
-static pstub_##func stub_##func = NULL;							\
+#define DECLARE_FUNCTION(func, args, ret)                                               \
+typedef ret APIENTRY (*pstub_##func)args;                                               \
+static pstub_##func stub_##func = NULL;                                                 \
 static int loaded_##func = 0;
 
 
 
-#define LOAD_FUNCTION(func) 									\
-	if(!loaded_##func)											\
-	{															\
-		init_lib ();											\
-		stub_##func = (pstub_##func)get_proc_address(#func);	\
-		if(stub_##func)											\
-		{														\
-			loaded_##func = 1;									\
-		}														\
-		else													\
-		{														\
-			char fn[256], buf[300];								\
-			strncpy(fn, #func, 255);							\
-			sprintf(buf, "Unable to load %s", fn);			\
-			caml_failwith(buf);									\
-		}														\
-	}
+#define LOAD_FUNCTION(func)                                                                     \
+        if(!loaded_##func)                                                                                      \
+        {                                                                                                                       \
+                init_lib ();                                                                                    \
+                stub_##func = (pstub_##func)get_proc_address(#func);    \
+                if(stub_##func)                                                                                 \
+                {                                                                                                               \
+                        loaded_##func = 1;                                                                      \
+                }                                                                                                               \
+                else                                                                                                    \
+                {                                                                                                               \
+                        char fn[256], buf[300];                                                         \
+                        strncpy(fn, #func, 255);                                                        \
+                        sprintf(buf, "Unable to load %s", fn);                  \
+                        caml_failwith(buf);                                                                     \
+                }                                                                                                               \
+        }
 
 
 
