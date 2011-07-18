@@ -110,6 +110,7 @@ static void init_lib()
 {
         if(lib)return;
         lib = dlopen("libGL.dylib",RTLD_LAZY);
+        if(lib == NULL) lib = dlopen("/System/Library/Frameworks/OpenGL.framework/Libraries/libGL.dylib", RTLD_LAZY);
         if(lib == NULL) failwith("error loading libGL.dylib");
 }
 
