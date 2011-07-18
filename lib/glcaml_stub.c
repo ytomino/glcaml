@@ -778,7 +778,7 @@ value glstub_glBinormalPointerEXT(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glBinormalPointerEXT);
 	(*stub_glBinormalPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -942,7 +942,7 @@ value glstub_glBufferData(value v0, value v1, value v2, value v3)
 	CAMLparam4(v0, v1, v2, v3);
 	GLenum lv0 = Int_val(v0);
 	GLsizeiptr lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBufferData);
 	(*stub_glBufferData)(lv0, lv1, lv2, lv3);
@@ -955,7 +955,7 @@ value glstub_glBufferDataARB(value v0, value v1, value v2, value v3)
 	CAMLparam4(v0, v1, v2, v3);
 	GLenum lv0 = Int_val(v0);
 	GLsizeiptr lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBufferDataARB);
 	(*stub_glBufferDataARB)(lv0, lv1, lv2, lv3);
@@ -981,7 +981,7 @@ value glstub_glBufferSubData(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLintptr lv1 = Int_val(v1);
 	GLsizeiptr lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glBufferSubData);
 	(*stub_glBufferSubData)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -994,7 +994,7 @@ value glstub_glBufferSubDataARB(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLintptr lv1 = Int_val(v1);
 	GLsizeiptr lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glBufferSubDataARB);
 	(*stub_glBufferSubDataARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -1016,7 +1016,7 @@ value glstub_glCallLists(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLsizei lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glCallLists);
 	(*stub_glCallLists)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -1870,7 +1870,7 @@ value glstub_glColorPointer(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glColorPointer);
 	(*stub_glColorPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -1884,7 +1884,7 @@ value glstub_glColorPointerEXT(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glColorPointerEXT);
 	(*stub_glColorPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -1926,7 +1926,7 @@ value glstub_glColorSubTable(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorSubTable);
 	(*stub_glColorSubTable)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -1947,7 +1947,7 @@ value glstub_glColorSubTableEXT(value v0, value v1, value v2, value v3, value v4
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorSubTableEXT);
 	(*stub_glColorSubTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -1968,7 +1968,7 @@ value glstub_glColorTable(value v0, value v1, value v2, value v3, value v4, valu
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTable);
 	(*stub_glColorTable)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -1989,7 +1989,7 @@ value glstub_glColorTableEXT(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTableEXT);
 	(*stub_glColorTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -2058,7 +2058,7 @@ value glstub_glColorTableSGI(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTableSGI);
 	(*stub_glColorTableSGI)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -2202,7 +2202,7 @@ value glstub_glCompressedTexImage1D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexImage1D);
 	(*stub_glCompressedTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -2224,7 +2224,7 @@ value glstub_glCompressedTexImage1DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexImage1DARB);
 	(*stub_glCompressedTexImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -2247,7 +2247,7 @@ value glstub_glCompressedTexImage2D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	GLsizei lv6 = Int_val(v6);
-	GLvoid* lv7 = (GLvoid *)((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7)));
+	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glCompressedTexImage2D);
 	(*stub_glCompressedTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
@@ -2270,7 +2270,7 @@ value glstub_glCompressedTexImage2DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	GLsizei lv6 = Int_val(v6);
-	GLvoid* lv7 = (GLvoid *)((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7)));
+	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glCompressedTexImage2DARB);
 	(*stub_glCompressedTexImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
@@ -2294,7 +2294,7 @@ value glstub_glCompressedTexImage3D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv5 = Int_val(v5);
 	GLint lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexImage3D);
 	(*stub_glCompressedTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -2318,7 +2318,7 @@ value glstub_glCompressedTexImage3DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv5 = Int_val(v5);
 	GLint lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexImage3DARB);
 	(*stub_glCompressedTexImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -2340,7 +2340,7 @@ value glstub_glCompressedTexSubImage1D(value v0, value v1, value v2, value v3, v
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexSubImage1D);
 	(*stub_glCompressedTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -2362,7 +2362,7 @@ value glstub_glCompressedTexSubImage1DARB(value v0, value v1, value v2, value v3
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexSubImage1DARB);
 	(*stub_glCompressedTexSubImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -2386,7 +2386,7 @@ value glstub_glCompressedTexSubImage2D(value v0, value v1, value v2, value v3, v
 	GLsizei lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexSubImage2D);
 	(*stub_glCompressedTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -2410,7 +2410,7 @@ value glstub_glCompressedTexSubImage2DARB(value v0, value v1, value v2, value v3
 	GLsizei lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexSubImage2DARB);
 	(*stub_glCompressedTexSubImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -2437,7 +2437,7 @@ value glstub_glCompressedTexSubImage3D(value v0, value v1, value v2, value v3, v
 	GLsizei lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
 	GLsizei lv9 = Int_val(v9);
-	GLvoid* lv10 = (GLvoid *)((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10)));
+	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glCompressedTexSubImage3D);
 	(*stub_glCompressedTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
@@ -2464,7 +2464,7 @@ value glstub_glCompressedTexSubImage3DARB(value v0, value v1, value v2, value v3
 	GLsizei lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
 	GLsizei lv9 = Int_val(v9);
-	GLvoid* lv10 = (GLvoid *)((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10)));
+	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glCompressedTexSubImage3DARB);
 	(*stub_glCompressedTexSubImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
@@ -2485,7 +2485,7 @@ value glstub_glConvolutionFilter1D(value v0, value v1, value v2, value v3, value
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glConvolutionFilter1D);
 	(*stub_glConvolutionFilter1D)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -2506,7 +2506,7 @@ value glstub_glConvolutionFilter1DEXT(value v0, value v1, value v2, value v3, va
 	GLsizei lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glConvolutionFilter1DEXT);
 	(*stub_glConvolutionFilter1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -2528,7 +2528,7 @@ value glstub_glConvolutionFilter2D(value v0, value v1, value v2, value v3, value
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glConvolutionFilter2D);
 	(*stub_glConvolutionFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -2550,7 +2550,7 @@ value glstub_glConvolutionFilter2DEXT(value v0, value v1, value v2, value v3, va
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glConvolutionFilter2DEXT);
 	(*stub_glConvolutionFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -3653,7 +3653,7 @@ value glstub_glDrawElements(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glDrawElements);
 	(*stub_glDrawElements)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -3666,7 +3666,7 @@ value glstub_glDrawElementsInstancedEXT(value v0, value v1, value v2, value v3, 
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glDrawElementsInstancedEXT);
 	(*stub_glDrawElementsInstancedEXT)(lv0, lv1, lv2, lv3, lv4);
@@ -3681,7 +3681,7 @@ value glstub_glDrawPixels(value v0, value v1, value v2, value v3, value v4)
 	GLsizei lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glDrawPixels);
 	(*stub_glDrawPixels)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -3724,7 +3724,7 @@ value glstub_glDrawRangeElements(value v0, value v1, value v2, value v3, value v
 	GLuint lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glDrawRangeElements);
 	(*stub_glDrawRangeElements)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -3745,7 +3745,7 @@ value glstub_glDrawRangeElementsEXT(value v0, value v1, value v2, value v3, valu
 	GLuint lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glDrawRangeElementsEXT);
 	(*stub_glDrawRangeElementsEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -3771,7 +3771,7 @@ value glstub_glEdgeFlagPointer(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glEdgeFlagPointer);
 	(*stub_glEdgeFlagPointer)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -3816,7 +3816,7 @@ value glstub_glElementPointerAPPLE(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLenum lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glElementPointerAPPLE);
 	(*stub_glElementPointerAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -3827,7 +3827,7 @@ value glstub_glElementPointerATI(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLenum lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glElementPointerATI);
 	(*stub_glElementPointerATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -4261,7 +4261,7 @@ value glstub_glFlushVertexArrayRangeAPPLE(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glFlushVertexArrayRangeAPPLE);
 	(*stub_glFlushVertexArrayRangeAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -4282,7 +4282,7 @@ value glstub_glFogCoordPointer(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glFogCoordPointer);
 	(*stub_glFogCoordPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -4294,7 +4294,7 @@ value glstub_glFogCoordPointerEXT(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glFogCoordPointerEXT);
 	(*stub_glFogCoordPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -5443,7 +5443,7 @@ value glstub_glGetBufferSubData(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLintptr lv1 = Int_val(v1);
 	GLsizeiptr lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetBufferSubData);
 	(*stub_glGetBufferSubData)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5456,7 +5456,7 @@ value glstub_glGetBufferSubDataARB(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLintptr lv1 = Int_val(v1);
 	GLsizeiptr lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetBufferSubDataARB);
 	(*stub_glGetBufferSubDataARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5491,7 +5491,7 @@ value glstub_glGetColorTable(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTable);
 	(*stub_glGetColorTable)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5504,7 +5504,7 @@ value glstub_glGetColorTableEXT(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTableEXT);
 	(*stub_glGetColorTableEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5589,7 +5589,7 @@ value glstub_glGetColorTableSGI(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTableSGI);
 	(*stub_glGetColorTableSGI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5667,7 +5667,7 @@ value glstub_glGetCompressedTexImage(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetCompressedTexImage);
 	(*stub_glGetCompressedTexImage)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -5679,7 +5679,7 @@ value glstub_glGetCompressedTexImageARB(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetCompressedTexImageARB);
 	(*stub_glGetCompressedTexImageARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -5692,7 +5692,7 @@ value glstub_glGetConvolutionFilter(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetConvolutionFilter);
 	(*stub_glGetConvolutionFilter)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5705,7 +5705,7 @@ value glstub_glGetConvolutionFilterEXT(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetConvolutionFilterEXT);
 	(*stub_glGetConvolutionFilterEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -5994,7 +5994,7 @@ value glstub_glGetHistogram(value v0, value v1, value v2, value v3, value v4)
 	GLboolean lv1 = Bool_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetHistogram);
 	(*stub_glGetHistogram)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -6008,7 +6008,7 @@ value glstub_glGetHistogramEXT(value v0, value v1, value v2, value v3, value v4)
 	GLboolean lv1 = Bool_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetHistogramEXT);
 	(*stub_glGetHistogramEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -6255,7 +6255,7 @@ value glstub_glGetMapControlPointsNV(value v0, value v1, value v2, value v3, val
 	GLsizei lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	GLboolean lv5 = Bool_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glGetMapControlPointsNV);
 	(*stub_glGetMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -6358,7 +6358,7 @@ value glstub_glGetMinmax(value v0, value v1, value v2, value v3, value v4)
 	GLboolean lv1 = Bool_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetMinmax);
 	(*stub_glGetMinmax)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -6372,7 +6372,7 @@ value glstub_glGetMinmaxEXT(value v0, value v1, value v2, value v3, value v4)
 	GLboolean lv1 = Bool_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetMinmaxEXT);
 	(*stub_glGetMinmaxEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -6706,7 +6706,7 @@ value glstub_glGetProgramStringARB(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetProgramStringARB);
 	(*stub_glGetProgramStringARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -6852,9 +6852,9 @@ value glstub_glGetSeparableFilter(value v0, value v1, value v2, value v3, value 
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glGetSeparableFilter);
 	(*stub_glGetSeparableFilter)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -6873,9 +6873,9 @@ value glstub_glGetSeparableFilterEXT(value v0, value v1, value v2, value v3, val
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glGetSeparableFilterEXT);
 	(*stub_glGetSeparableFilterEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -7063,7 +7063,7 @@ value glstub_glGetTexImage(value v0, value v1, value v2, value v3, value v4)
 	GLint lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetTexImage);
 	(*stub_glGetTexImage)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -7436,7 +7436,7 @@ value glstub_glGetVertexAttribPointerv(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetVertexAttribPointerv);
 	(*stub_glGetVertexAttribPointerv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -7777,7 +7777,7 @@ value glstub_glIndexPointer(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glIndexPointer);
 	(*stub_glIndexPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -7790,7 +7790,7 @@ value glstub_glIndexPointerEXT(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glIndexPointerEXT);
 	(*stub_glIndexPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -7936,7 +7936,7 @@ value glstub_glInterleavedArrays(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glInterleavedArrays);
 	(*stub_glInterleavedArrays)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -8630,7 +8630,7 @@ value glstub_glMapControlPointsNV(value v0, value v1, value v2, value v3, value 
 	GLint lv5 = Int_val(v5);
 	GLint lv6 = Int_val(v6);
 	GLboolean lv7 = Bool_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glMapControlPointsNV);
 	(*stub_glMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -8799,7 +8799,7 @@ value glstub_glMatrixIndexPointerARB(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glMatrixIndexPointerARB);
 	(*stub_glMatrixIndexPointerARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -9931,7 +9931,7 @@ value glstub_glNewObjectBufferATI(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	CAMLlocal1(result);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	GLenum lv2 = Int_val(v2);
 	GLuint ret;
 	LOAD_FUNCTION(glNewObjectBufferATI);
@@ -10110,7 +10110,7 @@ value glstub_glNormalPointer(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glNormalPointer);
 	(*stub_glNormalPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -10123,7 +10123,7 @@ value glstub_glNormalPointerEXT(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glNormalPointerEXT);
 	(*stub_glNormalPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -10365,7 +10365,7 @@ value glstub_glPixelDataRangeNV(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glPixelDataRangeNV);
 	(*stub_glPixelDataRangeNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -11318,7 +11318,7 @@ value glstub_glProgramStringARB(value v0, value v1, value v2, value v3)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glProgramStringARB);
 	(*stub_glProgramStringARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -11673,7 +11673,7 @@ value glstub_glReadPixels(value v0, value v1, value v2, value v3, value v4, valu
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glReadPixels);
 	(*stub_glReadPixels)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -11695,7 +11695,7 @@ value glstub_glReadVideoPixelsSUN(value v0, value v1, value v2, value v3, value 
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glReadVideoPixelsSUN);
 	(*stub_glReadVideoPixelsSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -11879,7 +11879,7 @@ value glstub_glReplacementCodePointerSUN(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glReplacementCodePointerSUN);
 	(*stub_glReplacementCodePointerSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -12805,7 +12805,7 @@ value glstub_glSecondaryColorPointer(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glSecondaryColorPointer);
 	(*stub_glSecondaryColorPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -12818,7 +12818,7 @@ value glstub_glSecondaryColorPointerEXT(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glSecondaryColorPointerEXT);
 	(*stub_glSecondaryColorPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -12860,8 +12860,8 @@ value glstub_glSeparableFilter2D(value v0, value v1, value v2, value v3, value v
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
-	GLvoid* lv7 = (GLvoid *)((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
+	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glSeparableFilter2D);
 	(*stub_glSeparableFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
@@ -12883,8 +12883,8 @@ value glstub_glSeparableFilter2DEXT(value v0, value v1, value v2, value v3, valu
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
-	GLvoid* lv7 = (GLvoid *)((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
+	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glSeparableFilter2DEXT);
 	(*stub_glSeparableFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
@@ -12933,7 +12933,7 @@ value glstub_glSetInvariantEXT(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glSetInvariantEXT);
 	(*stub_glSetInvariantEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -12945,7 +12945,7 @@ value glstub_glSetLocalConstantEXT(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glSetLocalConstantEXT);
 	(*stub_glSetLocalConstantEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -13184,7 +13184,7 @@ value glstub_glStringMarkerGREMEDY(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glStringMarkerGREMEDY);
 	(*stub_glStringMarkerGREMEDY)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -13226,7 +13226,7 @@ value glstub_glTangentPointerEXT(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glTangentPointerEXT);
 	(*stub_glTangentPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -14003,7 +14003,7 @@ value glstub_glTexCoordPointer(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glTexCoordPointer);
 	(*stub_glTexCoordPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -14017,7 +14017,7 @@ value glstub_glTexCoordPointerEXT(value v0, value v1, value v2, value v3, value 
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glTexCoordPointerEXT);
 	(*stub_glTexCoordPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -14194,7 +14194,7 @@ value glstub_glTexImage1D(value v0, value v1, value v2, value v3, value v4, valu
 	GLint lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
-	GLvoid* lv7 = (GLvoid *)((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7)));
+	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glTexImage1D);
 	(*stub_glTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
@@ -14218,7 +14218,7 @@ value glstub_glTexImage2D(value v0, value v1, value v2, value v3, value v4, valu
 	GLint lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
 	GLenum lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexImage2D);
 	(*stub_glTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -14243,7 +14243,7 @@ value glstub_glTexImage3D(value v0, value v1, value v2, value v3, value v4, valu
 	GLint lv6 = Int_val(v6);
 	GLenum lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
-	GLvoid* lv9 = (GLvoid *)((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9)));
+	GLvoid* lv9 = (Is_long(v9) ? (GLvoid*)Long_val(v9) : ((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9))));
 	LOAD_FUNCTION(glTexImage3D);
 	(*stub_glTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
@@ -14268,7 +14268,7 @@ value glstub_glTexImage3DEXT(value v0, value v1, value v2, value v3, value v4, v
 	GLint lv6 = Int_val(v6);
 	GLenum lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
-	GLvoid* lv9 = (GLvoid *)((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9)));
+	GLvoid* lv9 = (Is_long(v9) ? (GLvoid*)Long_val(v9) : ((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9))));
 	LOAD_FUNCTION(glTexImage3DEXT);
 	(*stub_glTexImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
@@ -14295,7 +14295,7 @@ value glstub_glTexImage4DSGIS(value v0, value v1, value v2, value v3, value v4, 
 	GLint lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
 	GLenum lv9 = Int_val(v9);
-	GLvoid* lv10 = (GLvoid *)((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10)));
+	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexImage4DSGIS);
 	(*stub_glTexImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
@@ -14413,7 +14413,7 @@ value glstub_glTexSubImage1D(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glTexSubImage1D);
 	(*stub_glTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -14435,7 +14435,7 @@ value glstub_glTexSubImage1DEXT(value v0, value v1, value v2, value v3, value v4
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
-	GLvoid* lv6 = (GLvoid *)((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6)));
+	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glTexSubImage1DEXT);
 	(*stub_glTexSubImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
@@ -14459,7 +14459,7 @@ value glstub_glTexSubImage2D(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
 	GLenum lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexSubImage2D);
 	(*stub_glTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -14483,7 +14483,7 @@ value glstub_glTexSubImage2DEXT(value v0, value v1, value v2, value v3, value v4
 	GLsizei lv5 = Int_val(v5);
 	GLenum lv6 = Int_val(v6);
 	GLenum lv7 = Int_val(v7);
-	GLvoid* lv8 = (GLvoid *)((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8)));
+	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexSubImage2DEXT);
 	(*stub_glTexSubImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
@@ -14510,7 +14510,7 @@ value glstub_glTexSubImage3D(value v0, value v1, value v2, value v3, value v4, v
 	GLsizei lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
 	GLenum lv9 = Int_val(v9);
-	GLvoid* lv10 = (GLvoid *)((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10)));
+	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexSubImage3D);
 	(*stub_glTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
@@ -14537,7 +14537,7 @@ value glstub_glTexSubImage3DEXT(value v0, value v1, value v2, value v3, value v4
 	GLsizei lv7 = Int_val(v7);
 	GLenum lv8 = Int_val(v8);
 	GLenum lv9 = Int_val(v9);
-	GLvoid* lv10 = (GLvoid *)((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10)));
+	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexSubImage3DEXT);
 	(*stub_glTexSubImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
@@ -14566,7 +14566,7 @@ value glstub_glTexSubImage4DSGIS(value v0, value v1, value v2, value v3, value v
 	GLsizei lv9 = Int_val(v9);
 	GLenum lv10 = Int_val(v10);
 	GLenum lv11 = Int_val(v11);
-	GLvoid* lv12 = (GLvoid *)((Tag_val(v12) == String_tag)? (String_val(v12)) : (Data_bigarray_val(v12)));
+	GLvoid* lv12 = (Is_long(v12) ? (GLvoid*)Long_val(v12) : ((Tag_val(v12) == String_tag)? (String_val(v12)) : (Data_bigarray_val(v12))));
 	LOAD_FUNCTION(glTexSubImage4DSGIS);
 	(*stub_glTexSubImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
 	CAMLreturn(Val_unit);
@@ -14624,7 +14624,7 @@ value glstub_glTextureRangeAPPLE(value v0, value v1, value v2)
 	CAMLparam3(v0, v1, v2);
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
-	GLvoid* lv2 = (GLvoid *)((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2)));
+	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glTextureRangeAPPLE);
 	(*stub_glTextureRangeAPPLE)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
@@ -15402,7 +15402,7 @@ value glstub_glUpdateObjectBufferATI(value v0, value v1, value v2, value v3, val
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	GLenum lv4 = Int_val(v4);
 	LOAD_FUNCTION(glUpdateObjectBufferATI);
 	(*stub_glUpdateObjectBufferATI)(lv0, lv1, lv2, lv3, lv4);
@@ -15470,7 +15470,7 @@ value glstub_glVariantPointerEXT(value v0, value v1, value v2, value v3)
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVariantPointerEXT);
 	(*stub_glVariantPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -15910,7 +15910,7 @@ value glstub_glVertexArrayRangeAPPLE(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glVertexArrayRangeAPPLE);
 	(*stub_glVertexArrayRangeAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -15921,7 +15921,7 @@ value glstub_glVertexArrayRangeNV(value v0, value v1)
 {
 	CAMLparam2(v0, v1);
 	GLsizei lv0 = Int_val(v0);
-	GLvoid* lv1 = (GLvoid *)((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1)));
+	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glVertexArrayRangeNV);
 	(*stub_glVertexArrayRangeNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
@@ -17424,7 +17424,7 @@ value glstub_glVertexAttribIPointerEXT(value v0, value v1, value v2, value v3, v
 	GLint lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexAttribIPointerEXT);
 	(*stub_glVertexAttribIPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -17461,7 +17461,7 @@ value glstub_glVertexAttribPointerARB(value v0, value v1, value v2, value v3, va
 	GLenum lv2 = Int_val(v2);
 	GLboolean lv3 = Bool_val(v3);
 	GLsizei lv4 = Int_val(v4);
-	GLvoid* lv5 = (GLvoid *)((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5)));
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glVertexAttribPointerARB);
 	(*stub_glVertexAttribPointerARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
@@ -17480,7 +17480,7 @@ value glstub_glVertexAttribPointerNV(value v0, value v1, value v2, value v3, val
 	GLint lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexAttribPointerNV);
 	(*stub_glVertexAttribPointerNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -17729,7 +17729,7 @@ value glstub_glVertexPointer(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVertexPointer);
 	(*stub_glVertexPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -17743,7 +17743,7 @@ value glstub_glVertexPointerEXT(value v0, value v1, value v2, value v3, value v4
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
-	GLvoid* lv4 = (GLvoid *)((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4)));
+	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexPointerEXT);
 	(*stub_glVertexPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
@@ -18070,7 +18070,7 @@ value glstub_glVertexWeightPointerEXT(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVertexWeightPointerEXT);
 	(*stub_glVertexWeightPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
@@ -18136,7 +18136,7 @@ value glstub_glWeightPointerARB(value v0, value v1, value v2, value v3)
 	GLint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
-	GLvoid* lv3 = (GLvoid *)((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3)));
+	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glWeightPointerARB);
 	(*stub_glWeightPointerARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
