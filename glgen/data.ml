@@ -151,7 +151,7 @@ let translate_ptr t s =
   let p = sprintf in
   match t with
   | "void*"     -> p "(void *)((Tag_val(%s) == String_tag)? (String_val(%s)) : (Data_bigarray_val(%s)))" s s s
-  | "GLvoid*"   -> p "(GLvoid *)((Tag_val(%s) == String_tag)? (String_val(%s)) : (Data_bigarray_val(%s)))" s s s
+  | "GLvoid*"   -> p "(Is_long(%s) ? (GLvoid*)Long_val(%s) : ((Tag_val(%s) == String_tag)? (String_val(%s)) : (Data_bigarray_val(%s))))" s s s s s
   | "GLboolean*"  -> p "Data_bigarray_val(%s)" s
   | "GLuint*"     -> p "Data_bigarray_val(%s)" s
   | "GLint*"      -> p "Data_bigarray_val(%s)" s
