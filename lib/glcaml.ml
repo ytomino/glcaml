@@ -3097,6 +3097,7 @@ external glBindTexGenParameterEXT: int -> int -> int -> int = "glstub_glBindTexG
 external glBindTexture: int -> int -> unit = "glstub_glBindTexture" "glstub_glBindTexture"
 external glBindTextureEXT: int -> int -> unit = "glstub_glBindTextureEXT" "glstub_glBindTextureEXT"
 external glBindTextureUnitParameterEXT: int -> int -> int = "glstub_glBindTextureUnitParameterEXT" "glstub_glBindTextureUnitParameterEXT"
+external glBindVertexArray: int -> unit = "glstub_glBindVertexArray" "glstub_glBindVertexArray"
 external glBindVertexArrayAPPLE: int -> unit = "glstub_glBindVertexArrayAPPLE" "glstub_glBindVertexArrayAPPLE"
 external glBindVertexShaderEXT: int -> unit = "glstub_glBindVertexShaderEXT" "glstub_glBindVertexShaderEXT"
 external glBinormalPointerEXT: int -> int -> 'a -> unit = "glstub_glBinormalPointerEXT" "glstub_glBinormalPointerEXT"
@@ -3596,6 +3597,14 @@ let _ = copy_word_array np1 p1 in
 r
 
 
+external glDeleteVertexArrays: int -> word_array -> unit = "glstub_glDeleteVertexArrays" "glstub_glDeleteVertexArrays"
+let glDeleteVertexArrays p0 p1 =
+let np1 = to_word_array p1 in
+let r = glDeleteVertexArrays p0 np1 in
+let _ = copy_word_array np1 p1 in
+r
+
+
 external glDeleteVertexArraysAPPLE: int -> word_array -> unit = "glstub_glDeleteVertexArraysAPPLE" "glstub_glDeleteVertexArraysAPPLE"
 let glDeleteVertexArraysAPPLE p0 p1 =
 let np1 = to_word_array p1 in
@@ -4045,6 +4054,14 @@ external glGenTexturesEXT: int -> word_array -> unit = "glstub_glGenTexturesEXT"
 let glGenTexturesEXT p0 p1 =
 let np1 = to_word_array p1 in
 let r = glGenTexturesEXT p0 np1 in
+let _ = copy_word_array np1 p1 in
+r
+
+
+external glGenVertexArrays: int -> word_array -> unit = "glstub_glGenVertexArrays" "glstub_glGenVertexArrays"
+let glGenVertexArrays p0 p1 =
+let np1 = to_word_array p1 in
+let r = glGenVertexArrays p0 np1 in
 let _ = copy_word_array np1 p1 in
 r
 
@@ -5371,6 +5388,7 @@ external glIsShader: int -> bool = "glstub_glIsShader" "glstub_glIsShader"
 external glIsTexture: int -> bool = "glstub_glIsTexture" "glstub_glIsTexture"
 external glIsTextureEXT: int -> bool = "glstub_glIsTextureEXT" "glstub_glIsTextureEXT"
 external glIsVariantEnabledEXT: int -> int -> bool = "glstub_glIsVariantEnabledEXT" "glstub_glIsVariantEnabledEXT"
+external glIsVertexArray: int -> bool = "glstub_glIsVertexArray" "glstub_glIsVertexArray"
 external glIsVertexArrayAPPLE: int -> bool = "glstub_glIsVertexArrayAPPLE" "glstub_glIsVertexArrayAPPLE"
 external glLightEnviEXT: int -> int -> unit = "glstub_glLightEnviEXT" "glstub_glLightEnviEXT"
 external glLightModelf: int -> float -> unit = "glstub_glLightModelf" "glstub_glLightModelf"

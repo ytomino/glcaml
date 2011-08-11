@@ -753,6 +753,16 @@ value glstub_glBindTextureUnitParameterEXT(value v0, value v1)
 	CAMLreturn(result);
 }
 
+DECLARE_FUNCTION(glBindVertexArray,(GLuint),void);
+value glstub_glBindVertexArray(value v0)
+{
+	CAMLparam1(v0);
+	GLuint lv0 = Int_val(v0);
+	LOAD_FUNCTION(glBindVertexArray);
+	(*stub_glBindVertexArray)(lv0);
+	CAMLreturn(Val_unit);
+}
+
 DECLARE_FUNCTION(glBindVertexArrayAPPLE,(GLuint),void);
 value glstub_glBindVertexArrayAPPLE(value v0)
 {
@@ -3331,6 +3341,17 @@ value glstub_glDeleteTexturesEXT(value v0, value v1)
 	CAMLreturn(Val_unit);
 }
 
+DECLARE_FUNCTION(glDeleteVertexArrays,(GLsizei, GLuint*),void);
+value glstub_glDeleteVertexArrays(value v0, value v1)
+{
+	CAMLparam2(v0, v1);
+	GLsizei lv0 = Int_val(v0);
+	GLuint* lv1 = Data_bigarray_val(v1);
+	LOAD_FUNCTION(glDeleteVertexArrays);
+	(*stub_glDeleteVertexArrays)(lv0, lv1);
+	CAMLreturn(Val_unit);
+}
+
 DECLARE_FUNCTION(glDeleteVertexArraysAPPLE,(GLsizei, GLuint*),void);
 value glstub_glDeleteVertexArraysAPPLE(value v0, value v1)
 {
@@ -5141,6 +5162,17 @@ value glstub_glGenTexturesEXT(value v0, value v1)
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenTexturesEXT);
 	(*stub_glGenTexturesEXT)(lv0, lv1);
+	CAMLreturn(Val_unit);
+}
+
+DECLARE_FUNCTION(glGenVertexArrays,(GLsizei, GLuint*),void);
+value glstub_glGenVertexArrays(value v0, value v1)
+{
+	CAMLparam2(v0, v1);
+	GLsizei lv0 = Int_val(v0);
+	GLuint* lv1 = Data_bigarray_val(v1);
+	LOAD_FUNCTION(glGenVertexArrays);
+	(*stub_glGenVertexArrays)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8214,6 +8246,19 @@ value glstub_glIsVariantEnabledEXT(value v0, value v1)
 	GLboolean ret;
 	LOAD_FUNCTION(glIsVariantEnabledEXT);
 	ret = (*stub_glIsVariantEnabledEXT)(lv0, lv1);
+	result = Val_bool(ret);
+	CAMLreturn(result);
+}
+
+DECLARE_FUNCTION(glIsVertexArray,(GLuint),GLboolean);
+value glstub_glIsVertexArray(value v0)
+{
+	CAMLparam1(v0);
+	CAMLlocal1(result);
+	GLuint lv0 = Int_val(v0);
+	GLboolean ret;
+	LOAD_FUNCTION(glIsVertexArray);
+	ret = (*stub_glIsVertexArray)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
