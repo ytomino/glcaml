@@ -4923,3 +4923,8 @@
 	void glUniformMatrix3x4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x2fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x3fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+--GL_ARB_vertex_array_object
+	void glBindVertexArray (GLuint array)
+	void glDeleteVertexArrays (GLsizei n, GLuint* arrays)
+	void glGenVertexArrays (GLsizei n, GLuint* arrays)
+	GLboolean glIsVertexArray (GLuint array)
