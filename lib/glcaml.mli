@@ -3156,6 +3156,8 @@ external glBindTextureEXT : int -> int -> unit = "glstub_glBindTextureEXT"
 external glBindTextureUnitParameterEXT : int -> int -> int
   = "glstub_glBindTextureUnitParameterEXT"
   "glstub_glBindTextureUnitParameterEXT"
+external glBindVertexArray : int -> unit = "glstub_glBindVertexArray"
+  "glstub_glBindVertexArray"
 external glBindVertexArrayAPPLE : int -> unit
   = "glstub_glBindVertexArrayAPPLE" "glstub_glBindVertexArrayAPPLE"
 external glBindVertexShaderEXT : int -> unit = "glstub_glBindVertexShaderEXT"
@@ -3530,6 +3532,7 @@ external glDeleteShader : int -> unit = "glstub_glDeleteShader"
   "glstub_glDeleteShader"
 val glDeleteTextures : int -> int array -> unit
 val glDeleteTexturesEXT : int -> int array -> unit
+val glDeleteVertexArrays : int -> int array -> unit
 val glDeleteVertexArraysAPPLE : int -> int array -> unit
 external glDeleteVertexShaderEXT : int -> unit
   = "glstub_glDeleteVertexShaderEXT" "glstub_glDeleteVertexShaderEXT"
@@ -3809,6 +3812,7 @@ external glGenSymbolsEXT : int -> int -> int -> int -> int
   = "glstub_glGenSymbolsEXT" "glstub_glGenSymbolsEXT"
 val glGenTextures : int -> int array -> unit
 val glGenTexturesEXT : int -> int array -> unit
+val glGenVertexArrays : int -> int array -> unit
 val glGenVertexArraysAPPLE : int -> int array -> unit
 external glGenVertexShadersEXT : int -> int = "glstub_glGenVertexShadersEXT"
   "glstub_glGenVertexShadersEXT"
@@ -4164,6 +4168,8 @@ external glIsTextureEXT : int -> bool = "glstub_glIsTextureEXT"
   "glstub_glIsTextureEXT"
 external glIsVariantEnabledEXT : int -> int -> bool
   = "glstub_glIsVariantEnabledEXT" "glstub_glIsVariantEnabledEXT"
+external glIsVertexArray : int -> bool = "glstub_glIsVertexArray"
+  "glstub_glIsVertexArray"
 external glIsVertexArrayAPPLE : int -> bool = "glstub_glIsVertexArrayAPPLE"
   "glstub_glIsVertexArrayAPPLE"
 external glLightEnviEXT : int -> int -> unit = "glstub_glLightEnviEXT"
