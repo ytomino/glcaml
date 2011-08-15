@@ -1,16 +1,16 @@
 (*
  * GLCaml - Objective Caml interface for OpenGL 1.1, 1.2, 1.3, 1.4, 1.5, 2.0 and 2.1
- * plus extensions:
- *
+ * plus extensions: 
+ * 
  * Copyright (C) 2007, 2008 Elliott OTI
  *
- * Redistribution and use in source and binary forms, with or without modification, are permitted provided
+ * Redistribution and use in source and binary forms, with or without modification, are permitted provided 
  * that the following conditions are met:
- *  - Redistributions of source code must retain the above copyright notice, this list of conditions
+ *  - Redistributions of source code must retain the above copyright notice, this list of conditions 
  *    and the following disclaimer.
- *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions
+ *  - Redistributions in binary form must reproduce the above copyright notice, this list of conditions 
  *    and the following disclaimer in the documentation and/or other materials provided with the distribution.
- *  - The name Elliott Oti may not be used to endorse or promote products derived from this software
+ *  - The name Elliott Oti may not be used to endorse or promote products derived from this software 
  *    without specific prior written permission.
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * 'AS IS' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
@@ -26,16 +26,16 @@
  *)
 
 
-(** 1-dimensional array definitions for
-  - 8-bit signed bytes
-  - 8-bit unsigned bytes
-  - 16 bits signed words
-  - 16 bits unsigned words
-  - 32 bit signed words
-  - 64 bit signed words
-  - native word size
-  - 32 bit IEEE floats
-  - 64 bit IEEE floats *)
+(** 1-dimensional array definitions for 
+	- 8-bit signed bytes
+	- 8-bit unsigned bytes
+	- 16 bits signed words
+	- 16 bits unsigned words
+	- 32 bit signed words
+	- 64 bit signed words
+	- native word size
+	- 32 bit IEEE floats 
+	- 64 bit IEEE floats *)
 type byte_array = (int, Bigarray.int8_signed_elt, Bigarray.c_layout) Bigarray.Array1.t
 type ubyte_array = (int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 type short_array = (int, Bigarray.int16_signed_elt, Bigarray.c_layout) Bigarray.Array1.t
@@ -46,16 +46,16 @@ type int_array = (int, Bigarray.int_elt, Bigarray.c_layout) Bigarray.Array1.t
 type float_array = (float, Bigarray.float32_elt, Bigarray.c_layout) Bigarray.Array1.t
 type double_array = (float, Bigarray.float64_elt, Bigarray.c_layout) Bigarray.Array1.t
 
-(** 2-dimensional array definitions for
-  - 8-bit signed bytes
-  - 8-bit unsigned bytes
-  - 16 bits signed words
-  - 16 bits unsigned words
-  - 32 bit signed words
-  - 64 bit signed words
-  - native word size
-  - 32 bit IEEE floats
-  - 64 bit IEEE floats *)
+(** 2-dimensional array definitions for 
+	- 8-bit signed bytes
+	- 8-bit unsigned bytes
+	- 16 bits signed words
+	- 16 bits unsigned words
+	- 32 bit signed words
+	- 64 bit signed words
+	- native word size
+	- 32 bit IEEE floats 
+	- 64 bit IEEE floats *)
 type byte_matrix = (int, Bigarray.int8_signed_elt, Bigarray.c_layout) Bigarray.Array2.t
 type ubyte_matrix = (int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array2.t
 type short_matrix = (int, Bigarray.int16_signed_elt, Bigarray.c_layout) Bigarray.Array2.t
@@ -67,15 +67,15 @@ type float_matrix = (float, Bigarray.float32_elt, Bigarray.c_layout) Bigarray.Ar
 type double_matrix = (float, Bigarray.float64_elt, Bigarray.c_layout) Bigarray.Array2.t
 
 (** Create 1-dimensional arrays of the following types:
-  - 8-bit signed bytes
-  - 8-bit unsigned bytes
-  - 16 bits signed words
-  - 16 bits unsigned words
-  - 32 bit signed words
-  - 64 bit signed words
-  - native word size
-  - 32 bit IEEE floats
-  - 64 bit IEEE floats *)
+	- 8-bit signed bytes
+	- 8-bit unsigned bytes
+	- 16 bits signed words
+	- 16 bits unsigned words
+	- 32 bit signed words
+	- 64 bit signed words
+	- native word size
+	- 32 bit IEEE floats 
+	- 64 bit IEEE floats *)
 let make_byte_array len = Bigarray.Array1.create Bigarray.int8_signed Bigarray.c_layout len
 let make_ubyte_array len = Bigarray.Array1.create Bigarray.int8_unsigned Bigarray.c_layout len
 let make_short_array len = Bigarray.Array1.create Bigarray.int16_signed Bigarray.c_layout len
@@ -87,15 +87,15 @@ let make_float_array len = Bigarray.Array1.create Bigarray.float32 Bigarray.c_la
 let make_double_array len = Bigarray.Array1.create Bigarray.float64 Bigarray.c_layout len
 
 (** Create 2-dimensional arrays of the following types:
-  - 8-bit signed bytes
-  - 8-bit unsigned bytes
-  - 16 bits signed words
-  - 16 bits unsigned words
-  - 32 bit signed words
-  - 64 bit signed words
-  - native word size
-  - 32 bit IEEE floats
-  - 64 bit IEEE floats *)
+	- 8-bit signed bytes
+	- 8-bit unsigned bytes
+	- 16 bits signed words
+	- 16 bits unsigned words
+	- 32 bit signed words
+	- 64 bit signed words
+	- native word size
+	- 32 bit IEEE floats 
+	- 64 bit IEEE floats *)
 let make_byte_matrix dim1 dim2 = Bigarray.Array2.create Bigarray.int8_signed Bigarray.c_layout  dim1 dim2
 let make_ubyte_matrix dim1 dim2 = Bigarray.Array2.create Bigarray.int8_unsigned Bigarray.c_layout  dim1 dim2
 let make_short_matrix dim1 dim2 = Bigarray.Array2.create Bigarray.int16_signed Bigarray.c_layout  dim1 dim2
@@ -107,73 +107,73 @@ let make_float_matrix dim1 dim2 = Bigarray.Array2.create Bigarray.float32 Bigarr
 let make_double_matrix dim1 dim2 = Bigarray.Array2.create Bigarray.float64 Bigarray.c_layout  dim1 dim2
 
 (** Conversions between native Ocaml arrays and bigarrays for
-  - int arrays to byte_arrays
-  - int arrays to ubyte_arrays
-  - int arrays to short_arrays
-  - int arrays to ushort_arrays
-  - int arrays to int_arrays
-  - float arrays to float_arrays
-  - float arrays to double_arrays
+	- int arrays to byte_arrays
+	- int arrays to ubyte_arrays
+	- int arrays to short_arrays
+	- int arrays to ushort_arrays
+	- int arrays to int_arrays
+	- float arrays to float_arrays
+	- float arrays to double_arrays
 *)
 let to_byte_array a = Bigarray.Array1.of_array Bigarray.int8_signed Bigarray.c_layout a
 let to_ubyte_array a = Bigarray.Array1.of_array Bigarray.int8_unsigned Bigarray.c_layout a
 let to_short_array a = Bigarray.Array1.of_array Bigarray.int16_signed Bigarray.c_layout a
 let to_ushort_array a = Bigarray.Array1.of_array Bigarray.int16_unsigned Bigarray.c_layout a
-let to_word_array a =
-  let r = make_word_array (Array.length a) in
-  let _ = Array.iteri (fun i a -> r.{i} <- Int32.of_int a ) a in r
-let to_dword_array a =
-  let r = make_dword_array (Array.length a) in
-  let _ = Array.iteri (fun i a -> r.{i} <- Int64.of_int a ) a in r
-let to_int_array a =
-  let r = make_int_array (Array.length a) in
-  let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
-let to_float_array a =
-  let r = make_float_array (Array.length a) in
-  let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
-let to_double_array a =
-  let r = make_double_array (Array.length a) in
-  let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
+let to_word_array a = 
+	let r = make_word_array (Array.length a) in
+	let _ = Array.iteri (fun i a -> r.{i} <- Int32.of_int a ) a in r
+let to_dword_array a = 
+	let r = make_dword_array (Array.length a) in
+	let _ = Array.iteri (fun i a -> r.{i} <- Int64.of_int a ) a in r
+let to_int_array a = 
+	let r = make_int_array (Array.length a) in
+	let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
+let to_float_array a = 
+	let r = make_float_array (Array.length a) in
+	let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
+let to_double_array a = 
+	let r = make_double_array (Array.length a) in
+	let _ = Array.iteri (fun i a -> r.{i} <- a ) a in r
 
-(** Copy data between bigarrays and preallocated Ocaml arrays of
-  suitable length:
-  - byte_array to int array
-  - ubyte_array to int array
-  - short_array to int array
-  - ushort_array to int array
-  - word_array to int array
-  - dword_array to int array
-  - float_array to float array
-  - double_array to float array
+(**	Copy data between bigarrays and preallocated Ocaml arrays of 
+	suitable length:
+	- byte_array to int array
+	- ubyte_array to int array
+	- short_array to int array
+	- ushort_array to int array
+	- word_array to int array
+	- dword_array to int array
+	- float_array to float array
+	- double_array to float array
 *)
 let copy_byte_array src dst =
-  Array.iteri (fun i c -> dst.(i) <- src.{i} ) dst
+	Array.iteri (fun i c -> dst.(i) <- src.{i} ) dst
 let copy_ubyte_array = copy_byte_array
 let copy_short_array = copy_byte_array
 let copy_ushort_array = copy_byte_array
 let copy_word_array src dst =
-  Array.iteri (fun i c -> dst.(i) <- Int32.to_int src.{i} ) dst
+	Array.iteri (fun i c -> dst.(i) <- Int32.to_int src.{i} ) dst
 let copy_dword_array src dst =
-  Array.iteri (fun i c -> dst.(i) <- Int64.to_int src.{i} ) dst
-let copy_float_array src dst = copy_byte_array
-let copy_double_array src dst = copy_byte_array
+	Array.iteri (fun i c -> dst.(i) <- Int64.to_int src.{i} ) dst
+let copy_float_array src dst = copy_byte_array	
+let copy_double_array src dst = copy_byte_array	
 
 (** Convert a byte_array or ubyte_array to a string *)
 let to_string a =
-  let l = Bigarray.Array1.dim a in
-  let s = String.create l in
-  for i = 0 to (l - 1) do
-    s.[i] <- a.{i}
-  done;
-  s
+	let l = Bigarray.Array1.dim a in
+	let s = String.create l in
+	for i = 0 to (l - 1) do
+		s.[i] <- a.{i}
+	done;
+	s
 
 (** Convert between booleans and ints *)
 let int_of_bool b = if b then 1 else 0
 let bool_of_int i = not (i = 0)
 let bool_to_int_array b = Array.map int_of_bool b
 let int_to_bool_array i = Array.map bool_of_int i
-let copy_to_bool_array src dst =
-  Array.mapi (fun i c -> dst.(i) <-  bool_of_int src.(i)) dst
+let copy_to_bool_array src dst = 
+	Array.mapi (fun i c -> dst.(i) <-  bool_of_int src.(i)) dst
 
 
 
@@ -3097,6 +3097,7 @@ external glBindTexGenParameterEXT: int -> int -> int -> int = "glstub_glBindTexG
 external glBindTexture: int -> int -> unit = "glstub_glBindTexture" "glstub_glBindTexture"
 external glBindTextureEXT: int -> int -> unit = "glstub_glBindTextureEXT" "glstub_glBindTextureEXT"
 external glBindTextureUnitParameterEXT: int -> int -> int = "glstub_glBindTextureUnitParameterEXT" "glstub_glBindTextureUnitParameterEXT"
+external glBindVertexArray: int -> unit = "glstub_glBindVertexArray" "glstub_glBindVertexArray"
 external glBindVertexArrayAPPLE: int -> unit = "glstub_glBindVertexArrayAPPLE" "glstub_glBindVertexArrayAPPLE"
 external glBindVertexShaderEXT: int -> unit = "glstub_glBindVertexShaderEXT" "glstub_glBindVertexShaderEXT"
 external glBinormalPointerEXT: int -> int -> 'a -> unit = "glstub_glBinormalPointerEXT" "glstub_glBinormalPointerEXT"
@@ -3596,6 +3597,14 @@ let _ = copy_word_array np1 p1 in
 r
 
 
+external glDeleteVertexArrays: int -> word_array -> unit = "glstub_glDeleteVertexArrays" "glstub_glDeleteVertexArrays"
+let glDeleteVertexArrays p0 p1 =
+let np1 = to_word_array p1 in
+let r = glDeleteVertexArrays p0 np1 in
+let _ = copy_word_array np1 p1 in
+r
+
+
 external glDeleteVertexArraysAPPLE: int -> word_array -> unit = "glstub_glDeleteVertexArraysAPPLE" "glstub_glDeleteVertexArraysAPPLE"
 let glDeleteVertexArraysAPPLE p0 p1 =
 let np1 = to_word_array p1 in
@@ -4045,6 +4054,14 @@ external glGenTexturesEXT: int -> word_array -> unit = "glstub_glGenTexturesEXT"
 let glGenTexturesEXT p0 p1 =
 let np1 = to_word_array p1 in
 let r = glGenTexturesEXT p0 np1 in
+let _ = copy_word_array np1 p1 in
+r
+
+
+external glGenVertexArrays: int -> word_array -> unit = "glstub_glGenVertexArrays" "glstub_glGenVertexArrays"
+let glGenVertexArrays p0 p1 =
+let np1 = to_word_array p1 in
+let r = glGenVertexArrays p0 np1 in
 let _ = copy_word_array np1 p1 in
 r
 
@@ -5371,6 +5388,7 @@ external glIsShader: int -> bool = "glstub_glIsShader" "glstub_glIsShader"
 external glIsTexture: int -> bool = "glstub_glIsTexture" "glstub_glIsTexture"
 external glIsTextureEXT: int -> bool = "glstub_glIsTextureEXT" "glstub_glIsTextureEXT"
 external glIsVariantEnabledEXT: int -> int -> bool = "glstub_glIsVariantEnabledEXT" "glstub_glIsVariantEnabledEXT"
+external glIsVertexArray: int -> bool = "glstub_glIsVertexArray" "glstub_glIsVertexArray"
 external glIsVertexArrayAPPLE: int -> bool = "glstub_glIsVertexArrayAPPLE" "glstub_glIsVertexArrayAPPLE"
 external glLightEnviEXT: int -> int -> unit = "glstub_glLightEnviEXT" "glstub_glLightEnviEXT"
 external glLightModelf: int -> float -> unit = "glstub_glLightModelf" "glstub_glLightModelf"
