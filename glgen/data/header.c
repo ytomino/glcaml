@@ -35,11 +35,13 @@
 #include <caml/callback.h>
 #include <caml/bigarray.h>
 
+#include <GL/glew.h>
+
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef unsigned int GLbitfield;
 typedef void GLvoid;
-typedef char GLbyte;
+//typedef char GLbyte;
 typedef short GLshort;
 typedef int GLint;
 typedef unsigned char GLubyte;
@@ -125,32 +127,4 @@ value unsafe_coercion(value v)
         CAMLparam1(v);
         CAMLreturn(v);
 }
-
-
-#define DECLARE_FUNCTION(func, args, ret)                               \
-typedef ret APIENTRY (*pstub_##func)args;                               \
-static pstub_##func stub_##func = NULL;                                 \
-static int loaded_##func = 0;
-
-
-
-#define LOAD_FUNCTION(func)                                             \
-        if(!loaded_##func)                                              \
-        {                                                               \
-                init_lib ();                                            \
-                stub_##func = (pstub_##func)get_proc_address(#func);    \
-                if(stub_##func)                                         \
-                {                                                       \
-                        loaded_##func = 1;                              \
-                }                                                       \
-                else                                                    \
-                {                                                       \
-                        char fn[256], buf[300];                         \
-                        strncpy(fn, #func, 255);                        \
-                        sprintf(buf, "Unable to load %s", fn);          \
-                        caml_failwith(buf);                             \
-                }                                                       \
-        }
-
-
 

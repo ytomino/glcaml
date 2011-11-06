@@ -66,7 +66,7 @@ let rec handle_events quit =
 let main () =
   init [VIDEO];
   let w = 640 and h = 480 and bpp = 32 in
-  let _ = set_video_mode w h bpp [OPENGL] in
+  let _ = set_video_mode w h bpp [OPENGL; RESIZABLE] in
   set_caption "Jeff Molofee's GL Code Tutorial ... NeHe '99" "NeHe 02";
   init_gl w h;
   swap_buffers () ;

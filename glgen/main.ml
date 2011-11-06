@@ -71,9 +71,9 @@ let make_stub_return f =
     (sprintf "\tCAMLreturn(result);\n")
 
 (* Make C stub code typedef declarations for a given function *)
-let make_typedef_decl f =
-  let arglist = flatten (List.map (fun i -> i.pname) f.fparams) ", " in
-  (sprintf "DECLARE_FUNCTION(%s,(%s),%s);\n" f.fname arglist f.freturn.pname)
+let make_typedef_decl f = ""
+  (* let arglist = flatten (List.map (fun i -> i.pname) f.fparams) ", " in *)
+  (* (sprintf "DECLARE_FUNCTION(%s,(%s),%s);\n" f.fname arglist f.freturn.pname) *)
 
 (* Make C stub function call *)
 let make_func_call f =
@@ -87,8 +87,9 @@ let make_func_call f =
   let return =
   if (f.freturn.pptr = VOID) then "" else "ret = "
   in
-  (sprintf "\tLOAD_FUNCTION(%s);\n"  f.fname) ^
-  (sprintf "\t%s(*stub_%s)(%s);\n"  return f.fname args)
+  (sprintf "\t%s %s(%s);\n"  return f.fname args)
+  (* (sprintf "\tLOAD_FUNCTION(%s);\n"  f.fname) ^ *)
+  (* (sprintf "\t%s(*stub_%s)(%s);\n"  return f.fname args) *)
 
 (* Load ML value into C type *)
 let ml_var_to_c i p =
