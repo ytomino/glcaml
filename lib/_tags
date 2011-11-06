@@ -1,0 +1,6 @@
+<*.*>: package(bigarray)
+
+<glcaml.*>: use_gl
+<sdl*.*>: use_sdl
+<win.*>: use_win, use_gl, use_graphics
+
