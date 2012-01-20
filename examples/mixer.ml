@@ -106,6 +106,7 @@ let main () =
         | Mix.MUS_MP3 -> "MP3"
         | Mix.MUS_MP3_MAD -> "MP3_MAD"
         | Mix.MUS_FLAC -> "FLAC"
+        | Mix.MUS_MODPLUG -> "MODPLUG"
     );
 
     p "Music is %s" (

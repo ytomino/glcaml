@@ -2,7 +2,7 @@ open Sdl;;
 
 external linked_version: unit -> int * int * int = "sdlmixerstub_linked_version";;
 
-type init_flags = INIT_FLAC | INIT_MOD | INIT_MP3 | INIT_OGG;;
+type init_flags = INIT_FLAC | INIT_MOD | INIT_MP3 | INIT_OGG | INIT_FLUIDSYNTH;;
 
 external init: init_flags list -> unit = "sdlmixerstub_init";;
 external quit: unit -> unit = "sdlmixerstub_quit";;
@@ -17,7 +17,8 @@ let max_volume: int = 128;;
 
 type chunk;;
 type fading = NO_FADING | FADING_OUT | FADING_IN;;
-type music_type = MUS_NONE | MUS_CMD | MUS_WAV | MUS_MOD | MUS_MID | MUS_OGG | MUS_MP3 | MUS_MP3_MAD | MUS_FLAC;;
+type music_type = MUS_NONE | MUS_CMD | MUS_WAV | MUS_MOD | MUS_MID | MUS_OGG
+  | MUS_MP3 | MUS_MP3_MAD | MUS_FLAC | MUS_MODPLUG;;
 type music;;
 
 external open_audio: frequency: int -> format: Audio.sample_type -> channels: int -> chunksize: int -> unit = "sdlmixerstub_open_audio";;
@@ -87,6 +88,9 @@ external playing_music: unit -> bool = "sdlmixerstub_playing_music";;
 external set_music_cmd: command: string -> unit = "sdlmixerstub_set_music_cmd";;
 external set_synchro_value: value: int -> unit = "sdlmixerstub_set_synchro_value";;
 external get_synchro_value: unit -> int = "sdlmixerstub_get_synchro_value";;
+external set_sound_fonts: paths: string -> unit = "sdlmixerstub_set_sound_fonts";;
+external get_sound_fonts: unit -> string = "sdlmixerstub_get_sound_fonts";;
+external each_sound_font: (string -> int) -> int = "sdlmixerstub_each_sound_font";;
 external get_chunk: channel: int -> chunk = "sdlmixerstub_get_chunk";;
 external close_audio: unit -> unit = "sdlmixerstub_close_audio";;
 

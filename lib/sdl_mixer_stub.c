@@ -32,7 +32,8 @@ static int const initflags_table[] = {
     MIX_INIT_FLAC,
     MIX_INIT_MOD,
     MIX_INIT_MP3,
-    MIX_INIT_OGG
+    MIX_INIT_OGG,
+    MIX_INIT_FLUIDSYNTH,
 };
 
 static inline int Initflags_val(value initflags)
@@ -686,7 +687,7 @@ CAMLprim value sdlmixerstub_set_music_cmd(value command)
 CAMLprim value sdlmixerstub_set_synchro_value(value the_value)
 {
 	CAMLparam1(the_value);
-	Mix_SetSynchroValue(the_value);
+	Mix_SetSynchroValue(Int_val(the_value));
 	CAMLreturn(Val_unit);
 }
 
@@ -695,6 +696,36 @@ CAMLprim value sdlmixerstub_get_synchro_value(value unit)
 	CAMLparam1(unit);
 	int the_value = Mix_GetSynchroValue();
 	value result = Val_int(the_value);
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_set_sound_fonts(value paths)
+{
+	CAMLparam1(paths);
+	Mix_SetSoundFonts(String_val(paths));
+	CAMLreturn(Val_unit);
+}
+
+CAMLprim value sdlmixerstub_get_sound_fonts(value unit)
+{
+	CAMLparam1(unit);
+	value result = caml_copy_string(Mix_GetSoundFonts());
+	CAMLreturn(result);
+}
+
+static int EachSoundFont(char const *paths, void *data)
+{
+	CAMLparam0();
+	CAMLlocal1(function);
+	function = (value)data;
+	value result = Val_int(caml_callback(function, caml_copy_string(paths)));
+	CAMLreturn(result);
+}
+
+CAMLprim value sdlmixerstub_each_sound_font(value function)
+{
+	CAMLparam1(function);
+	value result = Val_int(Mix_EachSoundFont(EachSoundFont, (void *)function));
 	CAMLreturn(result);
 }
 
