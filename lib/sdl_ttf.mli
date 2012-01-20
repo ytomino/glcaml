@@ -1,5 +1,5 @@
 (* Objective Caml interface for SDL_ttf with SDLCaml *)
-(* based on SDL_ttf.h 2.0.10 *)
+(* based on SDL_ttf.h 2.0.11 *)
 
 open Sdl;;
 
@@ -143,3 +143,5 @@ val quit: unit -> unit;;
 (* Check if the TTF engine is initialized *)
 val was_init: unit -> bool;;
 
+(* Get the kerning size of two glyphs *)
+val get_font_kerning_size: font: font -> prev_index: int -> index: int -> int;;

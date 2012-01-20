@@ -29,6 +29,7 @@ static int const initflags_table[] = {
     IMG_INIT_JPG,
     IMG_INIT_PNG,
     IMG_INIT_TIF,
+    IMG_INIT_WEBP,
 };
 
 static inline int Initflags_val(value initflags)

@@ -1,5 +1,5 @@
 (* Objective Caml interface for SDL_mixer with SDLCaml *)
-(* based on SDL_mixer.h 1.2.11 *)
+(* based on SDL_mixer.h 1.2.12 *)
 
 open Sdl;;
 
@@ -8,7 +8,7 @@ open Sdl;;
    use the SDL_MIXER_VERSION() macro. *)
 val linked_version: unit -> int * int * int;;
 
-type init_flags = INIT_FLAC | INIT_MOD | INIT_MP3 | INIT_OGG;;
+type init_flags = INIT_FLAC | INIT_MOD | INIT_MP3 | INIT_OGG | INIT_FLUIDSYNTH;;
 
 (* Loads dynamic libraries and prepares them for use.  Flags should be
    one or more flags from MIX_InitFlags OR'd together.
@@ -33,7 +33,8 @@ type chunk;;
 (* The different fading types supported *)
 type fading = NO_FADING | FADING_OUT | FADING_IN;;
 
-type music_type = MUS_NONE | MUS_CMD | MUS_WAV | MUS_MOD | MUS_MID | MUS_OGG | MUS_MP3 | MUS_MP3_MAD | MUS_FLAC;;
+type music_type = MUS_NONE | MUS_CMD | MUS_WAV | MUS_MOD | MUS_MID | MUS_OGG
+  | MUS_MP3 | MUS_MP3_MAD | MUS_FLAC | MUS_MODPLUG;;
 
 (* The internal format for a music chunk interpreted via mikmod *)
 type music;;
@@ -59,6 +60,9 @@ val load_mus: file: string -> music;;
 (* Load a music file from an SDL_RWop object (Ogg and MikMod specific currently)
    Matt Campbell (matt@campbellhome.dhs.org) April 2000 *)
 (* val load_mus_rw: rw: rwops -> music;; *)
+
+(* Load a music file from an SDL_RWop object assuming a specific format *)
+(* val load_mustype_rw: rw: rwops -> t: music_type -> freesrc: int -> music;; *)
 
 (* Load a wave file of the mixer format from a memory buffer *)
 val quick_load_wav: mem: byte_array -> chunk;;
@@ -451,8 +455,8 @@ val paused_music: unit -> bool;;
 (* Set the current position in the music stream.
    This returns 0 if successful, or -1 if it failed or isn't implemented.
    This function is only implemented for MOD music formats (set pattern
-   order number) and for OGG music (set position in seconds), at the
-   moment. *)
+   order number) and for OGG, FLAC, MP3_MAD, and MODPLUG music (set 
+   position in seconds), at the moment. *)
 val set_music_position: position: float -> unit;;
 
 (* Check the status of a specific channel.
@@ -466,6 +470,11 @@ val set_music_cmd: command: string -> unit;;
 (* Synchro value is set by MikMod from modules while playing *)
 val set_synchro_value: value: int -> unit;;
 val get_synchro_value: unit -> int;;
+
+(* Set/Get/Iterate SoundFonts paths to use by supported MIDI backends *)
+val set_sound_fonts: paths: string -> unit;;
+val get_sound_fonts: unit -> string;;
+val each_sound_font: (string -> int) -> int;;
 
 (* Get the Mix_Chunk currently associated with a mixer channel
     Returns NULL if it's an invalid channel, or there's no chunk associated. *)

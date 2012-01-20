@@ -2,7 +2,7 @@ open Sdl;;
 
 external linked_version: unit -> int * int * int = "sdlimagestub_linked_version";;
 
-type init_flags = INIT_JPG | INIT_PNG | INIT_TIF;;
+type init_flags = INIT_JPG | INIT_PNG | INIT_TIF | INIT_WEBP;;
 
 external init: init_flags list -> unit = "sdlimagestub_init";;
 external quit: unit -> unit = "sdlimagestub_quit";;
