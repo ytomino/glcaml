@@ -515,3 +515,13 @@ CAMLprim value sdlttfstub_was_init(value unit)
 	value result = Val_bool(TTF_WasInit());
 	CAMLreturn(result);
 }
+
+CAMLprim value sdlttfstub_get_font_kerning_size(value font, value prev_index, value index)
+{
+	CAMLparam3(font, prev_index, index);
+	value result = Val_int(TTF_GetFontKerningSize(
+		TTF_Font_val(font),
+		Int_val(prev_index),
+		Int_val(index)));
+	CAMLreturn(result);
+}

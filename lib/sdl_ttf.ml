@@ -54,3 +54,4 @@ external render_glyph_blended: font: font -> ch: int -> fg: Video.color -> Video
 external close_font: font: font -> unit = "sdlttfstub_close_font";;
 external quit: unit -> unit = "sdlttfstub_quit";;
 external was_init: unit -> bool = "sdlttfstub_was_init";;
+external get_font_kerning_size: font: font -> prev_index: int -> index: int -> int = "sdlttfstub_get_font_kerning_size";;
