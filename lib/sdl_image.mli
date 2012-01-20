@@ -1,5 +1,5 @@
 (* Objective Caml interface for SDL_image with SDLCaml *)
-(* based on SDL_image.h 1.2.10 *)
+(* based on SDL_image.h 1.2.11 *)
 
 open Sdl;;
 
@@ -8,7 +8,7 @@ open Sdl;;
    use the SDL_IMAGE_VERSION() macro. *)
 val linked_version: unit -> int * int * int;;
 
-type init_flags = INIT_JPG | INIT_PNG | INIT_TIF;;
+type init_flags = INIT_JPG | INIT_PNG | INIT_TIF | INIT_WEBP;;
 
 (* Loads dynamic libraries and prepares them for use.  Flags should be
    one or more flags from IMG_InitFlags OR'd together.
@@ -24,7 +24,7 @@ val quit: unit -> unit;;
    If the image format supports a transparent pixel, SDL will set the
    colorkey for the surface.  You can enable RLE acceleration on the
    surface afterwards by calling:
-	SDL_SetColorKey(image, SDL_RLEACCEL, image->format->colorkey); *)
+        SDL_SetColorKey(image, SDL_RLEACCEL, image->format->colorkey); *)
 (* val load_typed_rw: src: rwops -> freesrc: int -> image_type: string -> Video.surface;; *)
 (* Convenience functions *)
 val load: file: string -> Video.surface;;
@@ -47,7 +47,8 @@ val load: file: string -> Video.surface;;
    val is_tif: src: rwops -> bool;;
    val is_xcf: src: rwops -> bool;;
    val is_xpm: src: rwops -> bool;;
-   val is_xv: src: rwops -> bool;; *)
+   val is_xv: src: rwops -> bool;;
+   val is_webp: src: rwops -> bool;; *)
 
 (* Individual loading functions *)
 (* val load_ico_rw: src: rwops -> Video.surface;;
@@ -63,6 +64,7 @@ val load: file: string -> Video.surface;;
    val load_tif_rw: src: rwops -> Video.surface;;
    val load_xcf_rw: src: rwops -> Video.surface;;
    val load_xpm_rw: src: rwops -> Video.surface;;
-   val load_xv_rw: src: rwops -> Video.surface;; *)
+   val load_xv_rw: src: rwops -> Video.surface;;
+   val load_webp_rw: src: rwops -> Video.surface;; *)
 
 val read_xpm_from_array: xpm: string array -> Video.surface;;
