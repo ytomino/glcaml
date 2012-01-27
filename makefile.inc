@@ -4,7 +4,7 @@ BINDIR=bin
 LIBS=graphics unix bigarray
 GL_SOURCE=$(LIBDIR)/glcaml_stub.c $(LIBDIR)/glcaml.mli $(LIBDIR)/glcaml.ml
 
-CLIBS=SDL SDL_mixer GLEW
+CLIBS=SDL SDL_mixer GLEW GL
 SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml $(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
 
 ifdef NOSDLMIXER
