@@ -479,6 +479,9 @@ module Event : sig
     [APPACTIVE]     The application is visible *)
   val get_app_state : unit -> (app_state list)
 
+  (* mouse state *)
+  val get_mouse_state: unit -> int * int * int
+
   (** SDLKey enum
     An enumeration of keysym definitions.
     Note : A lot of the keysyms are unavailable on most keyboards. For example, the [K_1] keysym can't be accessed on a french keyboard.
@@ -563,7 +566,7 @@ module Event : sig
 
   (** Mouse motion event *)
   type mouse_motion_event = {
-    mousestate : press_release; (** The mouse button state ([PRESSED] or [RELEASED]) *)
+    mousestate : int;
     mx : int;         (** x coordinate of cursor *)
     my : int;         (** y coordinate of cursor *)
     mxrel : int;        (** Amount in x coordinate moved since last mouse motion event *)

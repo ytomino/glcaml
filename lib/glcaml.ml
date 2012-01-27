@@ -8144,7 +8144,7 @@ let _ = copy_ushort_array np1 p1 in
 r
 
 external glVertexAttribIPointerEXT: int -> int -> int -> int -> 'a -> unit = "glstub_glVertexAttribIPointerEXT" "glstub_glVertexAttribIPointerEXT"
-external glVertexAttribPointer: int -> int -> int -> bool -> int -> int -> unit = "glstub_glVertexAttribPointer_byte" "glstub_glVertexAttribPointer"
+external glVertexAttribPointer: int -> int -> int -> bool -> int -> 'a -> unit = "glstub_glVertexAttribPointer_byte" "glstub_glVertexAttribPointer"
 external glVertexAttribPointerARB: int -> int -> int -> bool -> int -> 'a -> unit = "glstub_glVertexAttribPointerARB_byte" "glstub_glVertexAttribPointerARB"
 external glVertexAttribPointerNV: int -> int -> int -> int -> 'a -> unit = "glstub_glVertexAttribPointerNV" "glstub_glVertexAttribPointerNV"
 external glVertexAttribs1dvNV: int -> int -> float array -> unit = "glstub_glVertexAttribs1dvNV" "glstub_glVertexAttribs1dvNV"

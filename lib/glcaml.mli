@@ -5482,7 +5482,7 @@ val glVertexAttribI4usvEXT : int -> int array -> unit
 external glVertexAttribIPointerEXT : int -> int -> int -> int -> 'a -> unit
   = "glstub_glVertexAttribIPointerEXT" "glstub_glVertexAttribIPointerEXT"
 external glVertexAttribPointer :
-  int -> int -> int -> bool -> int -> int -> unit
+  int -> int -> int -> bool -> int -> 'a -> unit
   = "glstub_glVertexAttribPointer_byte" "glstub_glVertexAttribPointer"
 external glVertexAttribPointerARB :
   int -> int -> int -> bool -> int -> 'a -> unit
