@@ -1,27 +1,42 @@
 LIBDIR=lib
 SRCDIR=examples
 BINDIR=bin
-LIBS=graphics unix bigarray
+LIBS=unix bigarray
 GL_SOURCE=$(LIBDIR)/glcaml_stub.c $(LIBDIR)/glcaml.mli $(LIBDIR)/glcaml.ml
 
-CLIBS=SDL GLEW
-SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
+ifdef WIN32
+TARGET=i686-pc-mingw32 # msvc?
+else
+TARGET=$(shell gcc -dumpmachine)
+endif
 
-ifneq ($(findstring darwin,$(shell gcc -dumpmachine)),)
-OCAMLLDFLAGS=-ccopt -framework -ccopt Cocoa -ccopt -framework -ccopt OpenGL
-CLIBS+=SDLmain
+ifneq ($(GLEW),)
+CFLAGS=-DUSE_GLEW
+CLIBS=GLEW
+endif
+
+ifdef NOSDL
+LIBS+=graphics
+WIN_SOURCE=$(LIBDIR)/win_stub.c $(LIBDIR)/win.mli $(LIBDIR)/win.ml
+ifneq ($(findstring mingw32,$(TARGET)),)
+CLIBS+=opengl32 gdi32
 else
 CLIBS+=GL
+ifneq ($(findstring darwin,$(TARGET)),)
+CFLAGS+=-D__unix__ -isystem /usr/X11/include
 endif
-
-ifdef NOSDLMIXER
-CLIBS=SDL GLEW
+endif
+else
+CLIBS+=SDL
+ifneq ($(findstring darwin,$(TARGET)),)
+CLIBS+=SDLmain
+OCAMLLDFLAGS+=-ccopt -framework -ccopt Cocoa -ccopt -framework -ccopt OpenGL
+endif
 SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
-endif
-
 ifndef NOSDLMIXER
 CLIBS+=SDL_mixer
 SDL_SOURCE+=$(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
+endif
 endif
 
 EXAMPLE=$(SRCDIR)/$(MLFILE).ml

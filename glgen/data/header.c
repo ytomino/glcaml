@@ -35,13 +35,17 @@
 #include <caml/callback.h>
 #include <caml/bigarray.h>
 
+#if defined(USE_GLEW)
 #include <GL/glew.h>
+#endif
 
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef unsigned int GLbitfield;
 typedef void GLvoid;
-//typedef char GLbyte;
+#if !defined(__gl_h_) && !defined(__GLEW_H__)
+typedef char GLbyte;
+#endif
 typedef short GLshort;
 typedef int GLint;
 typedef unsigned char GLubyte;
@@ -53,9 +57,17 @@ typedef float GLclampf;
 typedef double GLdouble;
 typedef double GLclampd;
 typedef char GLchar;
+#if !defined(__gl_h_)
 typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptr;
+#endif
 typedef char* GLstring;
+
+#if defined(__GLEW_H__)
+#define DECLARE_FUNCTION(func, args, ret)
+#define LOAD_FUNCTION(func)
+#define CALL_FUNCTION(func) func
+#else
 
 #ifdef _WIN32
 #include <windows.h>
@@ -120,6 +132,33 @@ static void *get_proc_address(char *fname)
 {
         return dlsym(lib, fname);
 }
+#endif
+
+#define DECLARE_FUNCTION(func, args, ret)                               \
+typedef ret APIENTRY (*pstub_##func)args;                               \
+static pstub_##func stub_##func = NULL;                                 \
+static int loaded_##func = 0;
+
+#define LOAD_FUNCTION(func)                                             \
+        if(!loaded_##func)                                              \
+        {                                                               \
+                init_lib ();                                            \
+                stub_##func = (pstub_##func)get_proc_address(#func);    \
+                if(stub_##func)                                         \
+                {                                                       \
+                        loaded_##func = 1;                              \
+                }                                                       \
+                else                                                    \
+                {                                                       \
+                        char fn[256], buf[300];                         \
+                        strncpy(fn, #func, 255);                        \
+                        sprintf(buf, "Unable to load %s", fn);          \
+                        caml_failwith(buf);                             \
+                }                                                       \
+        }
+
+#define CALL_FUNCTION(func) (*stub_##func)
+
 #endif
 
 value unsafe_coercion(value v)

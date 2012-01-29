@@ -2,11 +2,20 @@ MAKE=make
 # Uncomment the following line on WIN32
 # MAKE=make WIN32=true
 
-all: sdlmixer sdl
+.PHONY: all sdl sdlmixer nosdl clean htmldoc
+
+# Uncomment the following line if use glew
+# export GLEW=true
+
+ALLTARGETS=sdl sdlmixer
+ifeq ($(GLEW),)
+ALLTARGETS+=nosdl
+endif
+
+all: $(ALLTARGETS)
 
 sdlmixer: 
 	$(MAKE) -f makefile.inc MLFILE=mixer
-
 
 sdl:
 	$(MAKE) -f makefile.inc MLFILE=audiopan
@@ -27,6 +36,15 @@ sdl:
 	$(MAKE) -f makefile.inc MLFILE=lesson07
 	$(MAKE) -f makefile.inc MLFILE=lesson08
 	$(MAKE) -f makefile.inc MLFILE=lesson09
+
+ifeq ($(GLEW),)
+nosdl:	
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker
+	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader
+endif
 
 clean:
 	$(MAKE) -f makefile.inc MLFILE=audiopan clean
