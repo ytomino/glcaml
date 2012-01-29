@@ -69,7 +69,7 @@ OCAMLCFLAGS:=-w L
 ifneq ($(ComSpec),)
 CFLAGS:=-O2
 else
-CFLAGS:=-O2 -D__unix__ -I $(shell port dir glut)/../../../../../../../../include
+CFLAGS:=-O2 -D__unix__ -I/usr/X11/include
 endif
 
 ifneq ($(ComSpec),)
@@ -77,8 +77,7 @@ OCAMLMKLIBFLAGS=-lopengl32 -lgdi32
 CCLIB=-cclib -lopengl32 -cclib -lgdi32
 FLFLAGS:=-defaultlib -lopengl32 -defaultlib -lgdi32
 else
-OPENGL_DYLIB=/System/Library/Frameworks/OpenGL.framework/Versions/A/Libraries/libGL.dylib
-OCAMLMKLIBFLAGS=-L/usr/X11/lib -lGL -cclib -dylib_file -cclib $(OPENGL_DYLIB):$(OPENGL_DYLIB)
+OCAMLMKLIBFLAGS=-L/usr/X11/lib -lGL
 endif
 ########
 
