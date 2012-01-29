@@ -3950,8 +3950,6 @@ val glGetPixelTransformParameterfvEXT : int -> int -> float array -> unit
 val glGetPixelTransformParameterivEXT : int -> int -> int array -> unit
 external glGetPointerv : int -> 'a -> unit = "glstub_glGetPointerv"
   "glstub_glGetPointerv"
-external glGetPointervEXT : int -> 'a -> unit = "glstub_glGetPointervEXT"
-  "glstub_glGetPointervEXT"
 val glGetPolygonStipple : int array -> unit
 external glGetProgramEnvParameterdvARB : int -> int -> float array -> unit
   = "glstub_glGetProgramEnvParameterdvARB"

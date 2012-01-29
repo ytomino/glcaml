@@ -4797,7 +4797,6 @@ let _ = copy_word_array np2 p2 in
 r
 
 external glGetPointerv: int -> 'a -> unit = "glstub_glGetPointerv" "glstub_glGetPointerv"
-external glGetPointervEXT: int -> 'a -> unit = "glstub_glGetPointervEXT" "glstub_glGetPointervEXT"
 
 external glGetPolygonStipple: ubyte_array -> unit = "glstub_glGetPolygonStipple" "glstub_glGetPolygonStipple"
 let glGetPolygonStipple p0 =

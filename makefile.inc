@@ -4,12 +4,24 @@ BINDIR=bin
 LIBS=graphics unix bigarray
 GL_SOURCE=$(LIBDIR)/glcaml_stub.c $(LIBDIR)/glcaml.mli $(LIBDIR)/glcaml.ml
 
-CLIBS=SDL SDL_mixer GLEW GL
-SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml $(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
+CLIBS=SDL GLEW
+SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
+
+ifneq ($(findstring darwin,$(shell gcc -dumpmachine)),)
+OCAMLLDFLAGS=-ccopt -framework -ccopt Cocoa -ccopt -framework -ccopt OpenGL
+CLIBS+=SDLmain
+else
+CLIBS+=GL
+endif
 
 ifdef NOSDLMIXER
 CLIBS=SDL GLEW
 SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
+endif
+
+ifndef NOSDLMIXER
+CLIBS+=SDL_mixer
+SDL_SOURCE+=$(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
 endif
 
 EXAMPLE=$(SRCDIR)/$(MLFILE).ml

@@ -5531,15 +5531,6 @@ value glstub_glGetPointerv(value v0, value v1)
 	CAMLreturn(Val_unit);
 }
 
-value glstub_glGetPointervEXT(value v0, value v1)
-{
-	CAMLparam2(v0, v1);
-	GLenum lv0 = Int_val(v0);
-	GLvoid** lv1 = Data_bigarray_val(v1);
-	 glGetPointervEXT(lv0, lv1);
-	CAMLreturn(Val_unit);
-}
-
 value glstub_glGetPolygonStipple(value v0)
 {
 	CAMLparam1(v0);
