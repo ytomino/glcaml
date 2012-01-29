@@ -14638,7 +14638,7 @@ value glstub_glVertexAttribPointer(value v0, value v1, value v2, value v3, value
 	GLenum lv2 = Int_val(v2);
 	GLboolean lv3 = Bool_val(v3);
 	GLsizei lv4 = Int_val(v4);
-	GLuint lv5 = Int_val(v5);
+	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	 glVertexAttribPointer(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
