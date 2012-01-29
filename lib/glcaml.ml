@@ -536,10 +536,6 @@ let gl_invariant_value_ext = 0x000087ea
 let gl_invariant_datatype_ext = 0x000087eb
 let gl_local_constant_value_ext = 0x000087ec
 let gl_local_constant_datatype_ext = 0x000087ed
-let gl_ktx_front_region = 0x00000000
-let gl_ktx_back_region = 0x00000001
-let gl_ktx_z_region = 0x00000002
-let gl_ktx_stencil_region = 0x00000003
 let gl_max_program_exec_instructions_nv = 0x000088f4
 let gl_max_program_call_depth_nv = 0x000088f5
 let gl_max_program_if_depth_nv = 0x000088f6
@@ -3120,7 +3116,6 @@ external glBlendFuncSeparateEXT: int -> int -> int -> int -> unit = "glstub_glBl
 external glBlitFramebufferEXT: int -> int -> int -> int -> int -> int -> int -> int -> int -> int -> unit = "glstub_glBlitFramebufferEXT_byte" "glstub_glBlitFramebufferEXT"
 external glBufferData: int -> int -> 'a -> int -> unit = "glstub_glBufferData" "glstub_glBufferData"
 external glBufferDataARB: int -> int -> 'a -> int -> unit = "glstub_glBufferDataARB" "glstub_glBufferDataARB"
-external glBufferRegionEnabledEXT: unit -> int = "glstub_glBufferRegionEnabledEXT" "glstub_glBufferRegionEnabledEXT"
 external glBufferSubData: int -> int -> int -> 'a -> unit = "glstub_glBufferSubData" "glstub_glBufferSubData"
 external glBufferSubDataARB: int -> int -> int -> 'a -> unit = "glstub_glBufferSubDataARB" "glstub_glBufferSubDataARB"
 external glCallList: int -> unit = "glstub_glCallList" "glstub_glCallList"
@@ -3489,7 +3484,6 @@ r
 
 external glCurrentPaletteMatrixARB: int -> unit = "glstub_glCurrentPaletteMatrixARB" "glstub_glCurrentPaletteMatrixARB"
 external glDeleteAsyncMarkersSGIX: int -> int -> unit = "glstub_glDeleteAsyncMarkersSGIX" "glstub_glDeleteAsyncMarkersSGIX"
-external glDeleteBufferRegionEXT: int -> unit = "glstub_glDeleteBufferRegionEXT" "glstub_glDeleteBufferRegionEXT"
 
 external glDeleteBuffers: int -> word_array -> unit = "glstub_glDeleteBuffers" "glstub_glDeleteBuffers"
 let glDeleteBuffers p0 p1 =
@@ -3640,7 +3634,6 @@ external glDrawArrays: int -> int -> int -> unit = "glstub_glDrawArrays" "glstub
 external glDrawArraysEXT: int -> int -> int -> unit = "glstub_glDrawArraysEXT" "glstub_glDrawArraysEXT"
 external glDrawArraysInstancedEXT: int -> int -> int -> int -> unit = "glstub_glDrawArraysInstancedEXT" "glstub_glDrawArraysInstancedEXT"
 external glDrawBuffer: int -> unit = "glstub_glDrawBuffer" "glstub_glDrawBuffer"
-external glDrawBufferRegionEXT: int -> int -> int -> int -> int -> int -> int -> unit = "glstub_glDrawBufferRegionEXT_byte" "glstub_glDrawBufferRegionEXT"
 
 external glDrawBuffers: int -> word_array -> unit = "glstub_glDrawBuffers" "glstub_glDrawBuffers"
 let glDrawBuffers p0 p1 =
@@ -4804,7 +4797,6 @@ let _ = copy_word_array np2 p2 in
 r
 
 external glGetPointerv: int -> 'a -> unit = "glstub_glGetPointerv" "glstub_glGetPointerv"
-external glGetPointervEXT: int -> 'a -> unit = "glstub_glGetPointervEXT" "glstub_glGetPointervEXT"
 
 external glGetPolygonStipple: ubyte_array -> unit = "glstub_glGetPolygonStipple" "glstub_glGetPolygonStipple"
 let glGetPolygonStipple p0 =
@@ -5896,7 +5888,6 @@ let np1 = to_short_array p1 in
 let r = glMultiTexCoord4svARB p0 np1 in
 r
 
-external glNewBufferRegionEXT: int -> int = "glstub_glNewBufferRegionEXT" "glstub_glNewBufferRegionEXT"
 external glNewList: int -> int -> unit = "glstub_glNewList" "glstub_glNewList"
 external glNewObjectBufferATI: int -> 'a -> int -> int = "glstub_glNewObjectBufferATI" "glstub_glNewObjectBufferATI"
 external glNormal3b: int -> int -> int -> unit = "glstub_glNormal3b" "glstub_glNormal3b"
@@ -6392,7 +6383,6 @@ let r = glRasterPos4sv np0 in
 r
 
 external glReadBuffer: int -> unit = "glstub_glReadBuffer" "glstub_glReadBuffer"
-external glReadBufferRegionEXT: int -> int -> int -> int -> int -> unit = "glstub_glReadBufferRegionEXT" "glstub_glReadBufferRegionEXT"
 external glReadPixels: int -> int -> int -> int -> int -> int -> 'a -> unit = "glstub_glReadPixels_byte" "glstub_glReadPixels"
 external glReadVideoPixelsSUN: int -> int -> int -> int -> int -> int -> 'a -> unit = "glstub_glReadVideoPixelsSUN_byte" "glstub_glReadVideoPixelsSUN"
 external glRectd: float -> float -> float -> float -> unit = "glstub_glRectd" "glstub_glRectd"
@@ -8625,3 +8615,4 @@ let _ = copy_short_array np0 p0 in
 r
 
 external glWriteMaskEXT: int -> int -> int -> int -> int -> int -> unit = "glstub_glWriteMaskEXT_byte" "glstub_glWriteMaskEXT"
+external glewInit: unit -> int = "glstub_glewInit" "glstub_glewInit"

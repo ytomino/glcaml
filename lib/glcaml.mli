@@ -580,10 +580,6 @@ val gl_invariant_value_ext : int
 val gl_invariant_datatype_ext : int
 val gl_local_constant_value_ext : int
 val gl_local_constant_datatype_ext : int
-val gl_ktx_front_region : int
-val gl_ktx_back_region : int
-val gl_ktx_z_region : int
-val gl_ktx_stencil_region : int
 val gl_max_program_exec_instructions_nv : int
 val gl_max_program_call_depth_nv : int
 val gl_max_program_if_depth_nv : int
@@ -3191,8 +3187,6 @@ external glBufferData : int -> int -> 'a -> int -> unit
   = "glstub_glBufferData" "glstub_glBufferData"
 external glBufferDataARB : int -> int -> 'a -> int -> unit
   = "glstub_glBufferDataARB" "glstub_glBufferDataARB"
-external glBufferRegionEnabledEXT : unit -> int
-  = "glstub_glBufferRegionEnabledEXT" "glstub_glBufferRegionEnabledEXT"
 external glBufferSubData : int -> int -> int -> 'a -> unit
   = "glstub_glBufferSubData" "glstub_glBufferSubData"
 external glBufferSubDataARB : int -> int -> int -> 'a -> unit
@@ -3507,8 +3501,6 @@ external glCurrentPaletteMatrixARB : int -> unit
   = "glstub_glCurrentPaletteMatrixARB" "glstub_glCurrentPaletteMatrixARB"
 external glDeleteAsyncMarkersSGIX : int -> int -> unit
   = "glstub_glDeleteAsyncMarkersSGIX" "glstub_glDeleteAsyncMarkersSGIX"
-external glDeleteBufferRegionEXT : int -> unit
-  = "glstub_glDeleteBufferRegionEXT" "glstub_glDeleteBufferRegionEXT"
 val glDeleteBuffers : int -> int array -> unit
 val glDeleteBuffersARB : int -> int array -> unit
 val glDeleteFencesAPPLE : int -> int array -> unit
@@ -3576,9 +3568,6 @@ external glDrawArraysInstancedEXT : int -> int -> int -> int -> unit
   = "glstub_glDrawArraysInstancedEXT" "glstub_glDrawArraysInstancedEXT"
 external glDrawBuffer : int -> unit = "glstub_glDrawBuffer"
   "glstub_glDrawBuffer"
-external glDrawBufferRegionEXT :
-  int -> int -> int -> int -> int -> int -> int -> unit
-  = "glstub_glDrawBufferRegionEXT_byte" "glstub_glDrawBufferRegionEXT"
 val glDrawBuffers : int -> int array -> unit
 val glDrawBuffersARB : int -> int array -> unit
 val glDrawBuffersATI : int -> int array -> unit
@@ -3961,8 +3950,6 @@ val glGetPixelTransformParameterfvEXT : int -> int -> float array -> unit
 val glGetPixelTransformParameterivEXT : int -> int -> int array -> unit
 external glGetPointerv : int -> 'a -> unit = "glstub_glGetPointerv"
   "glstub_glGetPointerv"
-external glGetPointervEXT : int -> 'a -> unit = "glstub_glGetPointervEXT"
-  "glstub_glGetPointervEXT"
 val glGetPolygonStipple : int array -> unit
 external glGetProgramEnvParameterdvARB : int -> int -> float array -> unit
   = "glstub_glGetProgramEnvParameterdvARB"
@@ -4398,8 +4385,6 @@ external glMultiTexCoord4sARB : int -> int -> int -> int -> int -> unit
   = "glstub_glMultiTexCoord4sARB" "glstub_glMultiTexCoord4sARB"
 val glMultiTexCoord4sv : int -> int array -> unit
 val glMultiTexCoord4svARB : int -> int array -> unit
-external glNewBufferRegionEXT : int -> int = "glstub_glNewBufferRegionEXT"
-  "glstub_glNewBufferRegionEXT"
 external glNewList : int -> int -> unit = "glstub_glNewList"
   "glstub_glNewList"
 external glNewObjectBufferATI : int -> 'a -> int -> int
@@ -4653,8 +4638,6 @@ external glRasterPos4s : int -> int -> int -> int -> unit
 val glRasterPos4sv : int array -> unit
 external glReadBuffer : int -> unit = "glstub_glReadBuffer"
   "glstub_glReadBuffer"
-external glReadBufferRegionEXT : int -> int -> int -> int -> int -> unit
-  = "glstub_glReadBufferRegionEXT" "glstub_glReadBufferRegionEXT"
 external glReadPixels : int -> int -> int -> int -> int -> int -> 'a -> unit
   = "glstub_glReadPixels_byte" "glstub_glReadPixels"
 external glReadVideoPixelsSUN :
@@ -5694,3 +5677,4 @@ external glWindowPos4sMESA : int -> int -> int -> int -> unit
 val glWindowPos4svMESA : int array -> unit
 external glWriteMaskEXT : int -> int -> int -> int -> int -> int -> unit
   = "glstub_glWriteMaskEXT_byte" "glstub_glWriteMaskEXT"
+external glewInit : unit -> int = "glstub_glewInit" "glstub_glewInit"

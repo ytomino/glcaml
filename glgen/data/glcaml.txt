@@ -597,16 +597,6 @@
 	void glGetLocalConstantBooleanvEXT (GLuint id, GLenum value, GLboolean* data)
 	void glGetLocalConstantIntegervEXT (GLuint id, GLenum value, GLint* data)
 	void glGetLocalConstantFloatvEXT (GLuint id, GLenum value, GLfloat* data)
---GL_KTX_buffer_region
-	GL_KTX_FRONT_REGION 0x0
-	GL_KTX_BACK_REGION 0x1
-	GL_KTX_Z_REGION 0x2
-	GL_KTX_STENCIL_REGION 0x3
-	GLuint glBufferRegionEnabledEXT (void)
-	GLuint glNewBufferRegionEXT (GLenum region)
-	void glDeleteBufferRegionEXT (GLenum region)
-	void glReadBufferRegionEXT (GLuint region, GLint x, GLint y, GLsizei width, GLsizei height)
-	void glDrawBufferRegionEXT (GLuint region, GLint x, GLint y, GLsizei width, GLsizei height, GLint xDest, GLint yDest)
 --GL_NV_fragment_program2
 --http://www.nvidia.com/dev_content/nvopenglspecs/GL_NV_fragment_program2.txt
 	GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV 0x88F4
@@ -2211,7 +2201,6 @@
 	void glColorPointerEXT (GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glDrawArraysEXT (GLenum mode, GLint first, GLsizei count)
 	void glEdgeFlagPointerEXT (GLsizei stride, GLsizei count, GLboolean* pointer)
-	void glGetPointervEXT (GLenum pname, GLvoid** params)
 	void glIndexPointerEXT (GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glNormalPointerEXT (GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glTexCoordPointerEXT (GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
@@ -4928,3 +4917,4 @@
 	void glDeleteVertexArrays (GLsizei n, GLuint* arrays)
 	void glGenVertexArrays (GLsizei n, GLuint* arrays)
 	GLboolean glIsVertexArray (GLuint array)
+    GLint glewInit (void)

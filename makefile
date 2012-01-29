@@ -1,18 +1,28 @@
 MAKE=make
 
-.PHONY: all nosdl sdl sdlmixer sdlttf clean
+.PHONY: all nosdl sdl sdlmixer sdlttf clean htmldoc
 
-all: build/glcaml.cma nosdl sdl sdlmixer sdlttf
+# Uncomment the following line if use glew
+# export GLEW=true
+
+ALLTARGETS=sdl sdlmixer sdlttf
+ifeq ($(GLEW),)
+ALLTARGETS+=nosdl
+endif
+
+all: build/glcaml.cma $(ALLTARGETS)
 
 build/glcaml.cma:
 	make -C lib -f makefile install DESTDIR=$(abspath build)
 
+ifeq ($(GLEW),)
 nosdl:
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=camera
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=checker
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=shader
+endif
 
 sdl:
 	$(MAKE) -f makefile.inc MLFILE=audiopan

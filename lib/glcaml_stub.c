@@ -35,11 +35,17 @@
 #include <caml/callback.h>
 #include <caml/bigarray.h>
 
+#if defined(USE_GLEW)
+#include <GL/glew.h>
+#endif
+
 typedef unsigned int GLenum;
 typedef unsigned char GLboolean;
 typedef unsigned int GLbitfield;
 typedef void GLvoid;
+#if !defined(__gl_h_) && !defined(__GLEW_H__)
 typedef char GLbyte;
+#endif
 typedef short GLshort;
 typedef int GLint;
 typedef unsigned char GLubyte;
@@ -51,9 +57,17 @@ typedef float GLclampf;
 typedef double GLdouble;
 typedef double GLclampd;
 typedef char GLchar;
+#if !defined(__gl_h_)
 typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptr;
+#endif
 typedef char* GLstring;
+
+#if defined(__GLEW_H__)
+#define DECLARE_FUNCTION(func, args, ret)
+#define LOAD_FUNCTION(func)
+#define CALL_FUNCTION(func) func
+#else
 
 #ifdef _WIN32
 #include <windows.h>
@@ -120,19 +134,10 @@ static void *get_proc_address(char *fname)
 }
 #endif
 
-value unsafe_coercion(value v)
-{
-        CAMLparam1(v);
-        CAMLreturn(v);
-}
-
-
 #define DECLARE_FUNCTION(func, args, ret)                               \
 typedef ret APIENTRY (*pstub_##func)args;                               \
 static pstub_##func stub_##func = NULL;                                 \
 static int loaded_##func = 0;
-
-
 
 #define LOAD_FUNCTION(func)                                             \
         if(!loaded_##func)                                              \
@@ -152,7 +157,15 @@ static int loaded_##func = 0;
                 }                                                       \
         }
 
+#define CALL_FUNCTION(func) (*stub_##func)
 
+#endif
+
+value unsafe_coercion(value v)
+{
+        CAMLparam1(v);
+        CAMLreturn(v);
+}
 
 DECLARE_FUNCTION(glAccum,(GLenum, GLfloat),void);
 value glstub_glAccum(value v0, value v1)
@@ -161,7 +174,7 @@ value glstub_glAccum(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glAccum);
-	(*stub_glAccum)(lv0, lv1);
+	CALL_FUNCTION(glAccum)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -171,7 +184,7 @@ value glstub_glActiveStencilFaceEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glActiveStencilFaceEXT);
-	(*stub_glActiveStencilFaceEXT)(lv0);
+	CALL_FUNCTION(glActiveStencilFaceEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -181,7 +194,7 @@ value glstub_glActiveTexture(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glActiveTexture);
-	(*stub_glActiveTexture)(lv0);
+	CALL_FUNCTION(glActiveTexture)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -191,7 +204,7 @@ value glstub_glActiveTextureARB(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glActiveTextureARB);
-	(*stub_glActiveTextureARB)(lv0);
+	CALL_FUNCTION(glActiveTextureARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -202,7 +215,7 @@ value glstub_glActiveVaryingNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLchar* lv1 = String_val(v1);
 	LOAD_FUNCTION(glActiveVaryingNV);
-	(*stub_glActiveVaryingNV)(lv0, lv1);
+	CALL_FUNCTION(glActiveVaryingNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -215,7 +228,7 @@ value glstub_glAddSwapHintRectWIN(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glAddSwapHintRectWIN);
-	(*stub_glAddSwapHintRectWIN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glAddSwapHintRectWIN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -231,7 +244,7 @@ value glstub_glAlphaFragmentOp1ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv4 = Int_val(v4);
 	GLuint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glAlphaFragmentOp1ATI);
-	(*stub_glAlphaFragmentOp1ATI)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glAlphaFragmentOp1ATI)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -255,7 +268,7 @@ value glstub_glAlphaFragmentOp2ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv7 = Int_val(v7);
 	GLuint lv8 = Int_val(v8);
 	LOAD_FUNCTION(glAlphaFragmentOp2ATI);
-	(*stub_glAlphaFragmentOp2ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glAlphaFragmentOp2ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -283,7 +296,7 @@ value glstub_glAlphaFragmentOp3ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv10 = Int_val(v10);
 	GLuint lv11 = Int_val(v11);
 	LOAD_FUNCTION(glAlphaFragmentOp3ATI);
-	(*stub_glAlphaFragmentOp3ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11);
+	CALL_FUNCTION(glAlphaFragmentOp3ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11);
 	CAMLreturn(Val_unit);
 }
 
@@ -299,7 +312,7 @@ value glstub_glAlphaFunc(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLclampf lv1 = Double_val(v1);
 	LOAD_FUNCTION(glAlphaFunc);
-	(*stub_glAlphaFunc)(lv0, lv1);
+	CALL_FUNCTION(glAlphaFunc)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -309,7 +322,7 @@ value glstub_glApplyTextureEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glApplyTextureEXT);
-	(*stub_glApplyTextureEXT)(lv0);
+	CALL_FUNCTION(glApplyTextureEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -323,7 +336,7 @@ value glstub_glAreProgramsResidentNV(value v0, value v1, value v2)
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	GLboolean ret;
 	LOAD_FUNCTION(glAreProgramsResidentNV);
-	ret = (*stub_glAreProgramsResidentNV)(lv0, lv1, lv2);
+	ret = CALL_FUNCTION(glAreProgramsResidentNV)(lv0, lv1, lv2);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -338,7 +351,7 @@ value glstub_glAreTexturesResident(value v0, value v1, value v2)
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	GLboolean ret;
 	LOAD_FUNCTION(glAreTexturesResident);
-	ret = (*stub_glAreTexturesResident)(lv0, lv1, lv2);
+	ret = CALL_FUNCTION(glAreTexturesResident)(lv0, lv1, lv2);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -353,7 +366,7 @@ value glstub_glAreTexturesResidentEXT(value v0, value v1, value v2)
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	GLboolean ret;
 	LOAD_FUNCTION(glAreTexturesResidentEXT);
-	ret = (*stub_glAreTexturesResidentEXT)(lv0, lv1, lv2);
+	ret = CALL_FUNCTION(glAreTexturesResidentEXT)(lv0, lv1, lv2);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -364,7 +377,7 @@ value glstub_glArrayElement(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glArrayElement);
-	(*stub_glArrayElement)(lv0);
+	CALL_FUNCTION(glArrayElement)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -374,7 +387,7 @@ value glstub_glArrayElementEXT(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glArrayElementEXT);
-	(*stub_glArrayElementEXT)(lv0);
+	CALL_FUNCTION(glArrayElementEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -390,7 +403,7 @@ value glstub_glArrayObjectATI(value v0, value v1, value v2, value v3, value v4, 
 	GLuint lv4 = Int_val(v4);
 	GLuint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glArrayObjectATI);
-	(*stub_glArrayObjectATI)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glArrayObjectATI)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -405,7 +418,7 @@ value glstub_glAsyncMarkerSGIX(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glAsyncMarkerSGIX);
-	(*stub_glAsyncMarkerSGIX)(lv0);
+	CALL_FUNCTION(glAsyncMarkerSGIX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -416,7 +429,7 @@ value glstub_glAttachObjectARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glAttachObjectARB);
-	(*stub_glAttachObjectARB)(lv0, lv1);
+	CALL_FUNCTION(glAttachObjectARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -427,7 +440,7 @@ value glstub_glAttachShader(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glAttachShader);
-	(*stub_glAttachShader)(lv0, lv1);
+	CALL_FUNCTION(glAttachShader)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -437,7 +450,7 @@ value glstub_glBegin(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBegin);
-	(*stub_glBegin)(lv0);
+	CALL_FUNCTION(glBegin)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -446,7 +459,7 @@ value glstub_glBeginFragmentShaderATI(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glBeginFragmentShaderATI);
-	(*stub_glBeginFragmentShaderATI)();
+	CALL_FUNCTION(glBeginFragmentShaderATI)();
 	CAMLreturn(Val_unit);
 }
 
@@ -456,7 +469,7 @@ value glstub_glBeginOcclusionQueryNV(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBeginOcclusionQueryNV);
-	(*stub_glBeginOcclusionQueryNV)(lv0);
+	CALL_FUNCTION(glBeginOcclusionQueryNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -467,7 +480,7 @@ value glstub_glBeginQuery(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBeginQuery);
-	(*stub_glBeginQuery)(lv0, lv1);
+	CALL_FUNCTION(glBeginQuery)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -478,7 +491,7 @@ value glstub_glBeginQueryARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBeginQueryARB);
-	(*stub_glBeginQueryARB)(lv0, lv1);
+	CALL_FUNCTION(glBeginQueryARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -487,7 +500,7 @@ value glstub_glBeginSceneEXT(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glBeginSceneEXT);
-	(*stub_glBeginSceneEXT)();
+	CALL_FUNCTION(glBeginSceneEXT)();
 	CAMLreturn(Val_unit);
 }
 
@@ -497,7 +510,7 @@ value glstub_glBeginTransformFeedbackNV(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBeginTransformFeedbackNV);
-	(*stub_glBeginTransformFeedbackNV)(lv0);
+	CALL_FUNCTION(glBeginTransformFeedbackNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -506,7 +519,7 @@ value glstub_glBeginVertexShaderEXT(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glBeginVertexShaderEXT);
-	(*stub_glBeginVertexShaderEXT)();
+	CALL_FUNCTION(glBeginVertexShaderEXT)();
 	CAMLreturn(Val_unit);
 }
 
@@ -518,7 +531,7 @@ value glstub_glBindAttribLocation(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLchar* lv2 = String_val(v2);
 	LOAD_FUNCTION(glBindAttribLocation);
-	(*stub_glBindAttribLocation)(lv0, lv1, lv2);
+	CALL_FUNCTION(glBindAttribLocation)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -530,7 +543,7 @@ value glstub_glBindAttribLocationARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLchar* lv2 = String_val(v2);
 	LOAD_FUNCTION(glBindAttribLocationARB);
-	(*stub_glBindAttribLocationARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glBindAttribLocationARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -541,7 +554,7 @@ value glstub_glBindBuffer(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindBuffer);
-	(*stub_glBindBuffer)(lv0, lv1);
+	CALL_FUNCTION(glBindBuffer)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -552,7 +565,7 @@ value glstub_glBindBufferARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindBufferARB);
-	(*stub_glBindBufferARB)(lv0, lv1);
+	CALL_FUNCTION(glBindBufferARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -564,7 +577,7 @@ value glstub_glBindBufferBaseNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glBindBufferBaseNV);
-	(*stub_glBindBufferBaseNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glBindBufferBaseNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -577,7 +590,7 @@ value glstub_glBindBufferOffsetNV(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLintptr lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBindBufferOffsetNV);
-	(*stub_glBindBufferOffsetNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBindBufferOffsetNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -591,7 +604,7 @@ value glstub_glBindBufferRangeNV(value v0, value v1, value v2, value v3, value v
 	GLintptr lv3 = Int_val(v3);
 	GLsizeiptr lv4 = Int_val(v4);
 	LOAD_FUNCTION(glBindBufferRangeNV);
-	(*stub_glBindBufferRangeNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glBindBufferRangeNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -603,7 +616,7 @@ value glstub_glBindFragDataLocationEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLchar* lv2 = String_val(v2);
 	LOAD_FUNCTION(glBindFragDataLocationEXT);
-	(*stub_glBindFragDataLocationEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glBindFragDataLocationEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -613,7 +626,7 @@ value glstub_glBindFragmentShaderATI(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBindFragmentShaderATI);
-	(*stub_glBindFragmentShaderATI)(lv0);
+	CALL_FUNCTION(glBindFragmentShaderATI)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -624,7 +637,7 @@ value glstub_glBindFramebufferEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindFramebufferEXT);
-	(*stub_glBindFramebufferEXT)(lv0, lv1);
+	CALL_FUNCTION(glBindFramebufferEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -637,7 +650,7 @@ value glstub_glBindLightParameterEXT(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLuint ret;
 	LOAD_FUNCTION(glBindLightParameterEXT);
-	ret = (*stub_glBindLightParameterEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glBindLightParameterEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -651,7 +664,7 @@ value glstub_glBindMaterialParameterEXT(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLuint ret;
 	LOAD_FUNCTION(glBindMaterialParameterEXT);
-	ret = (*stub_glBindMaterialParameterEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glBindMaterialParameterEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -664,7 +677,7 @@ value glstub_glBindParameterEXT(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glBindParameterEXT);
-	ret = (*stub_glBindParameterEXT)(lv0);
+	ret = CALL_FUNCTION(glBindParameterEXT)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -676,7 +689,7 @@ value glstub_glBindProgramARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindProgramARB);
-	(*stub_glBindProgramARB)(lv0, lv1);
+	CALL_FUNCTION(glBindProgramARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -687,7 +700,7 @@ value glstub_glBindProgramNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindProgramNV);
-	(*stub_glBindProgramNV)(lv0, lv1);
+	CALL_FUNCTION(glBindProgramNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -698,7 +711,7 @@ value glstub_glBindRenderbufferEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindRenderbufferEXT);
-	(*stub_glBindRenderbufferEXT)(lv0, lv1);
+	CALL_FUNCTION(glBindRenderbufferEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -712,7 +725,7 @@ value glstub_glBindTexGenParameterEXT(value v0, value v1, value v2)
 	GLenum lv2 = Int_val(v2);
 	GLuint ret;
 	LOAD_FUNCTION(glBindTexGenParameterEXT);
-	ret = (*stub_glBindTexGenParameterEXT)(lv0, lv1, lv2);
+	ret = CALL_FUNCTION(glBindTexGenParameterEXT)(lv0, lv1, lv2);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -724,7 +737,7 @@ value glstub_glBindTexture(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindTexture);
-	(*stub_glBindTexture)(lv0, lv1);
+	CALL_FUNCTION(glBindTexture)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -735,7 +748,7 @@ value glstub_glBindTextureEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBindTextureEXT);
-	(*stub_glBindTextureEXT)(lv0, lv1);
+	CALL_FUNCTION(glBindTextureEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -748,7 +761,7 @@ value glstub_glBindTextureUnitParameterEXT(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLuint ret;
 	LOAD_FUNCTION(glBindTextureUnitParameterEXT);
-	ret = (*stub_glBindTextureUnitParameterEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glBindTextureUnitParameterEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -759,7 +772,7 @@ value glstub_glBindVertexArray(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBindVertexArray);
-	(*stub_glBindVertexArray)(lv0);
+	CALL_FUNCTION(glBindVertexArray)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -769,7 +782,7 @@ value glstub_glBindVertexArrayAPPLE(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBindVertexArrayAPPLE);
-	(*stub_glBindVertexArrayAPPLE)(lv0);
+	CALL_FUNCTION(glBindVertexArrayAPPLE)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -779,7 +792,7 @@ value glstub_glBindVertexShaderEXT(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBindVertexShaderEXT);
-	(*stub_glBindVertexShaderEXT)(lv0);
+	CALL_FUNCTION(glBindVertexShaderEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -791,7 +804,7 @@ value glstub_glBinormalPointerEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glBinormalPointerEXT);
-	(*stub_glBinormalPointerEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glBinormalPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -808,7 +821,7 @@ value glstub_glBitmap(value v0, value v1, value v2, value v3, value v4, value v5
 	GLfloat lv5 = Double_val(v5);
 	GLubyte* lv6 = Data_bigarray_val(v6);
 	LOAD_FUNCTION(glBitmap);
-	(*stub_glBitmap)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glBitmap)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -826,7 +839,7 @@ value glstub_glBlendColor(value v0, value v1, value v2, value v3)
 	GLclampf lv2 = Double_val(v2);
 	GLclampf lv3 = Double_val(v3);
 	LOAD_FUNCTION(glBlendColor);
-	(*stub_glBlendColor)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBlendColor)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -839,7 +852,7 @@ value glstub_glBlendColorEXT(value v0, value v1, value v2, value v3)
 	GLclampf lv2 = Double_val(v2);
 	GLclampf lv3 = Double_val(v3);
 	LOAD_FUNCTION(glBlendColorEXT);
-	(*stub_glBlendColorEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBlendColorEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -849,7 +862,7 @@ value glstub_glBlendEquation(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBlendEquation);
-	(*stub_glBlendEquation)(lv0);
+	CALL_FUNCTION(glBlendEquation)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -859,7 +872,7 @@ value glstub_glBlendEquationEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glBlendEquationEXT);
-	(*stub_glBlendEquationEXT)(lv0);
+	CALL_FUNCTION(glBlendEquationEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -870,7 +883,7 @@ value glstub_glBlendEquationSeparate(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBlendEquationSeparate);
-	(*stub_glBlendEquationSeparate)(lv0, lv1);
+	CALL_FUNCTION(glBlendEquationSeparate)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -881,7 +894,7 @@ value glstub_glBlendEquationSeparateEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBlendEquationSeparateEXT);
-	(*stub_glBlendEquationSeparateEXT)(lv0, lv1);
+	CALL_FUNCTION(glBlendEquationSeparateEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -892,7 +905,7 @@ value glstub_glBlendFunc(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glBlendFunc);
-	(*stub_glBlendFunc)(lv0, lv1);
+	CALL_FUNCTION(glBlendFunc)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -905,7 +918,7 @@ value glstub_glBlendFuncSeparate(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBlendFuncSeparate);
-	(*stub_glBlendFuncSeparate)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBlendFuncSeparate)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -918,7 +931,7 @@ value glstub_glBlendFuncSeparateEXT(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBlendFuncSeparateEXT);
-	(*stub_glBlendFuncSeparateEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBlendFuncSeparateEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -938,7 +951,7 @@ value glstub_glBlitFramebufferEXT(value v0, value v1, value v2, value v3, value 
 	GLbitfield lv8 = Int_val(v8);
 	GLenum lv9 = Int_val(v9);
 	LOAD_FUNCTION(glBlitFramebufferEXT);
-	(*stub_glBlitFramebufferEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glBlitFramebufferEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -956,7 +969,7 @@ value glstub_glBufferData(value v0, value v1, value v2, value v3)
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBufferData);
-	(*stub_glBufferData)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBufferData)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -969,20 +982,8 @@ value glstub_glBufferDataARB(value v0, value v1, value v2, value v3)
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glBufferDataARB);
-	(*stub_glBufferDataARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBufferDataARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glBufferRegionEnabledEXT,(void),GLuint);
-value glstub_glBufferRegionEnabledEXT(value v0)
-{
-	CAMLparam1(v0);
-	CAMLlocal1(result);
-	GLuint ret;
-	LOAD_FUNCTION(glBufferRegionEnabledEXT);
-	ret = (*stub_glBufferRegionEnabledEXT)();
-	result = Val_int(ret);
-	CAMLreturn(result);
 }
 
 DECLARE_FUNCTION(glBufferSubData,(GLenum, GLintptr, GLsizeiptr, GLvoid*),void);
@@ -994,7 +995,7 @@ value glstub_glBufferSubData(value v0, value v1, value v2, value v3)
 	GLsizeiptr lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glBufferSubData);
-	(*stub_glBufferSubData)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBufferSubData)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1007,7 +1008,7 @@ value glstub_glBufferSubDataARB(value v0, value v1, value v2, value v3)
 	GLsizeiptr lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glBufferSubDataARB);
-	(*stub_glBufferSubDataARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glBufferSubDataARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1017,7 +1018,7 @@ value glstub_glCallList(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glCallList);
-	(*stub_glCallList)(lv0);
+	CALL_FUNCTION(glCallList)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1029,7 +1030,7 @@ value glstub_glCallLists(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glCallLists);
-	(*stub_glCallLists)(lv0, lv1, lv2);
+	CALL_FUNCTION(glCallLists)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1041,7 +1042,7 @@ value glstub_glCheckFramebufferStatusEXT(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLenum ret;
 	LOAD_FUNCTION(glCheckFramebufferStatusEXT);
-	ret = (*stub_glCheckFramebufferStatusEXT)(lv0);
+	ret = CALL_FUNCTION(glCheckFramebufferStatusEXT)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -1053,7 +1054,7 @@ value glstub_glClampColorARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glClampColorARB);
-	(*stub_glClampColorARB)(lv0, lv1);
+	CALL_FUNCTION(glClampColorARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1063,7 +1064,7 @@ value glstub_glClear(value v0)
 	CAMLparam1(v0);
 	GLbitfield lv0 = Int_val(v0);
 	LOAD_FUNCTION(glClear);
-	(*stub_glClear)(lv0);
+	CALL_FUNCTION(glClear)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1076,7 +1077,7 @@ value glstub_glClearAccum(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glClearAccum);
-	(*stub_glClearAccum)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glClearAccum)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1089,7 +1090,7 @@ value glstub_glClearColor(value v0, value v1, value v2, value v3)
 	GLclampf lv2 = Double_val(v2);
 	GLclampf lv3 = Double_val(v3);
 	LOAD_FUNCTION(glClearColor);
-	(*stub_glClearColor)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glClearColor)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1102,7 +1103,7 @@ value glstub_glClearColorIiEXT(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glClearColorIiEXT);
-	(*stub_glClearColorIiEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glClearColorIiEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1115,7 +1116,7 @@ value glstub_glClearColorIuiEXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glClearColorIuiEXT);
-	(*stub_glClearColorIuiEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glClearColorIuiEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1125,7 +1126,7 @@ value glstub_glClearDepth(value v0)
 	CAMLparam1(v0);
 	GLclampd lv0 = Double_val(v0);
 	LOAD_FUNCTION(glClearDepth);
-	(*stub_glClearDepth)(lv0);
+	CALL_FUNCTION(glClearDepth)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1135,7 +1136,7 @@ value glstub_glClearDepthdNV(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glClearDepthdNV);
-	(*stub_glClearDepthdNV)(lv0);
+	CALL_FUNCTION(glClearDepthdNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1145,7 +1146,7 @@ value glstub_glClearDepthfOES(value v0)
 	CAMLparam1(v0);
 	GLclampd lv0 = Double_val(v0);
 	LOAD_FUNCTION(glClearDepthfOES);
-	(*stub_glClearDepthfOES)(lv0);
+	CALL_FUNCTION(glClearDepthfOES)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1155,7 +1156,7 @@ value glstub_glClearIndex(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glClearIndex);
-	(*stub_glClearIndex)(lv0);
+	CALL_FUNCTION(glClearIndex)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1165,7 +1166,7 @@ value glstub_glClearStencil(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glClearStencil);
-	(*stub_glClearStencil)(lv0);
+	CALL_FUNCTION(glClearStencil)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1175,7 +1176,7 @@ value glstub_glClientActiveTexture(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glClientActiveTexture);
-	(*stub_glClientActiveTexture)(lv0);
+	CALL_FUNCTION(glClientActiveTexture)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1185,7 +1186,7 @@ value glstub_glClientActiveTextureARB(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glClientActiveTextureARB);
-	(*stub_glClientActiveTextureARB)(lv0);
+	CALL_FUNCTION(glClientActiveTextureARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1195,7 +1196,7 @@ value glstub_glClientActiveVertexStreamATI(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glClientActiveVertexStreamATI);
-	(*stub_glClientActiveVertexStreamATI)(lv0);
+	CALL_FUNCTION(glClientActiveVertexStreamATI)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1206,7 +1207,7 @@ value glstub_glClipPlane(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glClipPlane);
-	(*stub_glClipPlane)(lv0, lv1);
+	CALL_FUNCTION(glClipPlane)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1217,7 +1218,7 @@ value glstub_glClipPlanefOES(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glClipPlanefOES);
-	(*stub_glClipPlanefOES)(lv0, lv1);
+	CALL_FUNCTION(glClipPlanefOES)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1229,7 +1230,7 @@ value glstub_glColor3b(value v0, value v1, value v2)
 	GLbyte lv1 = Int_val(v1);
 	GLbyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3b);
-	(*stub_glColor3b)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3b)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1239,7 +1240,7 @@ value glstub_glColor3bv(value v0)
 	CAMLparam1(v0);
 	GLbyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3bv);
-	(*stub_glColor3bv)(lv0);
+	CALL_FUNCTION(glColor3bv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1251,7 +1252,7 @@ value glstub_glColor3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glColor3d);
-	(*stub_glColor3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1261,7 +1262,7 @@ value glstub_glColor3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3dv);
-	(*stub_glColor3dv)(lv0);
+	CALL_FUNCTION(glColor3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1273,7 +1274,7 @@ value glstub_glColor3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glColor3f);
-	(*stub_glColor3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1289,7 +1290,7 @@ value glstub_glColor3fVertex3fSUN(value v0, value v1, value v2, value v3, value 
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glColor3fVertex3fSUN);
-	(*stub_glColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -1305,7 +1306,7 @@ value glstub_glColor3fVertex3fvSUN(value v0, value v1)
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glColor3fVertex3fvSUN);
-	(*stub_glColor3fVertex3fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glColor3fVertex3fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1315,7 +1316,7 @@ value glstub_glColor3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3fv);
-	(*stub_glColor3fv)(lv0);
+	CALL_FUNCTION(glColor3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1327,7 +1328,7 @@ value glstub_glColor3hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3hNV);
-	(*stub_glColor3hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1337,7 +1338,7 @@ value glstub_glColor3hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3hvNV);
-	(*stub_glColor3hvNV)(lv0);
+	CALL_FUNCTION(glColor3hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1349,7 +1350,7 @@ value glstub_glColor3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3i);
-	(*stub_glColor3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1359,7 +1360,7 @@ value glstub_glColor3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3iv);
-	(*stub_glColor3iv)(lv0);
+	CALL_FUNCTION(glColor3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1371,7 +1372,7 @@ value glstub_glColor3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3s);
-	(*stub_glColor3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1381,7 +1382,7 @@ value glstub_glColor3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3sv);
-	(*stub_glColor3sv)(lv0);
+	CALL_FUNCTION(glColor3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1393,7 +1394,7 @@ value glstub_glColor3ub(value v0, value v1, value v2)
 	GLubyte lv1 = Int_val(v1);
 	GLubyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3ub);
-	(*stub_glColor3ub)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3ub)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1403,7 +1404,7 @@ value glstub_glColor3ubv(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3ubv);
-	(*stub_glColor3ubv)(lv0);
+	CALL_FUNCTION(glColor3ubv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1415,7 +1416,7 @@ value glstub_glColor3ui(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3ui);
-	(*stub_glColor3ui)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3ui)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1425,7 +1426,7 @@ value glstub_glColor3uiv(value v0)
 	CAMLparam1(v0);
 	GLuint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3uiv);
-	(*stub_glColor3uiv)(lv0);
+	CALL_FUNCTION(glColor3uiv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1437,7 +1438,7 @@ value glstub_glColor3us(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glColor3us);
-	(*stub_glColor3us)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor3us)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1447,7 +1448,7 @@ value glstub_glColor3usv(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor3usv);
-	(*stub_glColor3usv)(lv0);
+	CALL_FUNCTION(glColor3usv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1460,7 +1461,7 @@ value glstub_glColor4b(value v0, value v1, value v2, value v3)
 	GLbyte lv2 = Int_val(v2);
 	GLbyte lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4b);
-	(*stub_glColor4b)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4b)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1470,7 +1471,7 @@ value glstub_glColor4bv(value v0)
 	CAMLparam1(v0);
 	GLbyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4bv);
-	(*stub_glColor4bv)(lv0);
+	CALL_FUNCTION(glColor4bv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1483,7 +1484,7 @@ value glstub_glColor4d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glColor4d);
-	(*stub_glColor4d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1493,7 +1494,7 @@ value glstub_glColor4dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4dv);
-	(*stub_glColor4dv)(lv0);
+	CALL_FUNCTION(glColor4dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1506,7 +1507,7 @@ value glstub_glColor4f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glColor4f);
-	(*stub_glColor4f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1526,7 +1527,7 @@ value glstub_glColor4fNormal3fVertex3fSUN(value v0, value v1, value v2, value v3
 	GLfloat lv8 = Double_val(v8);
 	GLfloat lv9 = Double_val(v9);
 	LOAD_FUNCTION(glColor4fNormal3fVertex3fSUN);
-	(*stub_glColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -1543,7 +1544,7 @@ value glstub_glColor4fNormal3fVertex3fvSUN(value v0, value v1, value v2)
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColor4fNormal3fVertex3fvSUN);
-	(*stub_glColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1553,7 +1554,7 @@ value glstub_glColor4fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4fv);
-	(*stub_glColor4fv)(lv0);
+	CALL_FUNCTION(glColor4fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1566,7 +1567,7 @@ value glstub_glColor4hNV(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4hNV);
-	(*stub_glColor4hNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4hNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1576,7 +1577,7 @@ value glstub_glColor4hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4hvNV);
-	(*stub_glColor4hvNV)(lv0);
+	CALL_FUNCTION(glColor4hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1589,7 +1590,7 @@ value glstub_glColor4i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4i);
-	(*stub_glColor4i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1599,7 +1600,7 @@ value glstub_glColor4iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4iv);
-	(*stub_glColor4iv)(lv0);
+	CALL_FUNCTION(glColor4iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1612,7 +1613,7 @@ value glstub_glColor4s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4s);
-	(*stub_glColor4s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1622,7 +1623,7 @@ value glstub_glColor4sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4sv);
-	(*stub_glColor4sv)(lv0);
+	CALL_FUNCTION(glColor4sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1635,7 +1636,7 @@ value glstub_glColor4ub(value v0, value v1, value v2, value v3)
 	GLubyte lv2 = Int_val(v2);
 	GLubyte lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4ub);
-	(*stub_glColor4ub)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4ub)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1651,7 +1652,7 @@ value glstub_glColor4ubVertex2fSUN(value v0, value v1, value v2, value v3, value
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glColor4ubVertex2fSUN);
-	(*stub_glColor4ubVertex2fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColor4ubVertex2fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -1667,7 +1668,7 @@ value glstub_glColor4ubVertex2fvSUN(value v0, value v1)
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glColor4ubVertex2fvSUN);
-	(*stub_glColor4ubVertex2fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glColor4ubVertex2fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1684,7 +1685,7 @@ value glstub_glColor4ubVertex3fSUN(value v0, value v1, value v2, value v3, value
 	GLfloat lv5 = Double_val(v5);
 	GLfloat lv6 = Double_val(v6);
 	LOAD_FUNCTION(glColor4ubVertex3fSUN);
-	(*stub_glColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -1700,7 +1701,7 @@ value glstub_glColor4ubVertex3fvSUN(value v0, value v1)
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glColor4ubVertex3fvSUN);
-	(*stub_glColor4ubVertex3fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glColor4ubVertex3fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1710,7 +1711,7 @@ value glstub_glColor4ubv(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4ubv);
-	(*stub_glColor4ubv)(lv0);
+	CALL_FUNCTION(glColor4ubv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1723,7 +1724,7 @@ value glstub_glColor4ui(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4ui);
-	(*stub_glColor4ui)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4ui)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1733,7 +1734,7 @@ value glstub_glColor4uiv(value v0)
 	CAMLparam1(v0);
 	GLuint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4uiv);
-	(*stub_glColor4uiv)(lv0);
+	CALL_FUNCTION(glColor4uiv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1746,7 +1747,7 @@ value glstub_glColor4us(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glColor4us);
-	(*stub_glColor4us)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColor4us)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1756,7 +1757,7 @@ value glstub_glColor4usv(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glColor4usv);
-	(*stub_glColor4usv)(lv0);
+	CALL_FUNCTION(glColor4usv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -1773,7 +1774,7 @@ value glstub_glColorFragmentOp1ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv5 = Int_val(v5);
 	GLuint lv6 = Int_val(v6);
 	LOAD_FUNCTION(glColorFragmentOp1ATI);
-	(*stub_glColorFragmentOp1ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glColorFragmentOp1ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -1798,7 +1799,7 @@ value glstub_glColorFragmentOp2ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv8 = Int_val(v8);
 	GLuint lv9 = Int_val(v9);
 	LOAD_FUNCTION(glColorFragmentOp2ATI);
-	(*stub_glColorFragmentOp2ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glColorFragmentOp2ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -1827,7 +1828,7 @@ value glstub_glColorFragmentOp3ATI(value v0, value v1, value v2, value v3, value
 	GLuint lv11 = Int_val(v11);
 	GLuint lv12 = Int_val(v12);
 	LOAD_FUNCTION(glColorFragmentOp3ATI);
-	(*stub_glColorFragmentOp3ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
+	CALL_FUNCTION(glColorFragmentOp3ATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
 	CAMLreturn(Val_unit);
 }
 
@@ -1845,7 +1846,7 @@ value glstub_glColorMask(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLboolean lv3 = Bool_val(v3);
 	LOAD_FUNCTION(glColorMask);
-	(*stub_glColorMask)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColorMask)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1859,7 +1860,7 @@ value glstub_glColorMaskIndexedEXT(value v0, value v1, value v2, value v3, value
 	GLboolean lv3 = Bool_val(v3);
 	GLboolean lv4 = Bool_val(v4);
 	LOAD_FUNCTION(glColorMaskIndexedEXT);
-	(*stub_glColorMaskIndexedEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glColorMaskIndexedEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -1870,7 +1871,7 @@ value glstub_glColorMaterial(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glColorMaterial);
-	(*stub_glColorMaterial)(lv0, lv1);
+	CALL_FUNCTION(glColorMaterial)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -1883,7 +1884,7 @@ value glstub_glColorPointer(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glColorPointer);
-	(*stub_glColorPointer)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glColorPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -1897,7 +1898,7 @@ value glstub_glColorPointerEXT(value v0, value v1, value v2, value v3, value v4)
 	GLsizei lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glColorPointerEXT);
-	(*stub_glColorPointerEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glColorPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -1911,7 +1912,7 @@ value glstub_glColorPointerListIBM(value v0, value v1, value v2, value v3, value
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glColorPointerListIBM);
-	(*stub_glColorPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glColorPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -1923,7 +1924,7 @@ value glstub_glColorPointervINTEL(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColorPointervINTEL);
-	(*stub_glColorPointervINTEL)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColorPointervINTEL)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -1939,7 +1940,7 @@ value glstub_glColorSubTable(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorSubTable);
-	(*stub_glColorSubTable)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColorSubTable)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -1960,7 +1961,7 @@ value glstub_glColorSubTableEXT(value v0, value v1, value v2, value v3, value v4
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorSubTableEXT);
-	(*stub_glColorSubTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColorSubTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -1981,7 +1982,7 @@ value glstub_glColorTable(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTable);
-	(*stub_glColorTable)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColorTable)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2002,7 +2003,7 @@ value glstub_glColorTableEXT(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTableEXT);
-	(*stub_glColorTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColorTableEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2019,7 +2020,7 @@ value glstub_glColorTableParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColorTableParameterfv);
-	(*stub_glColorTableParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColorTableParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2031,7 +2032,7 @@ value glstub_glColorTableParameterfvSGI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColorTableParameterfvSGI);
-	(*stub_glColorTableParameterfvSGI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColorTableParameterfvSGI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2043,7 +2044,7 @@ value glstub_glColorTableParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColorTableParameteriv);
-	(*stub_glColorTableParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColorTableParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2055,7 +2056,7 @@ value glstub_glColorTableParameterivSGI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glColorTableParameterivSGI);
-	(*stub_glColorTableParameterivSGI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glColorTableParameterivSGI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2071,7 +2072,7 @@ value glstub_glColorTableSGI(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glColorTableSGI);
-	(*stub_glColorTableSGI)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glColorTableSGI)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2092,7 +2093,7 @@ value glstub_glCombinerInputNV(value v0, value v1, value v2, value v3, value v4,
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
 	LOAD_FUNCTION(glCombinerInputNV);
-	(*stub_glCombinerInputNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glCombinerInputNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2117,7 +2118,7 @@ value glstub_glCombinerOutputNV(value v0, value v1, value v2, value v3, value v4
 	GLboolean lv8 = Bool_val(v8);
 	GLboolean lv9 = Bool_val(v9);
 	LOAD_FUNCTION(glCombinerOutputNV);
-	(*stub_glCombinerOutputNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glCombinerOutputNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -2133,7 +2134,7 @@ value glstub_glCombinerParameterfNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glCombinerParameterfNV);
-	(*stub_glCombinerParameterfNV)(lv0, lv1);
+	CALL_FUNCTION(glCombinerParameterfNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -2144,7 +2145,7 @@ value glstub_glCombinerParameterfvNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glCombinerParameterfvNV);
-	(*stub_glCombinerParameterfvNV)(lv0, lv1);
+	CALL_FUNCTION(glCombinerParameterfvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -2155,7 +2156,7 @@ value glstub_glCombinerParameteriNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glCombinerParameteriNV);
-	(*stub_glCombinerParameteriNV)(lv0, lv1);
+	CALL_FUNCTION(glCombinerParameteriNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -2166,7 +2167,7 @@ value glstub_glCombinerParameterivNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glCombinerParameterivNV);
-	(*stub_glCombinerParameterivNV)(lv0, lv1);
+	CALL_FUNCTION(glCombinerParameterivNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -2178,7 +2179,7 @@ value glstub_glCombinerStageParameterfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glCombinerStageParameterfvNV);
-	(*stub_glCombinerStageParameterfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glCombinerStageParameterfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2188,7 +2189,7 @@ value glstub_glCompileShader(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glCompileShader);
-	(*stub_glCompileShader)(lv0);
+	CALL_FUNCTION(glCompileShader)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -2198,7 +2199,7 @@ value glstub_glCompileShaderARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glCompileShaderARB);
-	(*stub_glCompileShaderARB)(lv0);
+	CALL_FUNCTION(glCompileShaderARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -2215,7 +2216,7 @@ value glstub_glCompressedTexImage1D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexImage1D);
-	(*stub_glCompressedTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCompressedTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2237,7 +2238,7 @@ value glstub_glCompressedTexImage1DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexImage1DARB);
-	(*stub_glCompressedTexImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCompressedTexImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2260,7 +2261,7 @@ value glstub_glCompressedTexImage2D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv6 = Int_val(v6);
 	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glCompressedTexImage2D);
-	(*stub_glCompressedTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCompressedTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -2283,7 +2284,7 @@ value glstub_glCompressedTexImage2DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv6 = Int_val(v6);
 	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glCompressedTexImage2DARB);
-	(*stub_glCompressedTexImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCompressedTexImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -2307,7 +2308,7 @@ value glstub_glCompressedTexImage3D(value v0, value v1, value v2, value v3, valu
 	GLsizei lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexImage3D);
-	(*stub_glCompressedTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCompressedTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -2331,7 +2332,7 @@ value glstub_glCompressedTexImage3DARB(value v0, value v1, value v2, value v3, v
 	GLsizei lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexImage3DARB);
-	(*stub_glCompressedTexImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCompressedTexImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -2353,7 +2354,7 @@ value glstub_glCompressedTexSubImage1D(value v0, value v1, value v2, value v3, v
 	GLsizei lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexSubImage1D);
-	(*stub_glCompressedTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCompressedTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2375,7 +2376,7 @@ value glstub_glCompressedTexSubImage1DARB(value v0, value v1, value v2, value v3
 	GLsizei lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glCompressedTexSubImage1DARB);
-	(*stub_glCompressedTexSubImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCompressedTexSubImage1DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2399,7 +2400,7 @@ value glstub_glCompressedTexSubImage2D(value v0, value v1, value v2, value v3, v
 	GLsizei lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexSubImage2D);
-	(*stub_glCompressedTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCompressedTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -2423,7 +2424,7 @@ value glstub_glCompressedTexSubImage2DARB(value v0, value v1, value v2, value v3
 	GLsizei lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glCompressedTexSubImage2DARB);
-	(*stub_glCompressedTexSubImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCompressedTexSubImage2DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -2450,7 +2451,7 @@ value glstub_glCompressedTexSubImage3D(value v0, value v1, value v2, value v3, v
 	GLsizei lv9 = Int_val(v9);
 	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glCompressedTexSubImage3D);
-	(*stub_glCompressedTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glCompressedTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -2477,7 +2478,7 @@ value glstub_glCompressedTexSubImage3DARB(value v0, value v1, value v2, value v3
 	GLsizei lv9 = Int_val(v9);
 	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glCompressedTexSubImage3DARB);
-	(*stub_glCompressedTexSubImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glCompressedTexSubImage3DARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -2498,7 +2499,7 @@ value glstub_glConvolutionFilter1D(value v0, value v1, value v2, value v3, value
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glConvolutionFilter1D);
-	(*stub_glConvolutionFilter1D)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glConvolutionFilter1D)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2519,7 +2520,7 @@ value glstub_glConvolutionFilter1DEXT(value v0, value v1, value v2, value v3, va
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glConvolutionFilter1DEXT);
-	(*stub_glConvolutionFilter1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glConvolutionFilter1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2541,7 +2542,7 @@ value glstub_glConvolutionFilter2D(value v0, value v1, value v2, value v3, value
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glConvolutionFilter2D);
-	(*stub_glConvolutionFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glConvolutionFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2563,7 +2564,7 @@ value glstub_glConvolutionFilter2DEXT(value v0, value v1, value v2, value v3, va
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glConvolutionFilter2DEXT);
-	(*stub_glConvolutionFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glConvolutionFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2580,7 +2581,7 @@ value glstub_glConvolutionParameterf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glConvolutionParameterf);
-	(*stub_glConvolutionParameterf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameterf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2592,7 +2593,7 @@ value glstub_glConvolutionParameterfEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glConvolutionParameterfEXT);
-	(*stub_glConvolutionParameterfEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameterfEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2604,7 +2605,7 @@ value glstub_glConvolutionParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glConvolutionParameterfv);
-	(*stub_glConvolutionParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2616,7 +2617,7 @@ value glstub_glConvolutionParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glConvolutionParameterfvEXT);
-	(*stub_glConvolutionParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2628,7 +2629,7 @@ value glstub_glConvolutionParameteri(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glConvolutionParameteri);
-	(*stub_glConvolutionParameteri)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameteri)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2640,7 +2641,7 @@ value glstub_glConvolutionParameteriEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glConvolutionParameteriEXT);
-	(*stub_glConvolutionParameteriEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameteriEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2652,7 +2653,7 @@ value glstub_glConvolutionParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glConvolutionParameteriv);
-	(*stub_glConvolutionParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2664,7 +2665,7 @@ value glstub_glConvolutionParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glConvolutionParameterivEXT);
-	(*stub_glConvolutionParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glConvolutionParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -2678,7 +2679,7 @@ value glstub_glCopyColorSubTable(value v0, value v1, value v2, value v3, value v
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyColorSubTable);
-	(*stub_glCopyColorSubTable)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyColorSubTable)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2692,7 +2693,7 @@ value glstub_glCopyColorSubTableEXT(value v0, value v1, value v2, value v3, valu
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyColorSubTableEXT);
-	(*stub_glCopyColorSubTableEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyColorSubTableEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2706,7 +2707,7 @@ value glstub_glCopyColorTable(value v0, value v1, value v2, value v3, value v4)
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyColorTable);
-	(*stub_glCopyColorTable)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyColorTable)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2720,7 +2721,7 @@ value glstub_glCopyColorTableSGI(value v0, value v1, value v2, value v3, value v
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyColorTableSGI);
-	(*stub_glCopyColorTableSGI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyColorTableSGI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2734,7 +2735,7 @@ value glstub_glCopyConvolutionFilter1D(value v0, value v1, value v2, value v3, v
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyConvolutionFilter1D);
-	(*stub_glCopyConvolutionFilter1D)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyConvolutionFilter1D)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2748,7 +2749,7 @@ value glstub_glCopyConvolutionFilter1DEXT(value v0, value v1, value v2, value v3
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyConvolutionFilter1DEXT);
-	(*stub_glCopyConvolutionFilter1DEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyConvolutionFilter1DEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2764,7 +2765,7 @@ value glstub_glCopyConvolutionFilter2D(value v0, value v1, value v2, value v3, v
 	GLsizei lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glCopyConvolutionFilter2D);
-	(*stub_glCopyConvolutionFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glCopyConvolutionFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2785,7 +2786,7 @@ value glstub_glCopyConvolutionFilter2DEXT(value v0, value v1, value v2, value v3
 	GLsizei lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glCopyConvolutionFilter2DEXT);
-	(*stub_glCopyConvolutionFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glCopyConvolutionFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2804,7 +2805,7 @@ value glstub_glCopyPixels(value v0, value v1, value v2, value v3, value v4)
 	GLsizei lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	LOAD_FUNCTION(glCopyPixels);
-	(*stub_glCopyPixels)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glCopyPixels)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -2821,7 +2822,7 @@ value glstub_glCopyTexImage1D(value v0, value v1, value v2, value v3, value v4, 
 	GLsizei lv5 = Int_val(v5);
 	GLint lv6 = Int_val(v6);
 	LOAD_FUNCTION(glCopyTexImage1D);
-	(*stub_glCopyTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCopyTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2843,7 +2844,7 @@ value glstub_glCopyTexImage1DEXT(value v0, value v1, value v2, value v3, value v
 	GLsizei lv5 = Int_val(v5);
 	GLint lv6 = Int_val(v6);
 	LOAD_FUNCTION(glCopyTexImage1DEXT);
-	(*stub_glCopyTexImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glCopyTexImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -2866,7 +2867,7 @@ value glstub_glCopyTexImage2D(value v0, value v1, value v2, value v3, value v4, 
 	GLsizei lv6 = Int_val(v6);
 	GLint lv7 = Int_val(v7);
 	LOAD_FUNCTION(glCopyTexImage2D);
-	(*stub_glCopyTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCopyTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -2889,7 +2890,7 @@ value glstub_glCopyTexImage2DEXT(value v0, value v1, value v2, value v3, value v
 	GLsizei lv6 = Int_val(v6);
 	GLint lv7 = Int_val(v7);
 	LOAD_FUNCTION(glCopyTexImage2DEXT);
-	(*stub_glCopyTexImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCopyTexImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -2910,7 +2911,7 @@ value glstub_glCopyTexSubImage1D(value v0, value v1, value v2, value v3, value v
 	GLint lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glCopyTexSubImage1D);
-	(*stub_glCopyTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glCopyTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2931,7 +2932,7 @@ value glstub_glCopyTexSubImage1DEXT(value v0, value v1, value v2, value v3, valu
 	GLint lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glCopyTexSubImage1DEXT);
-	(*stub_glCopyTexSubImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glCopyTexSubImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -2954,7 +2955,7 @@ value glstub_glCopyTexSubImage2D(value v0, value v1, value v2, value v3, value v
 	GLsizei lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
 	LOAD_FUNCTION(glCopyTexSubImage2D);
-	(*stub_glCopyTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCopyTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -2977,7 +2978,7 @@ value glstub_glCopyTexSubImage2DEXT(value v0, value v1, value v2, value v3, valu
 	GLsizei lv6 = Int_val(v6);
 	GLsizei lv7 = Int_val(v7);
 	LOAD_FUNCTION(glCopyTexSubImage2DEXT);
-	(*stub_glCopyTexSubImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glCopyTexSubImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -3001,7 +3002,7 @@ value glstub_glCopyTexSubImage3D(value v0, value v1, value v2, value v3, value v
 	GLsizei lv7 = Int_val(v7);
 	GLsizei lv8 = Int_val(v8);
 	LOAD_FUNCTION(glCopyTexSubImage3D);
-	(*stub_glCopyTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCopyTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -3025,7 +3026,7 @@ value glstub_glCopyTexSubImage3DEXT(value v0, value v1, value v2, value v3, valu
 	GLsizei lv7 = Int_val(v7);
 	GLsizei lv8 = Int_val(v8);
 	LOAD_FUNCTION(glCopyTexSubImage3DEXT);
-	(*stub_glCopyTexSubImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glCopyTexSubImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -3041,7 +3042,7 @@ value glstub_glCreateProgram(value v0)
 	CAMLlocal1(result);
 	GLuint ret;
 	LOAD_FUNCTION(glCreateProgram);
-	ret = (*stub_glCreateProgram)();
+	ret = CALL_FUNCTION(glCreateProgram)();
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -3053,7 +3054,7 @@ value glstub_glCreateProgramObjectARB(value v0)
 	CAMLlocal1(result);
 	GLuint ret;
 	LOAD_FUNCTION(glCreateProgramObjectARB);
-	ret = (*stub_glCreateProgramObjectARB)();
+	ret = CALL_FUNCTION(glCreateProgramObjectARB)();
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -3066,7 +3067,7 @@ value glstub_glCreateShader(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glCreateShader);
-	ret = (*stub_glCreateShader)(lv0);
+	ret = CALL_FUNCTION(glCreateShader)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -3079,7 +3080,7 @@ value glstub_glCreateShaderObjectARB(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glCreateShaderObjectARB);
-	ret = (*stub_glCreateShaderObjectARB)(lv0);
+	ret = CALL_FUNCTION(glCreateShaderObjectARB)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -3090,7 +3091,7 @@ value glstub_glCullFace(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glCullFace);
-	(*stub_glCullFace)(lv0);
+	CALL_FUNCTION(glCullFace)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3101,7 +3102,7 @@ value glstub_glCullParameterdvEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glCullParameterdvEXT);
-	(*stub_glCullParameterdvEXT)(lv0, lv1);
+	CALL_FUNCTION(glCullParameterdvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3112,7 +3113,7 @@ value glstub_glCullParameterfvEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glCullParameterfvEXT);
-	(*stub_glCullParameterfvEXT)(lv0, lv1);
+	CALL_FUNCTION(glCullParameterfvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3122,7 +3123,7 @@ value glstub_glCurrentPaletteMatrixARB(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glCurrentPaletteMatrixARB);
-	(*stub_glCurrentPaletteMatrixARB)(lv0);
+	CALL_FUNCTION(glCurrentPaletteMatrixARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3133,17 +3134,7 @@ value glstub_glDeleteAsyncMarkersSGIX(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDeleteAsyncMarkersSGIX);
-	(*stub_glDeleteAsyncMarkersSGIX)(lv0, lv1);
-	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glDeleteBufferRegionEXT,(GLenum),void);
-value glstub_glDeleteBufferRegionEXT(value v0)
-{
-	CAMLparam1(v0);
-	GLenum lv0 = Int_val(v0);
-	LOAD_FUNCTION(glDeleteBufferRegionEXT);
-	(*stub_glDeleteBufferRegionEXT)(lv0);
+	CALL_FUNCTION(glDeleteAsyncMarkersSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3154,7 +3145,7 @@ value glstub_glDeleteBuffers(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteBuffers);
-	(*stub_glDeleteBuffers)(lv0, lv1);
+	CALL_FUNCTION(glDeleteBuffers)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3165,7 +3156,7 @@ value glstub_glDeleteBuffersARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteBuffersARB);
-	(*stub_glDeleteBuffersARB)(lv0, lv1);
+	CALL_FUNCTION(glDeleteBuffersARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3176,7 +3167,7 @@ value glstub_glDeleteFencesAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteFencesAPPLE);
-	(*stub_glDeleteFencesAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glDeleteFencesAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3187,7 +3178,7 @@ value glstub_glDeleteFencesNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteFencesNV);
-	(*stub_glDeleteFencesNV)(lv0, lv1);
+	CALL_FUNCTION(glDeleteFencesNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3197,7 +3188,7 @@ value glstub_glDeleteFragmentShaderATI(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDeleteFragmentShaderATI);
-	(*stub_glDeleteFragmentShaderATI)(lv0);
+	CALL_FUNCTION(glDeleteFragmentShaderATI)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3208,7 +3199,7 @@ value glstub_glDeleteFramebuffersEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteFramebuffersEXT);
-	(*stub_glDeleteFramebuffersEXT)(lv0, lv1);
+	CALL_FUNCTION(glDeleteFramebuffersEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3219,7 +3210,7 @@ value glstub_glDeleteLists(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDeleteLists);
-	(*stub_glDeleteLists)(lv0, lv1);
+	CALL_FUNCTION(glDeleteLists)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3229,7 +3220,7 @@ value glstub_glDeleteObjectARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDeleteObjectARB);
-	(*stub_glDeleteObjectARB)(lv0);
+	CALL_FUNCTION(glDeleteObjectARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3240,7 +3231,7 @@ value glstub_glDeleteOcclusionQueriesNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteOcclusionQueriesNV);
-	(*stub_glDeleteOcclusionQueriesNV)(lv0, lv1);
+	CALL_FUNCTION(glDeleteOcclusionQueriesNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3250,7 +3241,7 @@ value glstub_glDeleteProgram(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDeleteProgram);
-	(*stub_glDeleteProgram)(lv0);
+	CALL_FUNCTION(glDeleteProgram)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3261,7 +3252,7 @@ value glstub_glDeleteProgramsARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteProgramsARB);
-	(*stub_glDeleteProgramsARB)(lv0, lv1);
+	CALL_FUNCTION(glDeleteProgramsARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3272,7 +3263,7 @@ value glstub_glDeleteProgramsNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteProgramsNV);
-	(*stub_glDeleteProgramsNV)(lv0, lv1);
+	CALL_FUNCTION(glDeleteProgramsNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3283,7 +3274,7 @@ value glstub_glDeleteQueries(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteQueries);
-	(*stub_glDeleteQueries)(lv0, lv1);
+	CALL_FUNCTION(glDeleteQueries)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3294,7 +3285,7 @@ value glstub_glDeleteQueriesARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteQueriesARB);
-	(*stub_glDeleteQueriesARB)(lv0, lv1);
+	CALL_FUNCTION(glDeleteQueriesARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3305,7 +3296,7 @@ value glstub_glDeleteRenderbuffersEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteRenderbuffersEXT);
-	(*stub_glDeleteRenderbuffersEXT)(lv0, lv1);
+	CALL_FUNCTION(glDeleteRenderbuffersEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3315,7 +3306,7 @@ value glstub_glDeleteShader(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDeleteShader);
-	(*stub_glDeleteShader)(lv0);
+	CALL_FUNCTION(glDeleteShader)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3326,7 +3317,7 @@ value glstub_glDeleteTextures(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteTextures);
-	(*stub_glDeleteTextures)(lv0, lv1);
+	CALL_FUNCTION(glDeleteTextures)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3337,7 +3328,7 @@ value glstub_glDeleteTexturesEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteTexturesEXT);
-	(*stub_glDeleteTexturesEXT)(lv0, lv1);
+	CALL_FUNCTION(glDeleteTexturesEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3348,7 +3339,7 @@ value glstub_glDeleteVertexArrays(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteVertexArrays);
-	(*stub_glDeleteVertexArrays)(lv0, lv1);
+	CALL_FUNCTION(glDeleteVertexArrays)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3359,7 +3350,7 @@ value glstub_glDeleteVertexArraysAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDeleteVertexArraysAPPLE);
-	(*stub_glDeleteVertexArraysAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glDeleteVertexArraysAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3369,7 +3360,7 @@ value glstub_glDeleteVertexShaderEXT(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDeleteVertexShaderEXT);
-	(*stub_glDeleteVertexShaderEXT)(lv0);
+	CALL_FUNCTION(glDeleteVertexShaderEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3380,7 +3371,7 @@ value glstub_glDepthBoundsEXT(value v0, value v1)
 	GLclampd lv0 = Double_val(v0);
 	GLclampd lv1 = Double_val(v1);
 	LOAD_FUNCTION(glDepthBoundsEXT);
-	(*stub_glDepthBoundsEXT)(lv0, lv1);
+	CALL_FUNCTION(glDepthBoundsEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3391,7 +3382,7 @@ value glstub_glDepthBoundsdNV(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glDepthBoundsdNV);
-	(*stub_glDepthBoundsdNV)(lv0, lv1);
+	CALL_FUNCTION(glDepthBoundsdNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3401,7 +3392,7 @@ value glstub_glDepthFunc(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDepthFunc);
-	(*stub_glDepthFunc)(lv0);
+	CALL_FUNCTION(glDepthFunc)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3411,7 +3402,7 @@ value glstub_glDepthMask(value v0)
 	CAMLparam1(v0);
 	GLboolean lv0 = Bool_val(v0);
 	LOAD_FUNCTION(glDepthMask);
-	(*stub_glDepthMask)(lv0);
+	CALL_FUNCTION(glDepthMask)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3422,7 +3413,7 @@ value glstub_glDepthRange(value v0, value v1)
 	GLclampd lv0 = Double_val(v0);
 	GLclampd lv1 = Double_val(v1);
 	LOAD_FUNCTION(glDepthRange);
-	(*stub_glDepthRange)(lv0, lv1);
+	CALL_FUNCTION(glDepthRange)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3433,7 +3424,7 @@ value glstub_glDepthRangedNV(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glDepthRangedNV);
-	(*stub_glDepthRangedNV)(lv0, lv1);
+	CALL_FUNCTION(glDepthRangedNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3444,7 +3435,7 @@ value glstub_glDepthRangefOES(value v0, value v1)
 	GLclampf lv0 = Double_val(v0);
 	GLclampf lv1 = Double_val(v1);
 	LOAD_FUNCTION(glDepthRangefOES);
-	(*stub_glDepthRangefOES)(lv0, lv1);
+	CALL_FUNCTION(glDepthRangefOES)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3455,7 +3446,7 @@ value glstub_glDetachObjectARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDetachObjectARB);
-	(*stub_glDetachObjectARB)(lv0, lv1);
+	CALL_FUNCTION(glDetachObjectARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3466,7 +3457,7 @@ value glstub_glDetachShader(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDetachShader);
-	(*stub_glDetachShader)(lv0, lv1);
+	CALL_FUNCTION(glDetachShader)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3478,7 +3469,7 @@ value glstub_glDetailTexFuncSGIS(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glDetailTexFuncSGIS);
-	(*stub_glDetailTexFuncSGIS)(lv0, lv1, lv2);
+	CALL_FUNCTION(glDetailTexFuncSGIS)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3488,7 +3479,7 @@ value glstub_glDisable(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDisable);
-	(*stub_glDisable)(lv0);
+	CALL_FUNCTION(glDisable)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3498,7 +3489,7 @@ value glstub_glDisableClientState(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDisableClientState);
-	(*stub_glDisableClientState)(lv0);
+	CALL_FUNCTION(glDisableClientState)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3509,7 +3500,7 @@ value glstub_glDisableIndexedEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDisableIndexedEXT);
-	(*stub_glDisableIndexedEXT)(lv0, lv1);
+	CALL_FUNCTION(glDisableIndexedEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3519,7 +3510,7 @@ value glstub_glDisableVariantClientStateEXT(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDisableVariantClientStateEXT);
-	(*stub_glDisableVariantClientStateEXT)(lv0);
+	CALL_FUNCTION(glDisableVariantClientStateEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3529,7 +3520,7 @@ value glstub_glDisableVertexAttribArray(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDisableVertexAttribArray);
-	(*stub_glDisableVertexAttribArray)(lv0);
+	CALL_FUNCTION(glDisableVertexAttribArray)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3539,7 +3530,7 @@ value glstub_glDisableVertexAttribArrayARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDisableVertexAttribArrayARB);
-	(*stub_glDisableVertexAttribArrayARB)(lv0);
+	CALL_FUNCTION(glDisableVertexAttribArrayARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3551,7 +3542,7 @@ value glstub_glDrawArrays(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	LOAD_FUNCTION(glDrawArrays);
-	(*stub_glDrawArrays)(lv0, lv1, lv2);
+	CALL_FUNCTION(glDrawArrays)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3563,7 +3554,7 @@ value glstub_glDrawArraysEXT(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	LOAD_FUNCTION(glDrawArraysEXT);
-	(*stub_glDrawArraysEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glDrawArraysEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3576,7 +3567,7 @@ value glstub_glDrawArraysInstancedEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glDrawArraysInstancedEXT);
-	(*stub_glDrawArraysInstancedEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glDrawArraysInstancedEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -3586,30 +3577,8 @@ value glstub_glDrawBuffer(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glDrawBuffer);
-	(*stub_glDrawBuffer)(lv0);
+	CALL_FUNCTION(glDrawBuffer)(lv0);
 	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glDrawBufferRegionEXT,(GLuint, GLint, GLint, GLsizei, GLsizei, GLint, GLint),void);
-value glstub_glDrawBufferRegionEXT(value v0, value v1, value v2, value v3, value v4, value v5, value v6)
-{
-	CAMLparam5(v0, v1, v2, v3, v4);
-	CAMLxparam2(v5, v6);
-	GLuint lv0 = Int_val(v0);
-	GLint lv1 = Int_val(v1);
-	GLint lv2 = Int_val(v2);
-	GLsizei lv3 = Int_val(v3);
-	GLsizei lv4 = Int_val(v4);
-	GLint lv5 = Int_val(v5);
-	GLint lv6 = Int_val(v6);
-	LOAD_FUNCTION(glDrawBufferRegionEXT);
-	(*stub_glDrawBufferRegionEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
-	CAMLreturn(Val_unit);
-}
-
-value glstub_glDrawBufferRegionEXT_byte(value * argv, int n)
-{
-	return glstub_glDrawBufferRegionEXT(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
 }
 
 DECLARE_FUNCTION(glDrawBuffers,(GLsizei, GLenum*),void);
@@ -3619,7 +3588,7 @@ value glstub_glDrawBuffers(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLenum* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDrawBuffers);
-	(*stub_glDrawBuffers)(lv0, lv1);
+	CALL_FUNCTION(glDrawBuffers)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3630,7 +3599,7 @@ value glstub_glDrawBuffersARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLenum* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDrawBuffersARB);
-	(*stub_glDrawBuffersARB)(lv0, lv1);
+	CALL_FUNCTION(glDrawBuffersARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3641,7 +3610,7 @@ value glstub_glDrawBuffersATI(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLenum* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glDrawBuffersATI);
-	(*stub_glDrawBuffersATI)(lv0, lv1);
+	CALL_FUNCTION(glDrawBuffersATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3653,7 +3622,7 @@ value glstub_glDrawElementArrayAPPLE(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLsizei lv2 = Int_val(v2);
 	LOAD_FUNCTION(glDrawElementArrayAPPLE);
-	(*stub_glDrawElementArrayAPPLE)(lv0, lv1, lv2);
+	CALL_FUNCTION(glDrawElementArrayAPPLE)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3664,7 +3633,7 @@ value glstub_glDrawElementArrayATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	LOAD_FUNCTION(glDrawElementArrayATI);
-	(*stub_glDrawElementArrayATI)(lv0, lv1);
+	CALL_FUNCTION(glDrawElementArrayATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3677,7 +3646,7 @@ value glstub_glDrawElements(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glDrawElements);
-	(*stub_glDrawElements)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glDrawElements)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -3691,7 +3660,7 @@ value glstub_glDrawElementsInstancedEXT(value v0, value v1, value v2, value v3, 
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glDrawElementsInstancedEXT);
-	(*stub_glDrawElementsInstancedEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glDrawElementsInstancedEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -3705,7 +3674,7 @@ value glstub_glDrawPixels(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glDrawPixels);
-	(*stub_glDrawPixels)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glDrawPixels)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -3719,7 +3688,7 @@ value glstub_glDrawRangeElementArrayAPPLE(value v0, value v1, value v2, value v3
 	GLint lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glDrawRangeElementArrayAPPLE);
-	(*stub_glDrawRangeElementArrayAPPLE)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glDrawRangeElementArrayAPPLE)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -3732,7 +3701,7 @@ value glstub_glDrawRangeElementArrayATI(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glDrawRangeElementArrayATI);
-	(*stub_glDrawRangeElementArrayATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glDrawRangeElementArrayATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -3748,7 +3717,7 @@ value glstub_glDrawRangeElements(value v0, value v1, value v2, value v3, value v
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glDrawRangeElements);
-	(*stub_glDrawRangeElements)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glDrawRangeElements)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -3769,7 +3738,7 @@ value glstub_glDrawRangeElementsEXT(value v0, value v1, value v2, value v3, valu
 	GLenum lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glDrawRangeElementsEXT);
-	(*stub_glDrawRangeElementsEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glDrawRangeElementsEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -3784,7 +3753,7 @@ value glstub_glEdgeFlag(value v0)
 	CAMLparam1(v0);
 	GLboolean lv0 = Bool_val(v0);
 	LOAD_FUNCTION(glEdgeFlag);
-	(*stub_glEdgeFlag)(lv0);
+	CALL_FUNCTION(glEdgeFlag)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3795,7 +3764,7 @@ value glstub_glEdgeFlagPointer(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glEdgeFlagPointer);
-	(*stub_glEdgeFlagPointer)(lv0, lv1);
+	CALL_FUNCTION(glEdgeFlagPointer)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3807,7 +3776,7 @@ value glstub_glEdgeFlagPointerEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glEdgeFlagPointerEXT);
-	(*stub_glEdgeFlagPointerEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glEdgeFlagPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3819,7 +3788,7 @@ value glstub_glEdgeFlagPointerListIBM(value v0, value v1, value v2)
 	GLboolean** lv1 = Data_bigarray_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glEdgeFlagPointerListIBM);
-	(*stub_glEdgeFlagPointerListIBM)(lv0, lv1, lv2);
+	CALL_FUNCTION(glEdgeFlagPointerListIBM)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -3829,7 +3798,7 @@ value glstub_glEdgeFlagv(value v0)
 	CAMLparam1(v0);
 	GLboolean* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glEdgeFlagv);
-	(*stub_glEdgeFlagv)(lv0);
+	CALL_FUNCTION(glEdgeFlagv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3840,7 +3809,7 @@ value glstub_glElementPointerAPPLE(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glElementPointerAPPLE);
-	(*stub_glElementPointerAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glElementPointerAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3851,7 +3820,7 @@ value glstub_glElementPointerATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glElementPointerATI);
-	(*stub_glElementPointerATI)(lv0, lv1);
+	CALL_FUNCTION(glElementPointerATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3861,7 +3830,7 @@ value glstub_glEnable(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEnable);
-	(*stub_glEnable)(lv0);
+	CALL_FUNCTION(glEnable)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3871,7 +3840,7 @@ value glstub_glEnableClientState(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEnableClientState);
-	(*stub_glEnableClientState)(lv0);
+	CALL_FUNCTION(glEnableClientState)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3882,7 +3851,7 @@ value glstub_glEnableIndexedEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glEnableIndexedEXT);
-	(*stub_glEnableIndexedEXT)(lv0, lv1);
+	CALL_FUNCTION(glEnableIndexedEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -3892,7 +3861,7 @@ value glstub_glEnableVariantClientStateEXT(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEnableVariantClientStateEXT);
-	(*stub_glEnableVariantClientStateEXT)(lv0);
+	CALL_FUNCTION(glEnableVariantClientStateEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3902,7 +3871,7 @@ value glstub_glEnableVertexAttribArray(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEnableVertexAttribArray);
-	(*stub_glEnableVertexAttribArray)(lv0);
+	CALL_FUNCTION(glEnableVertexAttribArray)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3912,7 +3881,7 @@ value glstub_glEnableVertexAttribArrayARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEnableVertexAttribArrayARB);
-	(*stub_glEnableVertexAttribArrayARB)(lv0);
+	CALL_FUNCTION(glEnableVertexAttribArrayARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3921,7 +3890,7 @@ value glstub_glEnd(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEnd);
-	(*stub_glEnd)();
+	CALL_FUNCTION(glEnd)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3930,7 +3899,7 @@ value glstub_glEndFragmentShaderATI(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndFragmentShaderATI);
-	(*stub_glEndFragmentShaderATI)();
+	CALL_FUNCTION(glEndFragmentShaderATI)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3939,7 +3908,7 @@ value glstub_glEndList(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndList);
-	(*stub_glEndList)();
+	CALL_FUNCTION(glEndList)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3948,7 +3917,7 @@ value glstub_glEndOcclusionQueryNV(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndOcclusionQueryNV);
-	(*stub_glEndOcclusionQueryNV)();
+	CALL_FUNCTION(glEndOcclusionQueryNV)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3958,7 +3927,7 @@ value glstub_glEndQuery(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEndQuery);
-	(*stub_glEndQuery)(lv0);
+	CALL_FUNCTION(glEndQuery)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3968,7 +3937,7 @@ value glstub_glEndQueryARB(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEndQueryARB);
-	(*stub_glEndQueryARB)(lv0);
+	CALL_FUNCTION(glEndQueryARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -3977,7 +3946,7 @@ value glstub_glEndSceneEXT(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndSceneEXT);
-	(*stub_glEndSceneEXT)();
+	CALL_FUNCTION(glEndSceneEXT)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3986,7 +3955,7 @@ value glstub_glEndTransformFeedbackNV(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndTransformFeedbackNV);
-	(*stub_glEndTransformFeedbackNV)();
+	CALL_FUNCTION(glEndTransformFeedbackNV)();
 	CAMLreturn(Val_unit);
 }
 
@@ -3995,7 +3964,7 @@ value glstub_glEndVertexShaderEXT(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glEndVertexShaderEXT);
-	(*stub_glEndVertexShaderEXT)();
+	CALL_FUNCTION(glEndVertexShaderEXT)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4005,7 +3974,7 @@ value glstub_glEvalCoord1d(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glEvalCoord1d);
-	(*stub_glEvalCoord1d)(lv0);
+	CALL_FUNCTION(glEvalCoord1d)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4015,7 +3984,7 @@ value glstub_glEvalCoord1dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glEvalCoord1dv);
-	(*stub_glEvalCoord1dv)(lv0);
+	CALL_FUNCTION(glEvalCoord1dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4025,7 +3994,7 @@ value glstub_glEvalCoord1f(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glEvalCoord1f);
-	(*stub_glEvalCoord1f)(lv0);
+	CALL_FUNCTION(glEvalCoord1f)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4035,7 +4004,7 @@ value glstub_glEvalCoord1fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glEvalCoord1fv);
-	(*stub_glEvalCoord1fv)(lv0);
+	CALL_FUNCTION(glEvalCoord1fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4046,7 +4015,7 @@ value glstub_glEvalCoord2d(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glEvalCoord2d);
-	(*stub_glEvalCoord2d)(lv0, lv1);
+	CALL_FUNCTION(glEvalCoord2d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4056,7 +4025,7 @@ value glstub_glEvalCoord2dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glEvalCoord2dv);
-	(*stub_glEvalCoord2dv)(lv0);
+	CALL_FUNCTION(glEvalCoord2dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4067,7 +4036,7 @@ value glstub_glEvalCoord2f(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glEvalCoord2f);
-	(*stub_glEvalCoord2f)(lv0, lv1);
+	CALL_FUNCTION(glEvalCoord2f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4077,7 +4046,7 @@ value glstub_glEvalCoord2fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glEvalCoord2fv);
-	(*stub_glEvalCoord2fv)(lv0);
+	CALL_FUNCTION(glEvalCoord2fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4088,7 +4057,7 @@ value glstub_glEvalMapsNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glEvalMapsNV);
-	(*stub_glEvalMapsNV)(lv0, lv1);
+	CALL_FUNCTION(glEvalMapsNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4100,7 +4069,7 @@ value glstub_glEvalMesh1(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glEvalMesh1);
-	(*stub_glEvalMesh1)(lv0, lv1, lv2);
+	CALL_FUNCTION(glEvalMesh1)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4114,7 +4083,7 @@ value glstub_glEvalMesh2(value v0, value v1, value v2, value v3, value v4)
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glEvalMesh2);
-	(*stub_glEvalMesh2)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glEvalMesh2)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -4124,7 +4093,7 @@ value glstub_glEvalPoint1(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glEvalPoint1);
-	(*stub_glEvalPoint1)(lv0);
+	CALL_FUNCTION(glEvalPoint1)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4135,7 +4104,7 @@ value glstub_glEvalPoint2(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glEvalPoint2);
-	(*stub_glEvalPoint2)(lv0, lv1);
+	CALL_FUNCTION(glEvalPoint2)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4147,7 +4116,7 @@ value glstub_glExecuteProgramNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glExecuteProgramNV);
-	(*stub_glExecuteProgramNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glExecuteProgramNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4159,7 +4128,7 @@ value glstub_glExtractComponentEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glExtractComponentEXT);
-	(*stub_glExtractComponentEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glExtractComponentEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4171,7 +4140,7 @@ value glstub_glFeedbackBuffer(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFeedbackBuffer);
-	(*stub_glFeedbackBuffer)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFeedbackBuffer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4184,7 +4153,7 @@ value glstub_glFinalCombinerInputNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glFinalCombinerInputNV);
-	(*stub_glFinalCombinerInputNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glFinalCombinerInputNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -4193,7 +4162,7 @@ value glstub_glFinish(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glFinish);
-	(*stub_glFinish)();
+	CALL_FUNCTION(glFinish)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4205,7 +4174,7 @@ value glstub_glFinishAsyncSGIX(value v0)
 	GLuint* lv0 = Data_bigarray_val(v0);
 	GLint ret;
 	LOAD_FUNCTION(glFinishAsyncSGIX);
-	ret = (*stub_glFinishAsyncSGIX)(lv0);
+	ret = CALL_FUNCTION(glFinishAsyncSGIX)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -4216,7 +4185,7 @@ value glstub_glFinishFenceAPPLE(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFinishFenceAPPLE);
-	(*stub_glFinishFenceAPPLE)(lv0);
+	CALL_FUNCTION(glFinishFenceAPPLE)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4226,7 +4195,7 @@ value glstub_glFinishFenceNV(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFinishFenceNV);
-	(*stub_glFinishFenceNV)(lv0);
+	CALL_FUNCTION(glFinishFenceNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4237,7 +4206,7 @@ value glstub_glFinishObjectAPPLE(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFinishObjectAPPLE);
-	(*stub_glFinishObjectAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glFinishObjectAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4246,7 +4215,7 @@ value glstub_glFinishTextureSUNX(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glFinishTextureSUNX);
-	(*stub_glFinishTextureSUNX)();
+	CALL_FUNCTION(glFinishTextureSUNX)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4255,7 +4224,7 @@ value glstub_glFlush(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glFlush);
-	(*stub_glFlush)();
+	CALL_FUNCTION(glFlush)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4265,7 +4234,7 @@ value glstub_glFlushPixelDataRangeNV(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFlushPixelDataRangeNV);
-	(*stub_glFlushPixelDataRangeNV)(lv0);
+	CALL_FUNCTION(glFlushPixelDataRangeNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4274,7 +4243,7 @@ value glstub_glFlushRasterSGIX(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glFlushRasterSGIX);
-	(*stub_glFlushRasterSGIX)();
+	CALL_FUNCTION(glFlushRasterSGIX)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4285,7 +4254,7 @@ value glstub_glFlushVertexArrayRangeAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glFlushVertexArrayRangeAPPLE);
-	(*stub_glFlushVertexArrayRangeAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glFlushVertexArrayRangeAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4294,7 +4263,7 @@ value glstub_glFlushVertexArrayRangeNV(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glFlushVertexArrayRangeNV);
-	(*stub_glFlushVertexArrayRangeNV)();
+	CALL_FUNCTION(glFlushVertexArrayRangeNV)();
 	CAMLreturn(Val_unit);
 }
 
@@ -4306,7 +4275,7 @@ value glstub_glFogCoordPointer(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glFogCoordPointer);
-	(*stub_glFogCoordPointer)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFogCoordPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4318,7 +4287,7 @@ value glstub_glFogCoordPointerEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glFogCoordPointerEXT);
-	(*stub_glFogCoordPointerEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFogCoordPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4331,7 +4300,7 @@ value glstub_glFogCoordPointerListIBM(value v0, value v1, value v2, value v3)
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glFogCoordPointerListIBM);
-	(*stub_glFogCoordPointerListIBM)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glFogCoordPointerListIBM)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -4341,7 +4310,7 @@ value glstub_glFogCoordd(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glFogCoordd);
-	(*stub_glFogCoordd)(lv0);
+	CALL_FUNCTION(glFogCoordd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4351,7 +4320,7 @@ value glstub_glFogCoorddEXT(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glFogCoorddEXT);
-	(*stub_glFogCoorddEXT)(lv0);
+	CALL_FUNCTION(glFogCoorddEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4361,7 +4330,7 @@ value glstub_glFogCoorddv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glFogCoorddv);
-	(*stub_glFogCoorddv)(lv0);
+	CALL_FUNCTION(glFogCoorddv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4371,7 +4340,7 @@ value glstub_glFogCoorddvEXT(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glFogCoorddvEXT);
-	(*stub_glFogCoorddvEXT)(lv0);
+	CALL_FUNCTION(glFogCoorddvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4381,7 +4350,7 @@ value glstub_glFogCoordf(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glFogCoordf);
-	(*stub_glFogCoordf)(lv0);
+	CALL_FUNCTION(glFogCoordf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4391,7 +4360,7 @@ value glstub_glFogCoordfEXT(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glFogCoordfEXT);
-	(*stub_glFogCoordfEXT)(lv0);
+	CALL_FUNCTION(glFogCoordfEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4401,7 +4370,7 @@ value glstub_glFogCoordfv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glFogCoordfv);
-	(*stub_glFogCoordfv)(lv0);
+	CALL_FUNCTION(glFogCoordfv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4411,7 +4380,7 @@ value glstub_glFogCoordfvEXT(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glFogCoordfvEXT);
-	(*stub_glFogCoordfvEXT)(lv0);
+	CALL_FUNCTION(glFogCoordfvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4421,7 +4390,7 @@ value glstub_glFogCoordhNV(value v0)
 	CAMLparam1(v0);
 	GLushort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFogCoordhNV);
-	(*stub_glFogCoordhNV)(lv0);
+	CALL_FUNCTION(glFogCoordhNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4431,7 +4400,7 @@ value glstub_glFogCoordhvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glFogCoordhvNV);
-	(*stub_glFogCoordhvNV)(lv0);
+	CALL_FUNCTION(glFogCoordhvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4442,7 +4411,7 @@ value glstub_glFogFuncSGIS(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFogFuncSGIS);
-	(*stub_glFogFuncSGIS)(lv0, lv1);
+	CALL_FUNCTION(glFogFuncSGIS)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4453,7 +4422,7 @@ value glstub_glFogf(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glFogf);
-	(*stub_glFogf)(lv0, lv1);
+	CALL_FUNCTION(glFogf)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4464,7 +4433,7 @@ value glstub_glFogfv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFogfv);
-	(*stub_glFogfv)(lv0, lv1);
+	CALL_FUNCTION(glFogfv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4475,7 +4444,7 @@ value glstub_glFogi(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFogi);
-	(*stub_glFogi)(lv0, lv1);
+	CALL_FUNCTION(glFogi)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4486,7 +4455,7 @@ value glstub_glFogiv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFogiv);
-	(*stub_glFogiv)(lv0, lv1);
+	CALL_FUNCTION(glFogiv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4497,7 +4466,7 @@ value glstub_glFragmentColorMaterialEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFragmentColorMaterialEXT);
-	(*stub_glFragmentColorMaterialEXT)(lv0, lv1);
+	CALL_FUNCTION(glFragmentColorMaterialEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4508,7 +4477,7 @@ value glstub_glFragmentColorMaterialSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFragmentColorMaterialSGIX);
-	(*stub_glFragmentColorMaterialSGIX)(lv0, lv1);
+	CALL_FUNCTION(glFragmentColorMaterialSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4519,7 +4488,7 @@ value glstub_glFragmentLightModelfEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelfEXT);
-	(*stub_glFragmentLightModelfEXT)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelfEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4530,7 +4499,7 @@ value glstub_glFragmentLightModelfSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelfSGIX);
-	(*stub_glFragmentLightModelfSGIX)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelfSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4541,7 +4510,7 @@ value glstub_glFragmentLightModelfvEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelfvEXT);
-	(*stub_glFragmentLightModelfvEXT)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelfvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4552,7 +4521,7 @@ value glstub_glFragmentLightModelfvSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelfvSGIX);
-	(*stub_glFragmentLightModelfvSGIX)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelfvSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4563,7 +4532,7 @@ value glstub_glFragmentLightModeliEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFragmentLightModeliEXT);
-	(*stub_glFragmentLightModeliEXT)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModeliEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4574,7 +4543,7 @@ value glstub_glFragmentLightModeliSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glFragmentLightModeliSGIX);
-	(*stub_glFragmentLightModeliSGIX)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModeliSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4585,7 +4554,7 @@ value glstub_glFragmentLightModelivEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelivEXT);
-	(*stub_glFragmentLightModelivEXT)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4596,7 +4565,7 @@ value glstub_glFragmentLightModelivSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glFragmentLightModelivSGIX);
-	(*stub_glFragmentLightModelivSGIX)(lv0, lv1);
+	CALL_FUNCTION(glFragmentLightModelivSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4608,7 +4577,7 @@ value glstub_glFragmentLightfEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glFragmentLightfEXT);
-	(*stub_glFragmentLightfEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightfEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4620,7 +4589,7 @@ value glstub_glFragmentLightfSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glFragmentLightfSGIX);
-	(*stub_glFragmentLightfSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightfSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4632,7 +4601,7 @@ value glstub_glFragmentLightfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentLightfvEXT);
-	(*stub_glFragmentLightfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4644,7 +4613,7 @@ value glstub_glFragmentLightfvSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentLightfvSGIX);
-	(*stub_glFragmentLightfvSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightfvSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4656,7 +4625,7 @@ value glstub_glFragmentLightiEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glFragmentLightiEXT);
-	(*stub_glFragmentLightiEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightiEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4668,7 +4637,7 @@ value glstub_glFragmentLightiSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glFragmentLightiSGIX);
-	(*stub_glFragmentLightiSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightiSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4680,7 +4649,7 @@ value glstub_glFragmentLightivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentLightivEXT);
-	(*stub_glFragmentLightivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4692,7 +4661,7 @@ value glstub_glFragmentLightivSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentLightivSGIX);
-	(*stub_glFragmentLightivSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentLightivSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4704,7 +4673,7 @@ value glstub_glFragmentMaterialfEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialfEXT);
-	(*stub_glFragmentMaterialfEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialfEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4716,7 +4685,7 @@ value glstub_glFragmentMaterialfSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialfSGIX);
-	(*stub_glFragmentMaterialfSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialfSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4728,7 +4697,7 @@ value glstub_glFragmentMaterialfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialfvEXT);
-	(*stub_glFragmentMaterialfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4740,7 +4709,7 @@ value glstub_glFragmentMaterialfvSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialfvSGIX);
-	(*stub_glFragmentMaterialfvSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialfvSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4752,7 +4721,7 @@ value glstub_glFragmentMaterialiEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialiEXT);
-	(*stub_glFragmentMaterialiEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialiEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4764,7 +4733,7 @@ value glstub_glFragmentMaterialiSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialiSGIX);
-	(*stub_glFragmentMaterialiSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialiSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4776,7 +4745,7 @@ value glstub_glFragmentMaterialivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialivEXT);
-	(*stub_glFragmentMaterialivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4788,7 +4757,7 @@ value glstub_glFragmentMaterialivSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glFragmentMaterialivSGIX);
-	(*stub_glFragmentMaterialivSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glFragmentMaterialivSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -4798,7 +4767,7 @@ value glstub_glFrameZoomSGIX(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFrameZoomSGIX);
-	(*stub_glFrameZoomSGIX)(lv0);
+	CALL_FUNCTION(glFrameZoomSGIX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4811,7 +4780,7 @@ value glstub_glFramebufferRenderbufferEXT(value v0, value v1, value v2, value v3
 	GLenum lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glFramebufferRenderbufferEXT);
-	(*stub_glFramebufferRenderbufferEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glFramebufferRenderbufferEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -4825,7 +4794,7 @@ value glstub_glFramebufferTexture1DEXT(value v0, value v1, value v2, value v3, v
 	GLuint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glFramebufferTexture1DEXT);
-	(*stub_glFramebufferTexture1DEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glFramebufferTexture1DEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -4839,7 +4808,7 @@ value glstub_glFramebufferTexture2DEXT(value v0, value v1, value v2, value v3, v
 	GLuint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glFramebufferTexture2DEXT);
-	(*stub_glFramebufferTexture2DEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glFramebufferTexture2DEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -4855,7 +4824,7 @@ value glstub_glFramebufferTexture3DEXT(value v0, value v1, value v2, value v3, v
 	GLint lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glFramebufferTexture3DEXT);
-	(*stub_glFramebufferTexture3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glFramebufferTexture3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -4873,7 +4842,7 @@ value glstub_glFramebufferTextureEXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glFramebufferTextureEXT);
-	(*stub_glFramebufferTextureEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glFramebufferTextureEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -4887,7 +4856,7 @@ value glstub_glFramebufferTextureFaceEXT(value v0, value v1, value v2, value v3,
 	GLint lv3 = Int_val(v3);
 	GLenum lv4 = Int_val(v4);
 	LOAD_FUNCTION(glFramebufferTextureFaceEXT);
-	(*stub_glFramebufferTextureFaceEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glFramebufferTextureFaceEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -4901,7 +4870,7 @@ value glstub_glFramebufferTextureLayerEXT(value v0, value v1, value v2, value v3
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glFramebufferTextureLayerEXT);
-	(*stub_glFramebufferTextureLayerEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glFramebufferTextureLayerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -4911,7 +4880,7 @@ value glstub_glFreeObjectBufferATI(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFreeObjectBufferATI);
-	(*stub_glFreeObjectBufferATI)(lv0);
+	CALL_FUNCTION(glFreeObjectBufferATI)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4921,7 +4890,7 @@ value glstub_glFrontFace(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glFrontFace);
-	(*stub_glFrontFace)(lv0);
+	CALL_FUNCTION(glFrontFace)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -4937,7 +4906,7 @@ value glstub_glFrustum(value v0, value v1, value v2, value v3, value v4, value v
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glFrustum);
-	(*stub_glFrustum)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glFrustum)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -4958,7 +4927,7 @@ value glstub_glFrustumfOES(value v0, value v1, value v2, value v3, value v4, val
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glFrustumfOES);
-	(*stub_glFrustumfOES)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glFrustumfOES)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -4975,7 +4944,7 @@ value glstub_glGenAsyncMarkersSGIX(value v0)
 	GLsizei lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glGenAsyncMarkersSGIX);
-	ret = (*stub_glGenAsyncMarkersSGIX)(lv0);
+	ret = CALL_FUNCTION(glGenAsyncMarkersSGIX)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -4987,7 +4956,7 @@ value glstub_glGenBuffers(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenBuffers);
-	(*stub_glGenBuffers)(lv0, lv1);
+	CALL_FUNCTION(glGenBuffers)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -4998,7 +4967,7 @@ value glstub_glGenBuffersARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenBuffersARB);
-	(*stub_glGenBuffersARB)(lv0, lv1);
+	CALL_FUNCTION(glGenBuffersARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5009,7 +4978,7 @@ value glstub_glGenFencesAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenFencesAPPLE);
-	(*stub_glGenFencesAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glGenFencesAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5020,7 +4989,7 @@ value glstub_glGenFencesNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenFencesNV);
-	(*stub_glGenFencesNV)(lv0, lv1);
+	CALL_FUNCTION(glGenFencesNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5032,7 +5001,7 @@ value glstub_glGenFragmentShadersATI(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glGenFragmentShadersATI);
-	ret = (*stub_glGenFragmentShadersATI)(lv0);
+	ret = CALL_FUNCTION(glGenFragmentShadersATI)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5044,7 +5013,7 @@ value glstub_glGenFramebuffersEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenFramebuffersEXT);
-	(*stub_glGenFramebuffersEXT)(lv0, lv1);
+	CALL_FUNCTION(glGenFramebuffersEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5056,7 +5025,7 @@ value glstub_glGenLists(value v0)
 	GLsizei lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glGenLists);
-	ret = (*stub_glGenLists)(lv0);
+	ret = CALL_FUNCTION(glGenLists)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5068,7 +5037,7 @@ value glstub_glGenOcclusionQueriesNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenOcclusionQueriesNV);
-	(*stub_glGenOcclusionQueriesNV)(lv0, lv1);
+	CALL_FUNCTION(glGenOcclusionQueriesNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5079,7 +5048,7 @@ value glstub_glGenProgramsARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenProgramsARB);
-	(*stub_glGenProgramsARB)(lv0, lv1);
+	CALL_FUNCTION(glGenProgramsARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5090,7 +5059,7 @@ value glstub_glGenProgramsNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenProgramsNV);
-	(*stub_glGenProgramsNV)(lv0, lv1);
+	CALL_FUNCTION(glGenProgramsNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5101,7 +5070,7 @@ value glstub_glGenQueries(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenQueries);
-	(*stub_glGenQueries)(lv0, lv1);
+	CALL_FUNCTION(glGenQueries)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5112,7 +5081,7 @@ value glstub_glGenQueriesARB(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenQueriesARB);
-	(*stub_glGenQueriesARB)(lv0, lv1);
+	CALL_FUNCTION(glGenQueriesARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5123,7 +5092,7 @@ value glstub_glGenRenderbuffersEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenRenderbuffersEXT);
-	(*stub_glGenRenderbuffersEXT)(lv0, lv1);
+	CALL_FUNCTION(glGenRenderbuffersEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5138,7 +5107,7 @@ value glstub_glGenSymbolsEXT(value v0, value v1, value v2, value v3)
 	GLuint lv3 = Int_val(v3);
 	GLuint ret;
 	LOAD_FUNCTION(glGenSymbolsEXT);
-	ret = (*stub_glGenSymbolsEXT)(lv0, lv1, lv2, lv3);
+	ret = CALL_FUNCTION(glGenSymbolsEXT)(lv0, lv1, lv2, lv3);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5150,7 +5119,7 @@ value glstub_glGenTextures(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenTextures);
-	(*stub_glGenTextures)(lv0, lv1);
+	CALL_FUNCTION(glGenTextures)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5161,7 +5130,7 @@ value glstub_glGenTexturesEXT(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenTexturesEXT);
-	(*stub_glGenTexturesEXT)(lv0, lv1);
+	CALL_FUNCTION(glGenTexturesEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5172,7 +5141,7 @@ value glstub_glGenVertexArrays(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenVertexArrays);
-	(*stub_glGenVertexArrays)(lv0, lv1);
+	CALL_FUNCTION(glGenVertexArrays)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5183,7 +5152,7 @@ value glstub_glGenVertexArraysAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGenVertexArraysAPPLE);
-	(*stub_glGenVertexArraysAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glGenVertexArraysAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5195,7 +5164,7 @@ value glstub_glGenVertexShadersEXT(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glGenVertexShadersEXT);
-	ret = (*stub_glGenVertexShadersEXT)(lv0);
+	ret = CALL_FUNCTION(glGenVertexShadersEXT)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5206,7 +5175,7 @@ value glstub_glGenerateMipmapEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGenerateMipmapEXT);
-	(*stub_glGenerateMipmapEXT)(lv0);
+	CALL_FUNCTION(glGenerateMipmapEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -5223,7 +5192,7 @@ value glstub_glGetActiveAttrib(value v0, value v1, value v2, value v3, value v4,
 	GLenum* lv5 = Data_bigarray_val(v5);
 	GLchar* lv6 = String_val(v6);
 	LOAD_FUNCTION(glGetActiveAttrib);
-	(*stub_glGetActiveAttrib)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetActiveAttrib)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -5245,7 +5214,7 @@ value glstub_glGetActiveAttribARB(value v0, value v1, value v2, value v3, value 
 	GLenum* lv5 = Data_bigarray_val(v5);
 	GLchar* lv6 = String_val(v6);
 	LOAD_FUNCTION(glGetActiveAttribARB);
-	(*stub_glGetActiveAttribARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetActiveAttribARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -5267,7 +5236,7 @@ value glstub_glGetActiveUniform(value v0, value v1, value v2, value v3, value v4
 	GLenum* lv5 = Data_bigarray_val(v5);
 	GLchar* lv6 = String_val(v6);
 	LOAD_FUNCTION(glGetActiveUniform);
-	(*stub_glGetActiveUniform)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetActiveUniform)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -5289,7 +5258,7 @@ value glstub_glGetActiveUniformARB(value v0, value v1, value v2, value v3, value
 	GLenum* lv5 = Data_bigarray_val(v5);
 	GLchar* lv6 = String_val(v6);
 	LOAD_FUNCTION(glGetActiveUniformARB);
-	(*stub_glGetActiveUniformARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetActiveUniformARB)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -5311,7 +5280,7 @@ value glstub_glGetActiveVaryingNV(value v0, value v1, value v2, value v3, value 
 	GLenum* lv5 = Data_bigarray_val(v5);
 	GLchar* lv6 = String_val(v6);
 	LOAD_FUNCTION(glGetActiveVaryingNV);
-	(*stub_glGetActiveVaryingNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetActiveVaryingNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -5328,7 +5297,7 @@ value glstub_glGetArrayObjectfvATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetArrayObjectfvATI);
-	(*stub_glGetArrayObjectfvATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetArrayObjectfvATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5340,7 +5309,7 @@ value glstub_glGetArrayObjectivATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetArrayObjectivATI);
-	(*stub_glGetArrayObjectivATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetArrayObjectivATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5353,7 +5322,7 @@ value glstub_glGetAttachedObjectsARB(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLuint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetAttachedObjectsARB);
-	(*stub_glGetAttachedObjectsARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetAttachedObjectsARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5366,7 +5335,7 @@ value glstub_glGetAttachedShaders(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLuint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetAttachedShaders);
-	(*stub_glGetAttachedShaders)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetAttachedShaders)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5379,7 +5348,7 @@ value glstub_glGetAttribLocation(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetAttribLocation);
-	ret = (*stub_glGetAttribLocation)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetAttribLocation)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5393,7 +5362,7 @@ value glstub_glGetAttribLocationARB(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetAttribLocationARB);
-	ret = (*stub_glGetAttribLocationARB)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetAttribLocationARB)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5406,7 +5375,7 @@ value glstub_glGetBooleanIndexedvEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetBooleanIndexedvEXT);
-	(*stub_glGetBooleanIndexedvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetBooleanIndexedvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5417,7 +5386,7 @@ value glstub_glGetBooleanv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLboolean* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetBooleanv);
-	(*stub_glGetBooleanv)(lv0, lv1);
+	CALL_FUNCTION(glGetBooleanv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5429,7 +5398,7 @@ value glstub_glGetBufferParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetBufferParameteriv);
-	(*stub_glGetBufferParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetBufferParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5441,7 +5410,7 @@ value glstub_glGetBufferParameterivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetBufferParameterivARB);
-	(*stub_glGetBufferParameterivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetBufferParameterivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5453,7 +5422,7 @@ value glstub_glGetBufferPointerv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetBufferPointerv);
-	(*stub_glGetBufferPointerv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetBufferPointerv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5465,7 +5434,7 @@ value glstub_glGetBufferPointervARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetBufferPointervARB);
-	(*stub_glGetBufferPointervARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetBufferPointervARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5478,7 +5447,7 @@ value glstub_glGetBufferSubData(value v0, value v1, value v2, value v3)
 	GLsizeiptr lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetBufferSubData);
-	(*stub_glGetBufferSubData)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetBufferSubData)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5491,7 +5460,7 @@ value glstub_glGetBufferSubDataARB(value v0, value v1, value v2, value v3)
 	GLsizeiptr lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetBufferSubDataARB);
-	(*stub_glGetBufferSubDataARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetBufferSubDataARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5502,7 +5471,7 @@ value glstub_glGetClipPlane(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetClipPlane);
-	(*stub_glGetClipPlane)(lv0, lv1);
+	CALL_FUNCTION(glGetClipPlane)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5513,7 +5482,7 @@ value glstub_glGetClipPlanefOES(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetClipPlanefOES);
-	(*stub_glGetClipPlanefOES)(lv0, lv1);
+	CALL_FUNCTION(glGetClipPlanefOES)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5526,7 +5495,7 @@ value glstub_glGetColorTable(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTable);
-	(*stub_glGetColorTable)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetColorTable)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5539,7 +5508,7 @@ value glstub_glGetColorTableEXT(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTableEXT);
-	(*stub_glGetColorTableEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetColorTableEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5551,7 +5520,7 @@ value glstub_glGetColorTableParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameterfv);
-	(*stub_glGetColorTableParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5563,7 +5532,7 @@ value glstub_glGetColorTableParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameterfvEXT);
-	(*stub_glGetColorTableParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5575,7 +5544,7 @@ value glstub_glGetColorTableParameterfvSGI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameterfvSGI);
-	(*stub_glGetColorTableParameterfvSGI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameterfvSGI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5587,7 +5556,7 @@ value glstub_glGetColorTableParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameteriv);
-	(*stub_glGetColorTableParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5599,7 +5568,7 @@ value glstub_glGetColorTableParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameterivEXT);
-	(*stub_glGetColorTableParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5611,7 +5580,7 @@ value glstub_glGetColorTableParameterivSGI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetColorTableParameterivSGI);
-	(*stub_glGetColorTableParameterivSGI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetColorTableParameterivSGI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5624,7 +5593,7 @@ value glstub_glGetColorTableSGI(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetColorTableSGI);
-	(*stub_glGetColorTableSGI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetColorTableSGI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5638,7 +5607,7 @@ value glstub_glGetCombinerInputParameterfvNV(value v0, value v1, value v2, value
 	GLenum lv3 = Int_val(v3);
 	GLfloat* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glGetCombinerInputParameterfvNV);
-	(*stub_glGetCombinerInputParameterfvNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetCombinerInputParameterfvNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -5652,7 +5621,7 @@ value glstub_glGetCombinerInputParameterivNV(value v0, value v1, value v2, value
 	GLenum lv3 = Int_val(v3);
 	GLint* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glGetCombinerInputParameterivNV);
-	(*stub_glGetCombinerInputParameterivNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetCombinerInputParameterivNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -5665,7 +5634,7 @@ value glstub_glGetCombinerOutputParameterfvNV(value v0, value v1, value v2, valu
 	GLenum lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetCombinerOutputParameterfvNV);
-	(*stub_glGetCombinerOutputParameterfvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetCombinerOutputParameterfvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5678,7 +5647,7 @@ value glstub_glGetCombinerOutputParameterivNV(value v0, value v1, value v2, valu
 	GLenum lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetCombinerOutputParameterivNV);
-	(*stub_glGetCombinerOutputParameterivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetCombinerOutputParameterivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5690,7 +5659,7 @@ value glstub_glGetCombinerStageParameterfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetCombinerStageParameterfvNV);
-	(*stub_glGetCombinerStageParameterfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetCombinerStageParameterfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5702,7 +5671,7 @@ value glstub_glGetCompressedTexImage(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetCompressedTexImage);
-	(*stub_glGetCompressedTexImage)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetCompressedTexImage)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5714,7 +5683,7 @@ value glstub_glGetCompressedTexImageARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetCompressedTexImageARB);
-	(*stub_glGetCompressedTexImageARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetCompressedTexImageARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5727,7 +5696,7 @@ value glstub_glGetConvolutionFilter(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetConvolutionFilter);
-	(*stub_glGetConvolutionFilter)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetConvolutionFilter)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5740,7 +5709,7 @@ value glstub_glGetConvolutionFilterEXT(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glGetConvolutionFilterEXT);
-	(*stub_glGetConvolutionFilterEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetConvolutionFilterEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -5752,7 +5721,7 @@ value glstub_glGetConvolutionParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetConvolutionParameterfv);
-	(*stub_glGetConvolutionParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetConvolutionParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5764,7 +5733,7 @@ value glstub_glGetConvolutionParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetConvolutionParameterfvEXT);
-	(*stub_glGetConvolutionParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetConvolutionParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5776,7 +5745,7 @@ value glstub_glGetConvolutionParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetConvolutionParameteriv);
-	(*stub_glGetConvolutionParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetConvolutionParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5788,7 +5757,7 @@ value glstub_glGetConvolutionParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetConvolutionParameterivEXT);
-	(*stub_glGetConvolutionParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetConvolutionParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5799,7 +5768,7 @@ value glstub_glGetDetailTexFuncSGIS(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetDetailTexFuncSGIS);
-	(*stub_glGetDetailTexFuncSGIS)(lv0, lv1);
+	CALL_FUNCTION(glGetDetailTexFuncSGIS)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5810,7 +5779,7 @@ value glstub_glGetDoublev(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetDoublev);
-	(*stub_glGetDoublev)(lv0, lv1);
+	CALL_FUNCTION(glGetDoublev)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5821,7 +5790,7 @@ value glstub_glGetError(value v0)
 	CAMLlocal1(result);
 	GLenum ret;
 	LOAD_FUNCTION(glGetError);
-	ret = (*stub_glGetError)();
+	ret = CALL_FUNCTION(glGetError)();
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5834,7 +5803,7 @@ value glstub_glGetFenceivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFenceivNV);
-	(*stub_glGetFenceivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFenceivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5846,7 +5815,7 @@ value glstub_glGetFinalCombinerInputParameterfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFinalCombinerInputParameterfvNV);
-	(*stub_glGetFinalCombinerInputParameterfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFinalCombinerInputParameterfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5858,7 +5827,7 @@ value glstub_glGetFinalCombinerInputParameterivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFinalCombinerInputParameterivNV);
-	(*stub_glGetFinalCombinerInputParameterivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFinalCombinerInputParameterivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5869,7 +5838,7 @@ value glstub_glGetFloatv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetFloatv);
-	(*stub_glGetFloatv)(lv0, lv1);
+	CALL_FUNCTION(glGetFloatv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -5879,7 +5848,7 @@ value glstub_glGetFogFuncSGIS(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glGetFogFuncSGIS);
-	(*stub_glGetFogFuncSGIS)(lv0);
+	CALL_FUNCTION(glGetFogFuncSGIS)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -5892,7 +5861,7 @@ value glstub_glGetFragDataLocationEXT(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetFragDataLocationEXT);
-	ret = (*stub_glGetFragDataLocationEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetFragDataLocationEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -5905,7 +5874,7 @@ value glstub_glGetFragmentLightfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentLightfvEXT);
-	(*stub_glGetFragmentLightfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentLightfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5917,7 +5886,7 @@ value glstub_glGetFragmentLightfvSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentLightfvSGIX);
-	(*stub_glGetFragmentLightfvSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentLightfvSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5929,7 +5898,7 @@ value glstub_glGetFragmentLightivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentLightivEXT);
-	(*stub_glGetFragmentLightivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentLightivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5941,7 +5910,7 @@ value glstub_glGetFragmentLightivSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentLightivSGIX);
-	(*stub_glGetFragmentLightivSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentLightivSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5953,7 +5922,7 @@ value glstub_glGetFragmentMaterialfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentMaterialfvEXT);
-	(*stub_glGetFragmentMaterialfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentMaterialfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5965,7 +5934,7 @@ value glstub_glGetFragmentMaterialfvSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentMaterialfvSGIX);
-	(*stub_glGetFragmentMaterialfvSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentMaterialfvSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5977,7 +5946,7 @@ value glstub_glGetFragmentMaterialivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentMaterialivEXT);
-	(*stub_glGetFragmentMaterialivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentMaterialivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -5989,7 +5958,7 @@ value glstub_glGetFragmentMaterialivSGIX(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetFragmentMaterialivSGIX);
-	(*stub_glGetFragmentMaterialivSGIX)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetFragmentMaterialivSGIX)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6002,7 +5971,7 @@ value glstub_glGetFramebufferAttachmentParameterivEXT(value v0, value v1, value 
 	GLenum lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetFramebufferAttachmentParameterivEXT);
-	(*stub_glGetFramebufferAttachmentParameterivEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetFramebufferAttachmentParameterivEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6014,7 +5983,7 @@ value glstub_glGetHandleARB(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLuint ret;
 	LOAD_FUNCTION(glGetHandleARB);
-	ret = (*stub_glGetHandleARB)(lv0);
+	ret = CALL_FUNCTION(glGetHandleARB)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -6029,7 +5998,7 @@ value glstub_glGetHistogram(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetHistogram);
-	(*stub_glGetHistogram)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetHistogram)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -6043,7 +6012,7 @@ value glstub_glGetHistogramEXT(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetHistogramEXT);
-	(*stub_glGetHistogramEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetHistogramEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -6055,7 +6024,7 @@ value glstub_glGetHistogramParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetHistogramParameterfv);
-	(*stub_glGetHistogramParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetHistogramParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6067,7 +6036,7 @@ value glstub_glGetHistogramParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetHistogramParameterfvEXT);
-	(*stub_glGetHistogramParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetHistogramParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6079,7 +6048,7 @@ value glstub_glGetHistogramParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetHistogramParameteriv);
-	(*stub_glGetHistogramParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetHistogramParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6091,7 +6060,7 @@ value glstub_glGetHistogramParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetHistogramParameterivEXT);
-	(*stub_glGetHistogramParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetHistogramParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6103,7 +6072,7 @@ value glstub_glGetImageTransformParameterfvHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetImageTransformParameterfvHP);
-	(*stub_glGetImageTransformParameterfvHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetImageTransformParameterfvHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6115,7 +6084,7 @@ value glstub_glGetImageTransformParameterivHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetImageTransformParameterivHP);
-	(*stub_glGetImageTransformParameterivHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetImageTransformParameterivHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6128,7 +6097,7 @@ value glstub_glGetInfoLogARB(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLchar* lv3 = String_val(v3);
 	LOAD_FUNCTION(glGetInfoLogARB);
-	(*stub_glGetInfoLogARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetInfoLogARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6140,7 +6109,7 @@ value glstub_glGetIntegerIndexedvEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetIntegerIndexedvEXT);
-	(*stub_glGetIntegerIndexedvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetIntegerIndexedvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6151,7 +6120,7 @@ value glstub_glGetIntegerv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetIntegerv);
-	(*stub_glGetIntegerv)(lv0, lv1);
+	CALL_FUNCTION(glGetIntegerv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6163,7 +6132,7 @@ value glstub_glGetInvariantBooleanvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetInvariantBooleanvEXT);
-	(*stub_glGetInvariantBooleanvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetInvariantBooleanvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6175,7 +6144,7 @@ value glstub_glGetInvariantFloatvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetInvariantFloatvEXT);
-	(*stub_glGetInvariantFloatvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetInvariantFloatvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6187,7 +6156,7 @@ value glstub_glGetInvariantIntegervEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetInvariantIntegervEXT);
-	(*stub_glGetInvariantIntegervEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetInvariantIntegervEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6199,7 +6168,7 @@ value glstub_glGetLightfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetLightfv);
-	(*stub_glGetLightfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetLightfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6211,7 +6180,7 @@ value glstub_glGetLightiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetLightiv);
-	(*stub_glGetLightiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetLightiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6223,7 +6192,7 @@ value glstub_glGetLocalConstantBooleanvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetLocalConstantBooleanvEXT);
-	(*stub_glGetLocalConstantBooleanvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetLocalConstantBooleanvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6235,7 +6204,7 @@ value glstub_glGetLocalConstantFloatvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetLocalConstantFloatvEXT);
-	(*stub_glGetLocalConstantFloatvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetLocalConstantFloatvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6247,7 +6216,7 @@ value glstub_glGetLocalConstantIntegervEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetLocalConstantIntegervEXT);
-	(*stub_glGetLocalConstantIntegervEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetLocalConstantIntegervEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6260,7 +6229,7 @@ value glstub_glGetMapAttribParameterfvNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetMapAttribParameterfvNV);
-	(*stub_glGetMapAttribParameterfvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetMapAttribParameterfvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6273,7 +6242,7 @@ value glstub_glGetMapAttribParameterivNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetMapAttribParameterivNV);
-	(*stub_glGetMapAttribParameterivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetMapAttribParameterivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6290,7 +6259,7 @@ value glstub_glGetMapControlPointsNV(value v0, value v1, value v2, value v3, val
 	GLboolean lv5 = Bool_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glGetMapControlPointsNV);
-	(*stub_glGetMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glGetMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -6307,7 +6276,7 @@ value glstub_glGetMapParameterfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMapParameterfvNV);
-	(*stub_glGetMapParameterfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMapParameterfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6319,7 +6288,7 @@ value glstub_glGetMapParameterivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMapParameterivNV);
-	(*stub_glGetMapParameterivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMapParameterivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6331,7 +6300,7 @@ value glstub_glGetMapdv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMapdv);
-	(*stub_glGetMapdv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMapdv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6343,7 +6312,7 @@ value glstub_glGetMapfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMapfv);
-	(*stub_glGetMapfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMapfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6355,7 +6324,7 @@ value glstub_glGetMapiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMapiv);
-	(*stub_glGetMapiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMapiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6367,7 +6336,7 @@ value glstub_glGetMaterialfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMaterialfv);
-	(*stub_glGetMaterialfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMaterialfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6379,7 +6348,7 @@ value glstub_glGetMaterialiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMaterialiv);
-	(*stub_glGetMaterialiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMaterialiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6393,7 +6362,7 @@ value glstub_glGetMinmax(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetMinmax);
-	(*stub_glGetMinmax)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetMinmax)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -6407,7 +6376,7 @@ value glstub_glGetMinmaxEXT(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetMinmaxEXT);
-	(*stub_glGetMinmaxEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetMinmaxEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -6419,7 +6388,7 @@ value glstub_glGetMinmaxParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMinmaxParameterfv);
-	(*stub_glGetMinmaxParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMinmaxParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6431,7 +6400,7 @@ value glstub_glGetMinmaxParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMinmaxParameterfvEXT);
-	(*stub_glGetMinmaxParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMinmaxParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6443,7 +6412,7 @@ value glstub_glGetMinmaxParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMinmaxParameteriv);
-	(*stub_glGetMinmaxParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMinmaxParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6455,7 +6424,7 @@ value glstub_glGetMinmaxParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetMinmaxParameterivEXT);
-	(*stub_glGetMinmaxParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetMinmaxParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6467,7 +6436,7 @@ value glstub_glGetObjectBufferfvATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetObjectBufferfvATI);
-	(*stub_glGetObjectBufferfvATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetObjectBufferfvATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6479,7 +6448,7 @@ value glstub_glGetObjectBufferivATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetObjectBufferivATI);
-	(*stub_glGetObjectBufferivATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetObjectBufferivATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6491,7 +6460,7 @@ value glstub_glGetObjectParameterfvARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetObjectParameterfvARB);
-	(*stub_glGetObjectParameterfvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetObjectParameterfvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6503,7 +6472,7 @@ value glstub_glGetObjectParameterivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetObjectParameterivARB);
-	(*stub_glGetObjectParameterivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetObjectParameterivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6515,7 +6484,7 @@ value glstub_glGetOcclusionQueryivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetOcclusionQueryivNV);
-	(*stub_glGetOcclusionQueryivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetOcclusionQueryivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6527,7 +6496,7 @@ value glstub_glGetOcclusionQueryuivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetOcclusionQueryuivNV);
-	(*stub_glGetOcclusionQueryuivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetOcclusionQueryuivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6538,7 +6507,7 @@ value glstub_glGetPixelMapfv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetPixelMapfv);
-	(*stub_glGetPixelMapfv)(lv0, lv1);
+	CALL_FUNCTION(glGetPixelMapfv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6549,7 +6518,7 @@ value glstub_glGetPixelMapuiv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetPixelMapuiv);
-	(*stub_glGetPixelMapuiv)(lv0, lv1);
+	CALL_FUNCTION(glGetPixelMapuiv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6560,7 +6529,7 @@ value glstub_glGetPixelMapusv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetPixelMapusv);
-	(*stub_glGetPixelMapusv)(lv0, lv1);
+	CALL_FUNCTION(glGetPixelMapusv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6572,7 +6541,7 @@ value glstub_glGetPixelTransformParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetPixelTransformParameterfvEXT);
-	(*stub_glGetPixelTransformParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetPixelTransformParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6584,7 +6553,7 @@ value glstub_glGetPixelTransformParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetPixelTransformParameterivEXT);
-	(*stub_glGetPixelTransformParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetPixelTransformParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6595,18 +6564,7 @@ value glstub_glGetPointerv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLvoid** lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetPointerv);
-	(*stub_glGetPointerv)(lv0, lv1);
-	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glGetPointervEXT,(GLenum, GLvoid**),void);
-value glstub_glGetPointervEXT(value v0, value v1)
-{
-	CAMLparam2(v0, v1);
-	GLenum lv0 = Int_val(v0);
-	GLvoid** lv1 = Data_bigarray_val(v1);
-	LOAD_FUNCTION(glGetPointervEXT);
-	(*stub_glGetPointervEXT)(lv0, lv1);
+	CALL_FUNCTION(glGetPointerv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6616,7 +6574,7 @@ value glstub_glGetPolygonStipple(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glGetPolygonStipple);
-	(*stub_glGetPolygonStipple)(lv0);
+	CALL_FUNCTION(glGetPolygonStipple)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -6628,7 +6586,7 @@ value glstub_glGetProgramEnvParameterdvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramEnvParameterdvARB);
-	(*stub_glGetProgramEnvParameterdvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramEnvParameterdvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6640,7 +6598,7 @@ value glstub_glGetProgramEnvParameterfvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramEnvParameterfvARB);
-	(*stub_glGetProgramEnvParameterfvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramEnvParameterfvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6653,7 +6611,7 @@ value glstub_glGetProgramInfoLog(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLchar* lv3 = String_val(v3);
 	LOAD_FUNCTION(glGetProgramInfoLog);
-	(*stub_glGetProgramInfoLog)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetProgramInfoLog)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6665,7 +6623,7 @@ value glstub_glGetProgramLocalParameterdvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramLocalParameterdvARB);
-	(*stub_glGetProgramLocalParameterdvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramLocalParameterdvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6677,7 +6635,7 @@ value glstub_glGetProgramLocalParameterfvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramLocalParameterfvARB);
-	(*stub_glGetProgramLocalParameterfvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramLocalParameterfvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6690,7 +6648,7 @@ value glstub_glGetProgramNamedParameterdvNV(value v0, value v1, value v2, value 
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	GLdouble* lv3 = (Tag_val(v3) == Double_array_tag)? (double *)v3: Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetProgramNamedParameterdvNV);
-	(*stub_glGetProgramNamedParameterdvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetProgramNamedParameterdvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6703,7 +6661,7 @@ value glstub_glGetProgramNamedParameterfvNV(value v0, value v1, value v2, value 
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetProgramNamedParameterfvNV);
-	(*stub_glGetProgramNamedParameterfvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetProgramNamedParameterfvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6716,7 +6674,7 @@ value glstub_glGetProgramParameterdvNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLdouble* lv3 = (Tag_val(v3) == Double_array_tag)? (double *)v3: Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetProgramParameterdvNV);
-	(*stub_glGetProgramParameterdvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetProgramParameterdvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6729,7 +6687,7 @@ value glstub_glGetProgramParameterfvNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetProgramParameterfvNV);
-	(*stub_glGetProgramParameterfvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetProgramParameterfvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6741,7 +6699,7 @@ value glstub_glGetProgramStringARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetProgramStringARB);
-	(*stub_glGetProgramStringARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramStringARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6753,7 +6711,7 @@ value glstub_glGetProgramStringNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramStringNV);
-	(*stub_glGetProgramStringNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramStringNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6765,7 +6723,7 @@ value glstub_glGetProgramiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramiv);
-	(*stub_glGetProgramiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6777,7 +6735,7 @@ value glstub_glGetProgramivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramivARB);
-	(*stub_glGetProgramivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6789,7 +6747,7 @@ value glstub_glGetProgramivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetProgramivNV);
-	(*stub_glGetProgramivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetProgramivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6801,7 +6759,7 @@ value glstub_glGetQueryObjectiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryObjectiv);
-	(*stub_glGetQueryObjectiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryObjectiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6813,7 +6771,7 @@ value glstub_glGetQueryObjectivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryObjectivARB);
-	(*stub_glGetQueryObjectivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryObjectivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6825,7 +6783,7 @@ value glstub_glGetQueryObjectuiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryObjectuiv);
-	(*stub_glGetQueryObjectuiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryObjectuiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6837,7 +6795,7 @@ value glstub_glGetQueryObjectuivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryObjectuivARB);
-	(*stub_glGetQueryObjectuivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryObjectuivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6849,7 +6807,7 @@ value glstub_glGetQueryiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryiv);
-	(*stub_glGetQueryiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6861,7 +6819,7 @@ value glstub_glGetQueryivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetQueryivARB);
-	(*stub_glGetQueryivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetQueryivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6873,7 +6831,7 @@ value glstub_glGetRenderbufferParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetRenderbufferParameterivEXT);
-	(*stub_glGetRenderbufferParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetRenderbufferParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6889,7 +6847,7 @@ value glstub_glGetSeparableFilter(value v0, value v1, value v2, value v3, value 
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glGetSeparableFilter);
-	(*stub_glGetSeparableFilter)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glGetSeparableFilter)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -6910,7 +6868,7 @@ value glstub_glGetSeparableFilterEXT(value v0, value v1, value v2, value v3, val
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glGetSeparableFilterEXT);
-	(*stub_glGetSeparableFilterEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glGetSeparableFilterEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -6928,7 +6886,7 @@ value glstub_glGetShaderInfoLog(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLchar* lv3 = String_val(v3);
 	LOAD_FUNCTION(glGetShaderInfoLog);
-	(*stub_glGetShaderInfoLog)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetShaderInfoLog)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6941,7 +6899,7 @@ value glstub_glGetShaderSource(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLchar* lv3 = String_val(v3);
 	LOAD_FUNCTION(glGetShaderSource);
-	(*stub_glGetShaderSource)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetShaderSource)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6954,7 +6912,7 @@ value glstub_glGetShaderSourceARB(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLchar* lv3 = String_val(v3);
 	LOAD_FUNCTION(glGetShaderSourceARB);
-	(*stub_glGetShaderSourceARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetShaderSourceARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -6966,7 +6924,7 @@ value glstub_glGetShaderiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetShaderiv);
-	(*stub_glGetShaderiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetShaderiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -6977,7 +6935,7 @@ value glstub_glGetSharpenTexFuncSGIS(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetSharpenTexFuncSGIS);
-	(*stub_glGetSharpenTexFuncSGIS)(lv0, lv1);
+	CALL_FUNCTION(glGetSharpenTexFuncSGIS)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -6989,7 +6947,7 @@ value glstub_glGetString(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLstring ret;
 	LOAD_FUNCTION(glGetString);
-	ret = (*stub_glGetString)(lv0);
+	ret = CALL_FUNCTION(glGetString)(lv0);
 	result = caml_copy_string(ret);
 	CAMLreturn(result);
 }
@@ -7001,7 +6959,7 @@ value glstub_glGetTexBumpParameterfvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetTexBumpParameterfvATI);
-	(*stub_glGetTexBumpParameterfvATI)(lv0, lv1);
+	CALL_FUNCTION(glGetTexBumpParameterfvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -7012,7 +6970,7 @@ value glstub_glGetTexBumpParameterivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glGetTexBumpParameterivATI);
-	(*stub_glGetTexBumpParameterivATI)(lv0, lv1);
+	CALL_FUNCTION(glGetTexBumpParameterivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -7024,7 +6982,7 @@ value glstub_glGetTexEnvfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexEnvfv);
-	(*stub_glGetTexEnvfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexEnvfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7036,7 +6994,7 @@ value glstub_glGetTexEnviv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexEnviv);
-	(*stub_glGetTexEnviv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexEnviv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7048,7 +7006,7 @@ value glstub_glGetTexFilterFuncSGIS(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexFilterFuncSGIS);
-	(*stub_glGetTexFilterFuncSGIS)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexFilterFuncSGIS)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7060,7 +7018,7 @@ value glstub_glGetTexGendv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexGendv);
-	(*stub_glGetTexGendv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexGendv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7072,7 +7030,7 @@ value glstub_glGetTexGenfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexGenfv);
-	(*stub_glGetTexGenfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexGenfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7084,7 +7042,7 @@ value glstub_glGetTexGeniv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexGeniv);
-	(*stub_glGetTexGeniv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexGeniv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7098,7 +7056,7 @@ value glstub_glGetTexImage(value v0, value v1, value v2, value v3, value v4)
 	GLenum lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glGetTexImage);
-	(*stub_glGetTexImage)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glGetTexImage)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -7111,7 +7069,7 @@ value glstub_glGetTexLevelParameterfv(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetTexLevelParameterfv);
-	(*stub_glGetTexLevelParameterfv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetTexLevelParameterfv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7124,7 +7082,7 @@ value glstub_glGetTexLevelParameteriv(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetTexLevelParameteriv);
-	(*stub_glGetTexLevelParameteriv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetTexLevelParameteriv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7136,7 +7094,7 @@ value glstub_glGetTexParameterIivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexParameterIivEXT);
-	(*stub_glGetTexParameterIivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexParameterIivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7148,7 +7106,7 @@ value glstub_glGetTexParameterIuivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexParameterIuivEXT);
-	(*stub_glGetTexParameterIuivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexParameterIuivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7160,7 +7118,7 @@ value glstub_glGetTexParameterPointervAPPLE(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexParameterPointervAPPLE);
-	(*stub_glGetTexParameterPointervAPPLE)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexParameterPointervAPPLE)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7172,7 +7130,7 @@ value glstub_glGetTexParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexParameterfv);
-	(*stub_glGetTexParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7184,7 +7142,7 @@ value glstub_glGetTexParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTexParameteriv);
-	(*stub_glGetTexParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTexParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7197,7 +7155,7 @@ value glstub_glGetTrackMatrixivNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glGetTrackMatrixivNV);
-	(*stub_glGetTrackMatrixivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glGetTrackMatrixivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7209,7 +7167,7 @@ value glstub_glGetTransformFeedbackVaryingNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetTransformFeedbackVaryingNV);
-	(*stub_glGetTransformFeedbackVaryingNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetTransformFeedbackVaryingNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7222,7 +7180,7 @@ value glstub_glGetUniformBufferSizeEXT(value v0, value v1)
 	GLint lv1 = Int_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetUniformBufferSizeEXT);
-	ret = (*stub_glGetUniformBufferSizeEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetUniformBufferSizeEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -7236,7 +7194,7 @@ value glstub_glGetUniformLocation(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetUniformLocation);
-	ret = (*stub_glGetUniformLocation)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetUniformLocation)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -7250,7 +7208,7 @@ value glstub_glGetUniformLocationARB(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetUniformLocationARB);
-	ret = (*stub_glGetUniformLocationARB)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetUniformLocationARB)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -7264,7 +7222,7 @@ value glstub_glGetUniformOffsetEXT(value v0, value v1)
 	GLint lv1 = Int_val(v1);
 	GLintptr ret;
 	LOAD_FUNCTION(glGetUniformOffsetEXT);
-	ret = (*stub_glGetUniformOffsetEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetUniformOffsetEXT)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -7277,7 +7235,7 @@ value glstub_glGetUniformfv(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetUniformfv);
-	(*stub_glGetUniformfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetUniformfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7289,7 +7247,7 @@ value glstub_glGetUniformfvARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetUniformfvARB);
-	(*stub_glGetUniformfvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetUniformfvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7301,7 +7259,7 @@ value glstub_glGetUniformiv(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetUniformiv);
-	(*stub_glGetUniformiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetUniformiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7313,7 +7271,7 @@ value glstub_glGetUniformivARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetUniformivARB);
-	(*stub_glGetUniformivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetUniformivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7325,7 +7283,7 @@ value glstub_glGetUniformuivEXT(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetUniformuivEXT);
-	(*stub_glGetUniformuivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetUniformuivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7337,7 +7295,7 @@ value glstub_glGetVariantArrayObjectfvATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantArrayObjectfvATI);
-	(*stub_glGetVariantArrayObjectfvATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantArrayObjectfvATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7349,7 +7307,7 @@ value glstub_glGetVariantArrayObjectivATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantArrayObjectivATI);
-	(*stub_glGetVariantArrayObjectivATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantArrayObjectivATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7361,7 +7319,7 @@ value glstub_glGetVariantBooleanvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLboolean* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantBooleanvEXT);
-	(*stub_glGetVariantBooleanvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantBooleanvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7373,7 +7331,7 @@ value glstub_glGetVariantFloatvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantFloatvEXT);
-	(*stub_glGetVariantFloatvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantFloatvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7385,7 +7343,7 @@ value glstub_glGetVariantIntegervEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantIntegervEXT);
-	(*stub_glGetVariantIntegervEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantIntegervEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7397,7 +7355,7 @@ value glstub_glGetVariantPointervEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVariantPointervEXT);
-	(*stub_glGetVariantPointervEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVariantPointervEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7410,7 +7368,7 @@ value glstub_glGetVaryingLocationNV(value v0, value v1)
 	GLchar* lv1 = String_val(v1);
 	GLint ret;
 	LOAD_FUNCTION(glGetVaryingLocationNV);
-	ret = (*stub_glGetVaryingLocationNV)(lv0, lv1);
+	ret = CALL_FUNCTION(glGetVaryingLocationNV)(lv0, lv1);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -7423,7 +7381,7 @@ value glstub_glGetVertexAttribArrayObjectfvATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribArrayObjectfvATI);
-	(*stub_glGetVertexAttribArrayObjectfvATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribArrayObjectfvATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7435,7 +7393,7 @@ value glstub_glGetVertexAttribArrayObjectivATI(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribArrayObjectivATI);
-	(*stub_glGetVertexAttribArrayObjectivATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribArrayObjectivATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7447,7 +7405,7 @@ value glstub_glGetVertexAttribIivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribIivEXT);
-	(*stub_glGetVertexAttribIivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribIivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7459,7 +7417,7 @@ value glstub_glGetVertexAttribIuivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribIuivEXT);
-	(*stub_glGetVertexAttribIuivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribIuivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7471,7 +7429,7 @@ value glstub_glGetVertexAttribPointerv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glGetVertexAttribPointerv);
-	(*stub_glGetVertexAttribPointerv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribPointerv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7483,7 +7441,7 @@ value glstub_glGetVertexAttribPointervARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribPointervARB);
-	(*stub_glGetVertexAttribPointervARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribPointervARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7495,7 +7453,7 @@ value glstub_glGetVertexAttribPointervNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribPointervNV);
-	(*stub_glGetVertexAttribPointervNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribPointervNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7507,7 +7465,7 @@ value glstub_glGetVertexAttribdv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribdv);
-	(*stub_glGetVertexAttribdv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribdv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7519,7 +7477,7 @@ value glstub_glGetVertexAttribdvARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribdvARB);
-	(*stub_glGetVertexAttribdvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribdvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7531,7 +7489,7 @@ value glstub_glGetVertexAttribdvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribdvNV);
-	(*stub_glGetVertexAttribdvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribdvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7543,7 +7501,7 @@ value glstub_glGetVertexAttribfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribfv);
-	(*stub_glGetVertexAttribfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7555,7 +7513,7 @@ value glstub_glGetVertexAttribfvARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribfvARB);
-	(*stub_glGetVertexAttribfvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribfvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7567,7 +7525,7 @@ value glstub_glGetVertexAttribfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribfvNV);
-	(*stub_glGetVertexAttribfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7579,7 +7537,7 @@ value glstub_glGetVertexAttribiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribiv);
-	(*stub_glGetVertexAttribiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7591,7 +7549,7 @@ value glstub_glGetVertexAttribivARB(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribivARB);
-	(*stub_glGetVertexAttribivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7603,7 +7561,7 @@ value glstub_glGetVertexAttribivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glGetVertexAttribivNV);
-	(*stub_glGetVertexAttribivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glGetVertexAttribivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7613,7 +7571,7 @@ value glstub_glGlobalAlphaFactorbSUN(value v0)
 	CAMLparam1(v0);
 	GLbyte lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactorbSUN);
-	(*stub_glGlobalAlphaFactorbSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactorbSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7623,7 +7581,7 @@ value glstub_glGlobalAlphaFactordSUN(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactordSUN);
-	(*stub_glGlobalAlphaFactordSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactordSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7633,7 +7591,7 @@ value glstub_glGlobalAlphaFactorfSUN(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactorfSUN);
-	(*stub_glGlobalAlphaFactorfSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactorfSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7643,7 +7601,7 @@ value glstub_glGlobalAlphaFactoriSUN(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactoriSUN);
-	(*stub_glGlobalAlphaFactoriSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactoriSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7653,7 +7611,7 @@ value glstub_glGlobalAlphaFactorsSUN(value v0)
 	CAMLparam1(v0);
 	GLshort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactorsSUN);
-	(*stub_glGlobalAlphaFactorsSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactorsSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7663,7 +7621,7 @@ value glstub_glGlobalAlphaFactorubSUN(value v0)
 	CAMLparam1(v0);
 	GLubyte lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactorubSUN);
-	(*stub_glGlobalAlphaFactorubSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactorubSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7673,7 +7631,7 @@ value glstub_glGlobalAlphaFactoruiSUN(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactoruiSUN);
-	(*stub_glGlobalAlphaFactoruiSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactoruiSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7683,7 +7641,7 @@ value glstub_glGlobalAlphaFactorusSUN(value v0)
 	CAMLparam1(v0);
 	GLushort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glGlobalAlphaFactorusSUN);
-	(*stub_glGlobalAlphaFactorusSUN)(lv0);
+	CALL_FUNCTION(glGlobalAlphaFactorusSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7694,7 +7652,7 @@ value glstub_glHint(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glHint);
-	(*stub_glHint)(lv0, lv1);
+	CALL_FUNCTION(glHint)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -7707,7 +7665,7 @@ value glstub_glHistogram(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLboolean lv3 = Bool_val(v3);
 	LOAD_FUNCTION(glHistogram);
-	(*stub_glHistogram)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glHistogram)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7720,7 +7678,7 @@ value glstub_glHistogramEXT(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLboolean lv3 = Bool_val(v3);
 	LOAD_FUNCTION(glHistogramEXT);
-	(*stub_glHistogramEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glHistogramEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7732,7 +7690,7 @@ value glstub_glImageTransformParameterfHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glImageTransformParameterfHP);
-	(*stub_glImageTransformParameterfHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glImageTransformParameterfHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7744,7 +7702,7 @@ value glstub_glImageTransformParameterfvHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glImageTransformParameterfvHP);
-	(*stub_glImageTransformParameterfvHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glImageTransformParameterfvHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7756,7 +7714,7 @@ value glstub_glImageTransformParameteriHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glImageTransformParameteriHP);
-	(*stub_glImageTransformParameteriHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glImageTransformParameteriHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7768,7 +7726,7 @@ value glstub_glImageTransformParameterivHP(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glImageTransformParameterivHP);
-	(*stub_glImageTransformParameterivHP)(lv0, lv1, lv2);
+	CALL_FUNCTION(glImageTransformParameterivHP)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7779,7 +7737,7 @@ value glstub_glIndexFuncEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glIndexFuncEXT);
-	(*stub_glIndexFuncEXT)(lv0, lv1);
+	CALL_FUNCTION(glIndexFuncEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -7789,7 +7747,7 @@ value glstub_glIndexMask(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glIndexMask);
-	(*stub_glIndexMask)(lv0);
+	CALL_FUNCTION(glIndexMask)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7800,7 +7758,7 @@ value glstub_glIndexMaterialEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glIndexMaterialEXT);
-	(*stub_glIndexMaterialEXT)(lv0, lv1);
+	CALL_FUNCTION(glIndexMaterialEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -7812,7 +7770,7 @@ value glstub_glIndexPointer(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glIndexPointer);
-	(*stub_glIndexPointer)(lv0, lv1, lv2);
+	CALL_FUNCTION(glIndexPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7825,7 +7783,7 @@ value glstub_glIndexPointerEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glIndexPointerEXT);
-	(*stub_glIndexPointerEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glIndexPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7838,7 +7796,7 @@ value glstub_glIndexPointerListIBM(value v0, value v1, value v2, value v3)
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glIndexPointerListIBM);
-	(*stub_glIndexPointerListIBM)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glIndexPointerListIBM)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -7848,7 +7806,7 @@ value glstub_glIndexd(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glIndexd);
-	(*stub_glIndexd)(lv0);
+	CALL_FUNCTION(glIndexd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7858,7 +7816,7 @@ value glstub_glIndexdv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glIndexdv);
-	(*stub_glIndexdv)(lv0);
+	CALL_FUNCTION(glIndexdv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7868,7 +7826,7 @@ value glstub_glIndexf(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glIndexf);
-	(*stub_glIndexf)(lv0);
+	CALL_FUNCTION(glIndexf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7878,7 +7836,7 @@ value glstub_glIndexfv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glIndexfv);
-	(*stub_glIndexfv)(lv0);
+	CALL_FUNCTION(glIndexfv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7888,7 +7846,7 @@ value glstub_glIndexi(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glIndexi);
-	(*stub_glIndexi)(lv0);
+	CALL_FUNCTION(glIndexi)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7898,7 +7856,7 @@ value glstub_glIndexiv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glIndexiv);
-	(*stub_glIndexiv)(lv0);
+	CALL_FUNCTION(glIndexiv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7908,7 +7866,7 @@ value glstub_glIndexs(value v0)
 	CAMLparam1(v0);
 	GLshort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glIndexs);
-	(*stub_glIndexs)(lv0);
+	CALL_FUNCTION(glIndexs)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7918,7 +7876,7 @@ value glstub_glIndexsv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glIndexsv);
-	(*stub_glIndexsv)(lv0);
+	CALL_FUNCTION(glIndexsv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7928,7 +7886,7 @@ value glstub_glIndexub(value v0)
 	CAMLparam1(v0);
 	GLubyte lv0 = Int_val(v0);
 	LOAD_FUNCTION(glIndexub);
-	(*stub_glIndexub)(lv0);
+	CALL_FUNCTION(glIndexub)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7938,7 +7896,7 @@ value glstub_glIndexubv(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glIndexubv);
-	(*stub_glIndexubv)(lv0);
+	CALL_FUNCTION(glIndexubv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -7947,7 +7905,7 @@ value glstub_glInitNames(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glInitNames);
-	(*stub_glInitNames)();
+	CALL_FUNCTION(glInitNames)();
 	CAMLreturn(Val_unit);
 }
 
@@ -7959,7 +7917,7 @@ value glstub_glInsertComponentEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glInsertComponentEXT);
-	(*stub_glInsertComponentEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glInsertComponentEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7971,7 +7929,7 @@ value glstub_glInterleavedArrays(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glInterleavedArrays);
-	(*stub_glInterleavedArrays)(lv0, lv1, lv2);
+	CALL_FUNCTION(glInterleavedArrays)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -7983,7 +7941,7 @@ value glstub_glIsAsyncMarkerSGIX(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsAsyncMarkerSGIX);
-	ret = (*stub_glIsAsyncMarkerSGIX)(lv0);
+	ret = CALL_FUNCTION(glIsAsyncMarkerSGIX)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -7996,7 +7954,7 @@ value glstub_glIsBuffer(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsBuffer);
-	ret = (*stub_glIsBuffer)(lv0);
+	ret = CALL_FUNCTION(glIsBuffer)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8009,7 +7967,7 @@ value glstub_glIsBufferARB(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsBufferARB);
-	ret = (*stub_glIsBufferARB)(lv0);
+	ret = CALL_FUNCTION(glIsBufferARB)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8022,7 +7980,7 @@ value glstub_glIsEnabled(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsEnabled);
-	ret = (*stub_glIsEnabled)(lv0);
+	ret = CALL_FUNCTION(glIsEnabled)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8036,7 +7994,7 @@ value glstub_glIsEnabledIndexedEXT(value v0, value v1)
 	GLuint lv1 = Int_val(v1);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsEnabledIndexedEXT);
-	ret = (*stub_glIsEnabledIndexedEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glIsEnabledIndexedEXT)(lv0, lv1);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8049,7 +8007,7 @@ value glstub_glIsFenceAPPLE(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsFenceAPPLE);
-	ret = (*stub_glIsFenceAPPLE)(lv0);
+	ret = CALL_FUNCTION(glIsFenceAPPLE)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8062,7 +8020,7 @@ value glstub_glIsFenceNV(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsFenceNV);
-	ret = (*stub_glIsFenceNV)(lv0);
+	ret = CALL_FUNCTION(glIsFenceNV)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8075,7 +8033,7 @@ value glstub_glIsFramebufferEXT(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsFramebufferEXT);
-	ret = (*stub_glIsFramebufferEXT)(lv0);
+	ret = CALL_FUNCTION(glIsFramebufferEXT)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8088,7 +8046,7 @@ value glstub_glIsList(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsList);
-	ret = (*stub_glIsList)(lv0);
+	ret = CALL_FUNCTION(glIsList)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8101,7 +8059,7 @@ value glstub_glIsObjectBufferATI(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsObjectBufferATI);
-	ret = (*stub_glIsObjectBufferATI)(lv0);
+	ret = CALL_FUNCTION(glIsObjectBufferATI)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8114,7 +8072,7 @@ value glstub_glIsOcclusionQueryNV(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsOcclusionQueryNV);
-	ret = (*stub_glIsOcclusionQueryNV)(lv0);
+	ret = CALL_FUNCTION(glIsOcclusionQueryNV)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8127,7 +8085,7 @@ value glstub_glIsProgram(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsProgram);
-	ret = (*stub_glIsProgram)(lv0);
+	ret = CALL_FUNCTION(glIsProgram)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8140,7 +8098,7 @@ value glstub_glIsProgramARB(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsProgramARB);
-	ret = (*stub_glIsProgramARB)(lv0);
+	ret = CALL_FUNCTION(glIsProgramARB)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8153,7 +8111,7 @@ value glstub_glIsProgramNV(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsProgramNV);
-	ret = (*stub_glIsProgramNV)(lv0);
+	ret = CALL_FUNCTION(glIsProgramNV)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8166,7 +8124,7 @@ value glstub_glIsQuery(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsQuery);
-	ret = (*stub_glIsQuery)(lv0);
+	ret = CALL_FUNCTION(glIsQuery)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8179,7 +8137,7 @@ value glstub_glIsQueryARB(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsQueryARB);
-	ret = (*stub_glIsQueryARB)(lv0);
+	ret = CALL_FUNCTION(glIsQueryARB)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8192,7 +8150,7 @@ value glstub_glIsRenderbufferEXT(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsRenderbufferEXT);
-	ret = (*stub_glIsRenderbufferEXT)(lv0);
+	ret = CALL_FUNCTION(glIsRenderbufferEXT)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8205,7 +8163,7 @@ value glstub_glIsShader(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsShader);
-	ret = (*stub_glIsShader)(lv0);
+	ret = CALL_FUNCTION(glIsShader)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8218,7 +8176,7 @@ value glstub_glIsTexture(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsTexture);
-	ret = (*stub_glIsTexture)(lv0);
+	ret = CALL_FUNCTION(glIsTexture)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8231,7 +8189,7 @@ value glstub_glIsTextureEXT(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsTextureEXT);
-	ret = (*stub_glIsTextureEXT)(lv0);
+	ret = CALL_FUNCTION(glIsTextureEXT)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8245,7 +8203,7 @@ value glstub_glIsVariantEnabledEXT(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsVariantEnabledEXT);
-	ret = (*stub_glIsVariantEnabledEXT)(lv0, lv1);
+	ret = CALL_FUNCTION(glIsVariantEnabledEXT)(lv0, lv1);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8258,7 +8216,7 @@ value glstub_glIsVertexArray(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsVertexArray);
-	ret = (*stub_glIsVertexArray)(lv0);
+	ret = CALL_FUNCTION(glIsVertexArray)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8271,7 +8229,7 @@ value glstub_glIsVertexArrayAPPLE(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glIsVertexArrayAPPLE);
-	ret = (*stub_glIsVertexArrayAPPLE)(lv0);
+	ret = CALL_FUNCTION(glIsVertexArrayAPPLE)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -8283,7 +8241,7 @@ value glstub_glLightEnviEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glLightEnviEXT);
-	(*stub_glLightEnviEXT)(lv0, lv1);
+	CALL_FUNCTION(glLightEnviEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8294,7 +8252,7 @@ value glstub_glLightModelf(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glLightModelf);
-	(*stub_glLightModelf)(lv0, lv1);
+	CALL_FUNCTION(glLightModelf)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8305,7 +8263,7 @@ value glstub_glLightModelfv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glLightModelfv);
-	(*stub_glLightModelfv)(lv0, lv1);
+	CALL_FUNCTION(glLightModelfv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8316,7 +8274,7 @@ value glstub_glLightModeli(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glLightModeli);
-	(*stub_glLightModeli)(lv0, lv1);
+	CALL_FUNCTION(glLightModeli)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8327,7 +8285,7 @@ value glstub_glLightModeliv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glLightModeliv);
-	(*stub_glLightModeliv)(lv0, lv1);
+	CALL_FUNCTION(glLightModeliv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8339,7 +8297,7 @@ value glstub_glLightf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glLightf);
-	(*stub_glLightf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glLightf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8351,7 +8309,7 @@ value glstub_glLightfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glLightfv);
-	(*stub_glLightfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glLightfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8363,7 +8321,7 @@ value glstub_glLighti(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glLighti);
-	(*stub_glLighti)(lv0, lv1, lv2);
+	CALL_FUNCTION(glLighti)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8375,7 +8333,7 @@ value glstub_glLightiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glLightiv);
-	(*stub_glLightiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glLightiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8386,7 +8344,7 @@ value glstub_glLineStipple(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLushort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glLineStipple);
-	(*stub_glLineStipple)(lv0, lv1);
+	CALL_FUNCTION(glLineStipple)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8396,7 +8354,7 @@ value glstub_glLineWidth(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glLineWidth);
-	(*stub_glLineWidth)(lv0);
+	CALL_FUNCTION(glLineWidth)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8406,7 +8364,7 @@ value glstub_glLinkProgram(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glLinkProgram);
-	(*stub_glLinkProgram)(lv0);
+	CALL_FUNCTION(glLinkProgram)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8416,7 +8374,7 @@ value glstub_glLinkProgramARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glLinkProgramARB);
-	(*stub_glLinkProgramARB)(lv0);
+	CALL_FUNCTION(glLinkProgramARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8426,7 +8384,7 @@ value glstub_glListBase(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glListBase);
-	(*stub_glListBase)(lv0);
+	CALL_FUNCTION(glListBase)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8435,7 +8393,7 @@ value glstub_glLoadIdentity(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glLoadIdentity);
-	(*stub_glLoadIdentity)();
+	CALL_FUNCTION(glLoadIdentity)();
 	CAMLreturn(Val_unit);
 }
 
@@ -8445,7 +8403,7 @@ value glstub_glLoadMatrixd(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadMatrixd);
-	(*stub_glLoadMatrixd)(lv0);
+	CALL_FUNCTION(glLoadMatrixd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8455,7 +8413,7 @@ value glstub_glLoadMatrixf(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadMatrixf);
-	(*stub_glLoadMatrixf)(lv0);
+	CALL_FUNCTION(glLoadMatrixf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8465,7 +8423,7 @@ value glstub_glLoadName(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glLoadName);
-	(*stub_glLoadName)(lv0);
+	CALL_FUNCTION(glLoadName)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8478,7 +8436,7 @@ value glstub_glLoadProgramNV(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLubyte* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glLoadProgramNV);
-	(*stub_glLoadProgramNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glLoadProgramNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -8488,7 +8446,7 @@ value glstub_glLoadTransposeMatrixd(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadTransposeMatrixd);
-	(*stub_glLoadTransposeMatrixd)(lv0);
+	CALL_FUNCTION(glLoadTransposeMatrixd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8498,7 +8456,7 @@ value glstub_glLoadTransposeMatrixdARB(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadTransposeMatrixdARB);
-	(*stub_glLoadTransposeMatrixdARB)(lv0);
+	CALL_FUNCTION(glLoadTransposeMatrixdARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8508,7 +8466,7 @@ value glstub_glLoadTransposeMatrixf(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadTransposeMatrixf);
-	(*stub_glLoadTransposeMatrixf)(lv0);
+	CALL_FUNCTION(glLoadTransposeMatrixf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8518,7 +8476,7 @@ value glstub_glLoadTransposeMatrixfARB(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glLoadTransposeMatrixfARB);
-	(*stub_glLoadTransposeMatrixfARB)(lv0);
+	CALL_FUNCTION(glLoadTransposeMatrixfARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8529,7 +8487,7 @@ value glstub_glLockArraysEXT(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLsizei lv1 = Int_val(v1);
 	LOAD_FUNCTION(glLockArraysEXT);
-	(*stub_glLockArraysEXT)(lv0, lv1);
+	CALL_FUNCTION(glLockArraysEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8539,7 +8497,7 @@ value glstub_glLogicOp(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glLogicOp);
-	(*stub_glLogicOp)(lv0);
+	CALL_FUNCTION(glLogicOp)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8555,7 +8513,7 @@ value glstub_glMap1d(value v0, value v1, value v2, value v3, value v4, value v5)
 	GLint lv4 = Int_val(v4);
 	GLdouble* lv5 = (Tag_val(v5) == Double_array_tag)? (double *)v5: Data_bigarray_val(v5);
 	LOAD_FUNCTION(glMap1d);
-	(*stub_glMap1d)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMap1d)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -8576,7 +8534,7 @@ value glstub_glMap1f(value v0, value v1, value v2, value v3, value v4, value v5)
 	GLint lv4 = Int_val(v4);
 	GLfloat* lv5 = Data_bigarray_val(v5);
 	LOAD_FUNCTION(glMap1f);
-	(*stub_glMap1f)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMap1f)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -8601,7 +8559,7 @@ value glstub_glMap2d(value v0, value v1, value v2, value v3, value v4, value v5,
 	GLint lv8 = Int_val(v8);
 	GLdouble* lv9 = (Tag_val(v9) == Double_array_tag)? (double *)v9: Data_bigarray_val(v9);
 	LOAD_FUNCTION(glMap2d);
-	(*stub_glMap2d)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glMap2d)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -8626,7 +8584,7 @@ value glstub_glMap2f(value v0, value v1, value v2, value v3, value v4, value v5,
 	GLint lv8 = Int_val(v8);
 	GLfloat* lv9 = Data_bigarray_val(v9);
 	LOAD_FUNCTION(glMap2f);
-	(*stub_glMap2f)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glMap2f)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -8644,7 +8602,7 @@ value glstub_glMapBuffer(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* ret;
 	LOAD_FUNCTION(glMapBuffer);
-	ret = (*stub_glMapBuffer)(lv0, lv1);
+	ret = CALL_FUNCTION(glMapBuffer)(lv0, lv1);
 	result = (value)(ret);
 	CAMLreturn(result);
 }
@@ -8658,7 +8616,7 @@ value glstub_glMapBufferARB(value v0, value v1)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* ret;
 	LOAD_FUNCTION(glMapBufferARB);
-	ret = (*stub_glMapBufferARB)(lv0, lv1);
+	ret = CALL_FUNCTION(glMapBufferARB)(lv0, lv1);
 	result = (value)(ret);
 	CAMLreturn(result);
 }
@@ -8678,7 +8636,7 @@ value glstub_glMapControlPointsNV(value v0, value v1, value v2, value v3, value 
 	GLboolean lv7 = Bool_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glMapControlPointsNV);
-	(*stub_glMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glMapControlPointsNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -8695,7 +8653,7 @@ value glstub_glMapGrid1d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMapGrid1d);
-	(*stub_glMapGrid1d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMapGrid1d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8707,7 +8665,7 @@ value glstub_glMapGrid1f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMapGrid1f);
-	(*stub_glMapGrid1f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMapGrid1f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8723,7 +8681,7 @@ value glstub_glMapGrid2d(value v0, value v1, value v2, value v3, value v4, value
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glMapGrid2d);
-	(*stub_glMapGrid2d)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMapGrid2d)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -8744,7 +8702,7 @@ value glstub_glMapGrid2f(value v0, value v1, value v2, value v3, value v4, value
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glMapGrid2f);
-	(*stub_glMapGrid2f)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMapGrid2f)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -8761,7 +8719,7 @@ value glstub_glMapObjectBufferATI(value v0)
 	GLuint lv0 = Int_val(v0);
 	void* ret;
 	LOAD_FUNCTION(glMapObjectBufferATI);
-	ret = (*stub_glMapObjectBufferATI)(lv0);
+	ret = CALL_FUNCTION(glMapObjectBufferATI)(lv0);
 	result = (value)(ret);
 	CAMLreturn(result);
 }
@@ -8774,7 +8732,7 @@ value glstub_glMapParameterfvNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glMapParameterfvNV);
-	(*stub_glMapParameterfvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMapParameterfvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8786,7 +8744,7 @@ value glstub_glMapParameterivNV(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glMapParameterivNV);
-	(*stub_glMapParameterivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMapParameterivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8798,7 +8756,7 @@ value glstub_glMaterialf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMaterialf);
-	(*stub_glMaterialf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMaterialf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8810,7 +8768,7 @@ value glstub_glMaterialfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glMaterialfv);
-	(*stub_glMaterialfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMaterialfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8822,7 +8780,7 @@ value glstub_glMateriali(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMateriali);
-	(*stub_glMateriali)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMateriali)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8834,7 +8792,7 @@ value glstub_glMaterialiv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glMaterialiv);
-	(*stub_glMaterialiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMaterialiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8847,7 +8805,7 @@ value glstub_glMatrixIndexPointerARB(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glMatrixIndexPointerARB);
-	(*stub_glMatrixIndexPointerARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMatrixIndexPointerARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -8858,7 +8816,7 @@ value glstub_glMatrixIndexubvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMatrixIndexubvARB);
-	(*stub_glMatrixIndexubvARB)(lv0, lv1);
+	CALL_FUNCTION(glMatrixIndexubvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8869,7 +8827,7 @@ value glstub_glMatrixIndexuivARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMatrixIndexuivARB);
-	(*stub_glMatrixIndexuivARB)(lv0, lv1);
+	CALL_FUNCTION(glMatrixIndexuivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8880,7 +8838,7 @@ value glstub_glMatrixIndexusvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMatrixIndexusvARB);
-	(*stub_glMatrixIndexusvARB)(lv0, lv1);
+	CALL_FUNCTION(glMatrixIndexusvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -8890,7 +8848,7 @@ value glstub_glMatrixMode(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glMatrixMode);
-	(*stub_glMatrixMode)(lv0);
+	CALL_FUNCTION(glMatrixMode)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8902,7 +8860,7 @@ value glstub_glMinmax(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLboolean lv2 = Bool_val(v2);
 	LOAD_FUNCTION(glMinmax);
-	(*stub_glMinmax)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMinmax)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8914,7 +8872,7 @@ value glstub_glMinmaxEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLboolean lv2 = Bool_val(v2);
 	LOAD_FUNCTION(glMinmaxEXT);
-	(*stub_glMinmaxEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMinmaxEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -8924,7 +8882,7 @@ value glstub_glMultMatrixd(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultMatrixd);
-	(*stub_glMultMatrixd)(lv0);
+	CALL_FUNCTION(glMultMatrixd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8934,7 +8892,7 @@ value glstub_glMultMatrixf(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultMatrixf);
-	(*stub_glMultMatrixf)(lv0);
+	CALL_FUNCTION(glMultMatrixf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8944,7 +8902,7 @@ value glstub_glMultTransposeMatrixd(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultTransposeMatrixd);
-	(*stub_glMultTransposeMatrixd)(lv0);
+	CALL_FUNCTION(glMultTransposeMatrixd)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8954,7 +8912,7 @@ value glstub_glMultTransposeMatrixdARB(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultTransposeMatrixdARB);
-	(*stub_glMultTransposeMatrixdARB)(lv0);
+	CALL_FUNCTION(glMultTransposeMatrixdARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8964,7 +8922,7 @@ value glstub_glMultTransposeMatrixf(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultTransposeMatrixf);
-	(*stub_glMultTransposeMatrixf)(lv0);
+	CALL_FUNCTION(glMultTransposeMatrixf)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8974,7 +8932,7 @@ value glstub_glMultTransposeMatrixfARB(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glMultTransposeMatrixfARB);
-	(*stub_glMultTransposeMatrixfARB)(lv0);
+	CALL_FUNCTION(glMultTransposeMatrixfARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -8987,7 +8945,7 @@ value glstub_glMultiDrawArrays(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiDrawArrays);
-	(*stub_glMultiDrawArrays)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiDrawArrays)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9000,7 +8958,7 @@ value glstub_glMultiDrawArraysEXT(value v0, value v1, value v2, value v3)
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiDrawArraysEXT);
-	(*stub_glMultiDrawArraysEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiDrawArraysEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9013,7 +8971,7 @@ value glstub_glMultiDrawElementArrayAPPLE(value v0, value v1, value v2, value v3
 	GLsizei* lv2 = Data_bigarray_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiDrawElementArrayAPPLE);
-	(*stub_glMultiDrawElementArrayAPPLE)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiDrawElementArrayAPPLE)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9027,7 +8985,7 @@ value glstub_glMultiDrawElements(value v0, value v1, value v2, value v3, value v
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiDrawElements);
-	(*stub_glMultiDrawElements)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiDrawElements)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9041,7 +8999,7 @@ value glstub_glMultiDrawElementsEXT(value v0, value v1, value v2, value v3, valu
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiDrawElementsEXT);
-	(*stub_glMultiDrawElementsEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiDrawElementsEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9057,7 +9015,7 @@ value glstub_glMultiDrawRangeElementArrayAPPLE(value v0, value v1, value v2, val
 	GLsizei* lv4 = Data_bigarray_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glMultiDrawRangeElementArrayAPPLE);
-	(*stub_glMultiDrawRangeElementArrayAPPLE)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMultiDrawRangeElementArrayAPPLE)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -9076,7 +9034,7 @@ value glstub_glMultiModeDrawArraysIBM(value v0, value v1, value v2, value v3, va
 	GLsizei lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiModeDrawArraysIBM);
-	(*stub_glMultiModeDrawArraysIBM)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiModeDrawArraysIBM)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9092,7 +9050,7 @@ value glstub_glMultiModeDrawElementsIBM(value v0, value v1, value v2, value v3, 
 	GLsizei lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glMultiModeDrawElementsIBM);
-	(*stub_glMultiModeDrawElementsIBM)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glMultiModeDrawElementsIBM)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -9108,7 +9066,7 @@ value glstub_glMultiTexCoord1d(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1d);
-	(*stub_glMultiTexCoord1d)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9119,7 +9077,7 @@ value glstub_glMultiTexCoord1dARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1dARB);
-	(*stub_glMultiTexCoord1dARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1dARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9130,7 +9088,7 @@ value glstub_glMultiTexCoord1dv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1dv);
-	(*stub_glMultiTexCoord1dv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9141,7 +9099,7 @@ value glstub_glMultiTexCoord1dvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1dvARB);
-	(*stub_glMultiTexCoord1dvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9152,7 +9110,7 @@ value glstub_glMultiTexCoord1f(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1f);
-	(*stub_glMultiTexCoord1f)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9163,7 +9121,7 @@ value glstub_glMultiTexCoord1fARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1fARB);
-	(*stub_glMultiTexCoord1fARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1fARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9174,7 +9132,7 @@ value glstub_glMultiTexCoord1fv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1fv);
-	(*stub_glMultiTexCoord1fv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9185,7 +9143,7 @@ value glstub_glMultiTexCoord1fvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1fvARB);
-	(*stub_glMultiTexCoord1fvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9196,7 +9154,7 @@ value glstub_glMultiTexCoord1hNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1hNV);
-	(*stub_glMultiTexCoord1hNV)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1hNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9207,7 +9165,7 @@ value glstub_glMultiTexCoord1hvNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1hvNV);
-	(*stub_glMultiTexCoord1hvNV)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9218,7 +9176,7 @@ value glstub_glMultiTexCoord1i(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1i);
-	(*stub_glMultiTexCoord1i)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9229,7 +9187,7 @@ value glstub_glMultiTexCoord1iARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1iARB);
-	(*stub_glMultiTexCoord1iARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1iARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9240,7 +9198,7 @@ value glstub_glMultiTexCoord1iv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1iv);
-	(*stub_glMultiTexCoord1iv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1iv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9251,7 +9209,7 @@ value glstub_glMultiTexCoord1ivARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1ivARB);
-	(*stub_glMultiTexCoord1ivARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1ivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9262,7 +9220,7 @@ value glstub_glMultiTexCoord1s(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1s);
-	(*stub_glMultiTexCoord1s)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9273,7 +9231,7 @@ value glstub_glMultiTexCoord1sARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1sARB);
-	(*stub_glMultiTexCoord1sARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1sARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9284,7 +9242,7 @@ value glstub_glMultiTexCoord1sv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1sv);
-	(*stub_glMultiTexCoord1sv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9295,7 +9253,7 @@ value glstub_glMultiTexCoord1svARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord1svARB);
-	(*stub_glMultiTexCoord1svARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord1svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9307,7 +9265,7 @@ value glstub_glMultiTexCoord2d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2d);
-	(*stub_glMultiTexCoord2d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9319,7 +9277,7 @@ value glstub_glMultiTexCoord2dARB(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2dARB);
-	(*stub_glMultiTexCoord2dARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2dARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9330,7 +9288,7 @@ value glstub_glMultiTexCoord2dv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2dv);
-	(*stub_glMultiTexCoord2dv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9341,7 +9299,7 @@ value glstub_glMultiTexCoord2dvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2dvARB);
-	(*stub_glMultiTexCoord2dvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9353,7 +9311,7 @@ value glstub_glMultiTexCoord2f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2f);
-	(*stub_glMultiTexCoord2f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9365,7 +9323,7 @@ value glstub_glMultiTexCoord2fARB(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2fARB);
-	(*stub_glMultiTexCoord2fARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2fARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9376,7 +9334,7 @@ value glstub_glMultiTexCoord2fv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2fv);
-	(*stub_glMultiTexCoord2fv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9387,7 +9345,7 @@ value glstub_glMultiTexCoord2fvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2fvARB);
-	(*stub_glMultiTexCoord2fvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9399,7 +9357,7 @@ value glstub_glMultiTexCoord2hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2hNV);
-	(*stub_glMultiTexCoord2hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9410,7 +9368,7 @@ value glstub_glMultiTexCoord2hvNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2hvNV);
-	(*stub_glMultiTexCoord2hvNV)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9422,7 +9380,7 @@ value glstub_glMultiTexCoord2i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2i);
-	(*stub_glMultiTexCoord2i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9434,7 +9392,7 @@ value glstub_glMultiTexCoord2iARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2iARB);
-	(*stub_glMultiTexCoord2iARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2iARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9445,7 +9403,7 @@ value glstub_glMultiTexCoord2iv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2iv);
-	(*stub_glMultiTexCoord2iv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2iv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9456,7 +9414,7 @@ value glstub_glMultiTexCoord2ivARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2ivARB);
-	(*stub_glMultiTexCoord2ivARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2ivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9468,7 +9426,7 @@ value glstub_glMultiTexCoord2s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2s);
-	(*stub_glMultiTexCoord2s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9480,7 +9438,7 @@ value glstub_glMultiTexCoord2sARB(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glMultiTexCoord2sARB);
-	(*stub_glMultiTexCoord2sARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glMultiTexCoord2sARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -9491,7 +9449,7 @@ value glstub_glMultiTexCoord2sv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2sv);
-	(*stub_glMultiTexCoord2sv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9502,7 +9460,7 @@ value glstub_glMultiTexCoord2svARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord2svARB);
-	(*stub_glMultiTexCoord2svARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord2svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9515,7 +9473,7 @@ value glstub_glMultiTexCoord3d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3d);
-	(*stub_glMultiTexCoord3d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9528,7 +9486,7 @@ value glstub_glMultiTexCoord3dARB(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3dARB);
-	(*stub_glMultiTexCoord3dARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3dARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9539,7 +9497,7 @@ value glstub_glMultiTexCoord3dv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3dv);
-	(*stub_glMultiTexCoord3dv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9550,7 +9508,7 @@ value glstub_glMultiTexCoord3dvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3dvARB);
-	(*stub_glMultiTexCoord3dvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9563,7 +9521,7 @@ value glstub_glMultiTexCoord3f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3f);
-	(*stub_glMultiTexCoord3f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9576,7 +9534,7 @@ value glstub_glMultiTexCoord3fARB(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3fARB);
-	(*stub_glMultiTexCoord3fARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3fARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9587,7 +9545,7 @@ value glstub_glMultiTexCoord3fv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3fv);
-	(*stub_glMultiTexCoord3fv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9598,7 +9556,7 @@ value glstub_glMultiTexCoord3fvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3fvARB);
-	(*stub_glMultiTexCoord3fvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9611,7 +9569,7 @@ value glstub_glMultiTexCoord3hNV(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3hNV);
-	(*stub_glMultiTexCoord3hNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3hNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9622,7 +9580,7 @@ value glstub_glMultiTexCoord3hvNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3hvNV);
-	(*stub_glMultiTexCoord3hvNV)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9635,7 +9593,7 @@ value glstub_glMultiTexCoord3i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3i);
-	(*stub_glMultiTexCoord3i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9648,7 +9606,7 @@ value glstub_glMultiTexCoord3iARB(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3iARB);
-	(*stub_glMultiTexCoord3iARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3iARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9659,7 +9617,7 @@ value glstub_glMultiTexCoord3iv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3iv);
-	(*stub_glMultiTexCoord3iv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3iv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9670,7 +9628,7 @@ value glstub_glMultiTexCoord3ivARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3ivARB);
-	(*stub_glMultiTexCoord3ivARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3ivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9683,7 +9641,7 @@ value glstub_glMultiTexCoord3s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3s);
-	(*stub_glMultiTexCoord3s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9696,7 +9654,7 @@ value glstub_glMultiTexCoord3sARB(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glMultiTexCoord3sARB);
-	(*stub_glMultiTexCoord3sARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glMultiTexCoord3sARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -9707,7 +9665,7 @@ value glstub_glMultiTexCoord3sv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3sv);
-	(*stub_glMultiTexCoord3sv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9718,7 +9676,7 @@ value glstub_glMultiTexCoord3svARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord3svARB);
-	(*stub_glMultiTexCoord3svARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord3svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9732,7 +9690,7 @@ value glstub_glMultiTexCoord4d(value v0, value v1, value v2, value v3, value v4)
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4d);
-	(*stub_glMultiTexCoord4d)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4d)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9746,7 +9704,7 @@ value glstub_glMultiTexCoord4dARB(value v0, value v1, value v2, value v3, value 
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4dARB);
-	(*stub_glMultiTexCoord4dARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4dARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9757,7 +9715,7 @@ value glstub_glMultiTexCoord4dv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4dv);
-	(*stub_glMultiTexCoord4dv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9768,7 +9726,7 @@ value glstub_glMultiTexCoord4dvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4dvARB);
-	(*stub_glMultiTexCoord4dvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9782,7 +9740,7 @@ value glstub_glMultiTexCoord4f(value v0, value v1, value v2, value v3, value v4)
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4f);
-	(*stub_glMultiTexCoord4f)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4f)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9796,7 +9754,7 @@ value glstub_glMultiTexCoord4fARB(value v0, value v1, value v2, value v3, value 
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4fARB);
-	(*stub_glMultiTexCoord4fARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4fARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9807,7 +9765,7 @@ value glstub_glMultiTexCoord4fv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4fv);
-	(*stub_glMultiTexCoord4fv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9818,7 +9776,7 @@ value glstub_glMultiTexCoord4fvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4fvARB);
-	(*stub_glMultiTexCoord4fvARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9832,7 +9790,7 @@ value glstub_glMultiTexCoord4hNV(value v0, value v1, value v2, value v3, value v
 	GLushort lv3 = Int_val(v3);
 	GLushort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4hNV);
-	(*stub_glMultiTexCoord4hNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4hNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9843,7 +9801,7 @@ value glstub_glMultiTexCoord4hvNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4hvNV);
-	(*stub_glMultiTexCoord4hvNV)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9857,7 +9815,7 @@ value glstub_glMultiTexCoord4i(value v0, value v1, value v2, value v3, value v4)
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4i);
-	(*stub_glMultiTexCoord4i)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4i)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9871,7 +9829,7 @@ value glstub_glMultiTexCoord4iARB(value v0, value v1, value v2, value v3, value 
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4iARB);
-	(*stub_glMultiTexCoord4iARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4iARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9882,7 +9840,7 @@ value glstub_glMultiTexCoord4iv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4iv);
-	(*stub_glMultiTexCoord4iv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4iv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9893,7 +9851,7 @@ value glstub_glMultiTexCoord4ivARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4ivARB);
-	(*stub_glMultiTexCoord4ivARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4ivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9907,7 +9865,7 @@ value glstub_glMultiTexCoord4s(value v0, value v1, value v2, value v3, value v4)
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4s);
-	(*stub_glMultiTexCoord4s)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4s)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9921,7 +9879,7 @@ value glstub_glMultiTexCoord4sARB(value v0, value v1, value v2, value v3, value 
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glMultiTexCoord4sARB);
-	(*stub_glMultiTexCoord4sARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glMultiTexCoord4sARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -9932,7 +9890,7 @@ value glstub_glMultiTexCoord4sv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4sv);
-	(*stub_glMultiTexCoord4sv)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9943,21 +9901,8 @@ value glstub_glMultiTexCoord4svARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glMultiTexCoord4svARB);
-	(*stub_glMultiTexCoord4svARB)(lv0, lv1);
+	CALL_FUNCTION(glMultiTexCoord4svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glNewBufferRegionEXT,(GLenum),GLuint);
-value glstub_glNewBufferRegionEXT(value v0)
-{
-	CAMLparam1(v0);
-	CAMLlocal1(result);
-	GLenum lv0 = Int_val(v0);
-	GLuint ret;
-	LOAD_FUNCTION(glNewBufferRegionEXT);
-	ret = (*stub_glNewBufferRegionEXT)(lv0);
-	result = Val_int(ret);
-	CAMLreturn(result);
 }
 
 DECLARE_FUNCTION(glNewList,(GLuint, GLenum),void);
@@ -9967,7 +9912,7 @@ value glstub_glNewList(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glNewList);
-	(*stub_glNewList)(lv0, lv1);
+	CALL_FUNCTION(glNewList)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -9981,7 +9926,7 @@ value glstub_glNewObjectBufferATI(value v0, value v1, value v2)
 	GLenum lv2 = Int_val(v2);
 	GLuint ret;
 	LOAD_FUNCTION(glNewObjectBufferATI);
-	ret = (*stub_glNewObjectBufferATI)(lv0, lv1, lv2);
+	ret = CALL_FUNCTION(glNewObjectBufferATI)(lv0, lv1, lv2);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -9994,7 +9939,7 @@ value glstub_glNormal3b(value v0, value v1, value v2)
 	GLbyte lv1 = Int_val(v1);
 	GLbyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glNormal3b);
-	(*stub_glNormal3b)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3b)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10004,7 +9949,7 @@ value glstub_glNormal3bv(value v0)
 	CAMLparam1(v0);
 	GLbyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3bv);
-	(*stub_glNormal3bv)(lv0);
+	CALL_FUNCTION(glNormal3bv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10016,7 +9961,7 @@ value glstub_glNormal3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glNormal3d);
-	(*stub_glNormal3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10026,7 +9971,7 @@ value glstub_glNormal3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3dv);
-	(*stub_glNormal3dv)(lv0);
+	CALL_FUNCTION(glNormal3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10038,7 +9983,7 @@ value glstub_glNormal3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glNormal3f);
-	(*stub_glNormal3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10054,7 +9999,7 @@ value glstub_glNormal3fVertex3fSUN(value v0, value v1, value v2, value v3, value
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glNormal3fVertex3fSUN);
-	(*stub_glNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10070,7 +10015,7 @@ value glstub_glNormal3fVertex3fvSUN(value v0, value v1)
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormal3fVertex3fvSUN);
-	(*stub_glNormal3fVertex3fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glNormal3fVertex3fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10080,7 +10025,7 @@ value glstub_glNormal3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3fv);
-	(*stub_glNormal3fv)(lv0);
+	CALL_FUNCTION(glNormal3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10092,7 +10037,7 @@ value glstub_glNormal3hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glNormal3hNV);
-	(*stub_glNormal3hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10102,7 +10047,7 @@ value glstub_glNormal3hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3hvNV);
-	(*stub_glNormal3hvNV)(lv0);
+	CALL_FUNCTION(glNormal3hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10114,7 +10059,7 @@ value glstub_glNormal3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glNormal3i);
-	(*stub_glNormal3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10124,7 +10069,7 @@ value glstub_glNormal3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3iv);
-	(*stub_glNormal3iv)(lv0);
+	CALL_FUNCTION(glNormal3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10136,7 +10081,7 @@ value glstub_glNormal3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glNormal3s);
-	(*stub_glNormal3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormal3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10146,7 +10091,7 @@ value glstub_glNormal3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glNormal3sv);
-	(*stub_glNormal3sv)(lv0);
+	CALL_FUNCTION(glNormal3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10158,7 +10103,7 @@ value glstub_glNormalPointer(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glNormalPointer);
-	(*stub_glNormalPointer)(lv0, lv1, lv2);
+	CALL_FUNCTION(glNormalPointer)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10171,7 +10116,7 @@ value glstub_glNormalPointerEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glNormalPointerEXT);
-	(*stub_glNormalPointerEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10184,7 +10129,7 @@ value glstub_glNormalPointerListIBM(value v0, value v1, value v2, value v3)
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glNormalPointerListIBM);
-	(*stub_glNormalPointerListIBM)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalPointerListIBM)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10195,7 +10140,7 @@ value glstub_glNormalPointervINTEL(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLvoid** lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalPointervINTEL);
-	(*stub_glNormalPointervINTEL)(lv0, lv1);
+	CALL_FUNCTION(glNormalPointervINTEL)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10208,7 +10153,7 @@ value glstub_glNormalStream3bATI(value v0, value v1, value v2, value v3)
 	GLbyte lv2 = Int_val(v2);
 	GLbyte lv3 = Int_val(v3);
 	LOAD_FUNCTION(glNormalStream3bATI);
-	(*stub_glNormalStream3bATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalStream3bATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10219,7 +10164,7 @@ value glstub_glNormalStream3bvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalStream3bvATI);
-	(*stub_glNormalStream3bvATI)(lv0, lv1);
+	CALL_FUNCTION(glNormalStream3bvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10232,7 +10177,7 @@ value glstub_glNormalStream3dATI(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glNormalStream3dATI);
-	(*stub_glNormalStream3dATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalStream3dATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10243,7 +10188,7 @@ value glstub_glNormalStream3dvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalStream3dvATI);
-	(*stub_glNormalStream3dvATI)(lv0, lv1);
+	CALL_FUNCTION(glNormalStream3dvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10256,7 +10201,7 @@ value glstub_glNormalStream3fATI(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glNormalStream3fATI);
-	(*stub_glNormalStream3fATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalStream3fATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10267,7 +10212,7 @@ value glstub_glNormalStream3fvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalStream3fvATI);
-	(*stub_glNormalStream3fvATI)(lv0, lv1);
+	CALL_FUNCTION(glNormalStream3fvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10280,7 +10225,7 @@ value glstub_glNormalStream3iATI(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glNormalStream3iATI);
-	(*stub_glNormalStream3iATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalStream3iATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10291,7 +10236,7 @@ value glstub_glNormalStream3ivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalStream3ivATI);
-	(*stub_glNormalStream3ivATI)(lv0, lv1);
+	CALL_FUNCTION(glNormalStream3ivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10304,7 +10249,7 @@ value glstub_glNormalStream3sATI(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glNormalStream3sATI);
-	(*stub_glNormalStream3sATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glNormalStream3sATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10315,7 +10260,7 @@ value glstub_glNormalStream3svATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glNormalStream3svATI);
-	(*stub_glNormalStream3svATI)(lv0, lv1);
+	CALL_FUNCTION(glNormalStream3svATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10331,7 +10276,7 @@ value glstub_glOrtho(value v0, value v1, value v2, value v3, value v4, value v5)
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glOrtho);
-	(*stub_glOrtho)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glOrtho)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10352,7 +10297,7 @@ value glstub_glOrthofOES(value v0, value v1, value v2, value v3, value v4, value
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glOrthofOES);
-	(*stub_glOrthofOES)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glOrthofOES)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10368,7 +10313,7 @@ value glstub_glPNTrianglesfATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPNTrianglesfATI);
-	(*stub_glPNTrianglesfATI)(lv0, lv1);
+	CALL_FUNCTION(glPNTrianglesfATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10379,7 +10324,7 @@ value glstub_glPNTrianglesiATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glPNTrianglesiATI);
-	(*stub_glPNTrianglesiATI)(lv0, lv1);
+	CALL_FUNCTION(glPNTrianglesiATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10391,7 +10336,7 @@ value glstub_glPassTexCoordATI(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	LOAD_FUNCTION(glPassTexCoordATI);
-	(*stub_glPassTexCoordATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPassTexCoordATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10401,7 +10346,7 @@ value glstub_glPassThrough(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glPassThrough);
-	(*stub_glPassThrough)(lv0);
+	CALL_FUNCTION(glPassThrough)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10413,7 +10358,7 @@ value glstub_glPixelDataRangeNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glPixelDataRangeNV);
-	(*stub_glPixelDataRangeNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelDataRangeNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10425,7 +10370,7 @@ value glstub_glPixelMapfv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPixelMapfv);
-	(*stub_glPixelMapfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelMapfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10437,7 +10382,7 @@ value glstub_glPixelMapuiv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPixelMapuiv);
-	(*stub_glPixelMapuiv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelMapuiv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10449,7 +10394,7 @@ value glstub_glPixelMapusv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLushort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPixelMapusv);
-	(*stub_glPixelMapusv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelMapusv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10460,7 +10405,7 @@ value glstub_glPixelStoref(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPixelStoref);
-	(*stub_glPixelStoref)(lv0, lv1);
+	CALL_FUNCTION(glPixelStoref)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10471,7 +10416,7 @@ value glstub_glPixelStorei(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glPixelStorei);
-	(*stub_glPixelStorei)(lv0, lv1);
+	CALL_FUNCTION(glPixelStorei)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10481,7 +10426,7 @@ value glstub_glPixelTexGenSGIX(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glPixelTexGenSGIX);
-	(*stub_glPixelTexGenSGIX)(lv0);
+	CALL_FUNCTION(glPixelTexGenSGIX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10492,7 +10437,7 @@ value glstub_glPixelTransferf(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPixelTransferf);
-	(*stub_glPixelTransferf)(lv0, lv1);
+	CALL_FUNCTION(glPixelTransferf)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10503,7 +10448,7 @@ value glstub_glPixelTransferi(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glPixelTransferi);
-	(*stub_glPixelTransferi)(lv0, lv1);
+	CALL_FUNCTION(glPixelTransferi)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10515,7 +10460,7 @@ value glstub_glPixelTransformParameterfEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glPixelTransformParameterfEXT);
-	(*stub_glPixelTransformParameterfEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelTransformParameterfEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10527,7 +10472,7 @@ value glstub_glPixelTransformParameterfvEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPixelTransformParameterfvEXT);
-	(*stub_glPixelTransformParameterfvEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelTransformParameterfvEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10539,7 +10484,7 @@ value glstub_glPixelTransformParameteriEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glPixelTransformParameteriEXT);
-	(*stub_glPixelTransformParameteriEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelTransformParameteriEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10551,7 +10496,7 @@ value glstub_glPixelTransformParameterivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPixelTransformParameterivEXT);
-	(*stub_glPixelTransformParameterivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPixelTransformParameterivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10562,7 +10507,7 @@ value glstub_glPixelZoom(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPixelZoom);
-	(*stub_glPixelZoom)(lv0, lv1);
+	CALL_FUNCTION(glPixelZoom)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10573,7 +10518,7 @@ value glstub_glPointParameterf(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPointParameterf);
-	(*stub_glPointParameterf)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterf)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10584,7 +10529,7 @@ value glstub_glPointParameterfARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPointParameterfARB);
-	(*stub_glPointParameterfARB)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterfARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10595,7 +10540,7 @@ value glstub_glPointParameterfEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPointParameterfEXT);
-	(*stub_glPointParameterfEXT)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterfEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10606,7 +10551,7 @@ value glstub_glPointParameterfv(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glPointParameterfv);
-	(*stub_glPointParameterfv)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterfv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10617,7 +10562,7 @@ value glstub_glPointParameterfvARB(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glPointParameterfvARB);
-	(*stub_glPointParameterfvARB)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterfvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10628,7 +10573,7 @@ value glstub_glPointParameterfvEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glPointParameterfvEXT);
-	(*stub_glPointParameterfvEXT)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterfvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10639,7 +10584,7 @@ value glstub_glPointParameteriNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glPointParameteriNV);
-	(*stub_glPointParameteriNV)(lv0, lv1);
+	CALL_FUNCTION(glPointParameteriNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10650,7 +10595,7 @@ value glstub_glPointParameterivNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glPointParameterivNV);
-	(*stub_glPointParameterivNV)(lv0, lv1);
+	CALL_FUNCTION(glPointParameterivNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10660,7 +10605,7 @@ value glstub_glPointSize(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glPointSize);
-	(*stub_glPointSize)(lv0);
+	CALL_FUNCTION(glPointSize)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10672,7 +10617,7 @@ value glstub_glPollAsyncSGIX(value v0)
 	GLuint* lv0 = Data_bigarray_val(v0);
 	GLint ret;
 	LOAD_FUNCTION(glPollAsyncSGIX);
-	ret = (*stub_glPollAsyncSGIX)(lv0);
+	ret = CALL_FUNCTION(glPollAsyncSGIX)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -10684,7 +10629,7 @@ value glstub_glPolygonMode(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glPolygonMode);
-	(*stub_glPolygonMode)(lv0, lv1);
+	CALL_FUNCTION(glPolygonMode)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10695,7 +10640,7 @@ value glstub_glPolygonOffset(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPolygonOffset);
-	(*stub_glPolygonOffset)(lv0, lv1);
+	CALL_FUNCTION(glPolygonOffset)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10706,7 +10651,7 @@ value glstub_glPolygonOffsetEXT(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glPolygonOffsetEXT);
-	(*stub_glPolygonOffsetEXT)(lv0, lv1);
+	CALL_FUNCTION(glPolygonOffsetEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -10716,7 +10661,7 @@ value glstub_glPolygonStipple(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glPolygonStipple);
-	(*stub_glPolygonStipple)(lv0);
+	CALL_FUNCTION(glPolygonStipple)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10725,7 +10670,7 @@ value glstub_glPopAttrib(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPopAttrib);
-	(*stub_glPopAttrib)();
+	CALL_FUNCTION(glPopAttrib)();
 	CAMLreturn(Val_unit);
 }
 
@@ -10734,7 +10679,7 @@ value glstub_glPopClientAttrib(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPopClientAttrib);
-	(*stub_glPopClientAttrib)();
+	CALL_FUNCTION(glPopClientAttrib)();
 	CAMLreturn(Val_unit);
 }
 
@@ -10743,7 +10688,7 @@ value glstub_glPopMatrix(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPopMatrix);
-	(*stub_glPopMatrix)();
+	CALL_FUNCTION(glPopMatrix)();
 	CAMLreturn(Val_unit);
 }
 
@@ -10752,7 +10697,7 @@ value glstub_glPopName(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPopName);
-	(*stub_glPopName)();
+	CALL_FUNCTION(glPopName)();
 	CAMLreturn(Val_unit);
 }
 
@@ -10762,7 +10707,7 @@ value glstub_glPrimitiveRestartIndexNV(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glPrimitiveRestartIndexNV);
-	(*stub_glPrimitiveRestartIndexNV)(lv0);
+	CALL_FUNCTION(glPrimitiveRestartIndexNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -10771,7 +10716,7 @@ value glstub_glPrimitiveRestartNV(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPrimitiveRestartNV);
-	(*stub_glPrimitiveRestartNV)();
+	CALL_FUNCTION(glPrimitiveRestartNV)();
 	CAMLreturn(Val_unit);
 }
 
@@ -10783,7 +10728,7 @@ value glstub_glPrioritizeTextures(value v0, value v1, value v2)
 	GLuint* lv1 = Data_bigarray_val(v1);
 	GLclampf* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPrioritizeTextures);
-	(*stub_glPrioritizeTextures)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPrioritizeTextures)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10795,7 +10740,7 @@ value glstub_glPrioritizeTexturesEXT(value v0, value v1, value v2)
 	GLuint* lv1 = Data_bigarray_val(v1);
 	GLclampf* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glPrioritizeTexturesEXT);
-	(*stub_glPrioritizeTexturesEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glPrioritizeTexturesEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10809,7 +10754,7 @@ value glstub_glProgramBufferParametersIivNV(value v0, value v1, value v2, value 
 	GLsizei lv3 = Int_val(v3);
 	GLint* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glProgramBufferParametersIivNV);
-	(*stub_glProgramBufferParametersIivNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glProgramBufferParametersIivNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -10823,7 +10768,7 @@ value glstub_glProgramBufferParametersIuivNV(value v0, value v1, value v2, value
 	GLsizei lv3 = Int_val(v3);
 	GLuint* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glProgramBufferParametersIuivNV);
-	(*stub_glProgramBufferParametersIuivNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glProgramBufferParametersIuivNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -10837,7 +10782,7 @@ value glstub_glProgramBufferParametersfvNV(value v0, value v1, value v2, value v
 	GLsizei lv3 = Int_val(v3);
 	GLfloat* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glProgramBufferParametersfvNV);
-	(*stub_glProgramBufferParametersfvNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glProgramBufferParametersfvNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -10853,7 +10798,7 @@ value glstub_glProgramEnvParameter4dARB(value v0, value v1, value v2, value v3, 
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramEnvParameter4dARB);
-	(*stub_glProgramEnvParameter4dARB)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramEnvParameter4dARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10870,7 +10815,7 @@ value glstub_glProgramEnvParameter4dvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramEnvParameter4dvARB);
-	(*stub_glProgramEnvParameter4dvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramEnvParameter4dvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10886,7 +10831,7 @@ value glstub_glProgramEnvParameter4fARB(value v0, value v1, value v2, value v3, 
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramEnvParameter4fARB);
-	(*stub_glProgramEnvParameter4fARB)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramEnvParameter4fARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10903,7 +10848,7 @@ value glstub_glProgramEnvParameter4fvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramEnvParameter4fvARB);
-	(*stub_glProgramEnvParameter4fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramEnvParameter4fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10919,7 +10864,7 @@ value glstub_glProgramEnvParameterI4iNV(value v0, value v1, value v2, value v3, 
 	GLint lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glProgramEnvParameterI4iNV);
-	(*stub_glProgramEnvParameterI4iNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramEnvParameterI4iNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10936,7 +10881,7 @@ value glstub_glProgramEnvParameterI4ivNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramEnvParameterI4ivNV);
-	(*stub_glProgramEnvParameterI4ivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramEnvParameterI4ivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10952,7 +10897,7 @@ value glstub_glProgramEnvParameterI4uiNV(value v0, value v1, value v2, value v3,
 	GLuint lv4 = Int_val(v4);
 	GLuint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glProgramEnvParameterI4uiNV);
-	(*stub_glProgramEnvParameterI4uiNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramEnvParameterI4uiNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -10969,7 +10914,7 @@ value glstub_glProgramEnvParameterI4uivNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramEnvParameterI4uivNV);
-	(*stub_glProgramEnvParameterI4uivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramEnvParameterI4uivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -10982,7 +10927,7 @@ value glstub_glProgramEnvParameters4fvEXT(value v0, value v1, value v2, value v3
 	GLsizei lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramEnvParameters4fvEXT);
-	(*stub_glProgramEnvParameters4fvEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramEnvParameters4fvEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -10995,7 +10940,7 @@ value glstub_glProgramEnvParametersI4ivNV(value v0, value v1, value v2, value v3
 	GLsizei lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramEnvParametersI4ivNV);
-	(*stub_glProgramEnvParametersI4ivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramEnvParametersI4ivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11008,7 +10953,7 @@ value glstub_glProgramEnvParametersI4uivNV(value v0, value v1, value v2, value v
 	GLsizei lv2 = Int_val(v2);
 	GLuint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramEnvParametersI4uivNV);
-	(*stub_glProgramEnvParametersI4uivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramEnvParametersI4uivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11024,7 +10969,7 @@ value glstub_glProgramLocalParameter4dARB(value v0, value v1, value v2, value v3
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramLocalParameter4dARB);
-	(*stub_glProgramLocalParameter4dARB)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramLocalParameter4dARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11041,7 +10986,7 @@ value glstub_glProgramLocalParameter4dvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramLocalParameter4dvARB);
-	(*stub_glProgramLocalParameter4dvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramLocalParameter4dvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11057,7 +11002,7 @@ value glstub_glProgramLocalParameter4fARB(value v0, value v1, value v2, value v3
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramLocalParameter4fARB);
-	(*stub_glProgramLocalParameter4fARB)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramLocalParameter4fARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11074,7 +11019,7 @@ value glstub_glProgramLocalParameter4fvARB(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramLocalParameter4fvARB);
-	(*stub_glProgramLocalParameter4fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramLocalParameter4fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11090,7 +11035,7 @@ value glstub_glProgramLocalParameterI4iNV(value v0, value v1, value v2, value v3
 	GLint lv4 = Int_val(v4);
 	GLint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glProgramLocalParameterI4iNV);
-	(*stub_glProgramLocalParameterI4iNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramLocalParameterI4iNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11107,7 +11052,7 @@ value glstub_glProgramLocalParameterI4ivNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramLocalParameterI4ivNV);
-	(*stub_glProgramLocalParameterI4ivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramLocalParameterI4ivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11123,7 +11068,7 @@ value glstub_glProgramLocalParameterI4uiNV(value v0, value v1, value v2, value v
 	GLuint lv4 = Int_val(v4);
 	GLuint lv5 = Int_val(v5);
 	LOAD_FUNCTION(glProgramLocalParameterI4uiNV);
-	(*stub_glProgramLocalParameterI4uiNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramLocalParameterI4uiNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11140,7 +11085,7 @@ value glstub_glProgramLocalParameterI4uivNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramLocalParameterI4uivNV);
-	(*stub_glProgramLocalParameterI4uivNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramLocalParameterI4uivNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11153,7 +11098,7 @@ value glstub_glProgramLocalParameters4fvEXT(value v0, value v1, value v2, value 
 	GLsizei lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramLocalParameters4fvEXT);
-	(*stub_glProgramLocalParameters4fvEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramLocalParameters4fvEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11166,7 +11111,7 @@ value glstub_glProgramLocalParametersI4ivNV(value v0, value v1, value v2, value 
 	GLsizei lv2 = Int_val(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramLocalParametersI4ivNV);
-	(*stub_glProgramLocalParametersI4ivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramLocalParametersI4ivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11179,7 +11124,7 @@ value glstub_glProgramLocalParametersI4uivNV(value v0, value v1, value v2, value
 	GLsizei lv2 = Int_val(v2);
 	GLuint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramLocalParametersI4uivNV);
-	(*stub_glProgramLocalParametersI4uivNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramLocalParametersI4uivNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11196,7 +11141,7 @@ value glstub_glProgramNamedParameter4dNV(value v0, value v1, value v2, value v3,
 	GLdouble lv5 = Double_val(v5);
 	GLdouble lv6 = Double_val(v6);
 	LOAD_FUNCTION(glProgramNamedParameter4dNV);
-	(*stub_glProgramNamedParameter4dNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glProgramNamedParameter4dNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -11214,7 +11159,7 @@ value glstub_glProgramNamedParameter4dvNV(value v0, value v1, value v2, value v3
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	GLdouble* lv3 = (Tag_val(v3) == Double_array_tag)? (double *)v3: Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramNamedParameter4dvNV);
-	(*stub_glProgramNamedParameter4dvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramNamedParameter4dvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11231,7 +11176,7 @@ value glstub_glProgramNamedParameter4fNV(value v0, value v1, value v2, value v3,
 	GLfloat lv5 = Double_val(v5);
 	GLfloat lv6 = Double_val(v6);
 	LOAD_FUNCTION(glProgramNamedParameter4fNV);
-	(*stub_glProgramNamedParameter4fNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glProgramNamedParameter4fNV)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -11249,7 +11194,7 @@ value glstub_glProgramNamedParameter4fvNV(value v0, value v1, value v2, value v3
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramNamedParameter4fvNV);
-	(*stub_glProgramNamedParameter4fvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramNamedParameter4fvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11265,7 +11210,7 @@ value glstub_glProgramParameter4dNV(value v0, value v1, value v2, value v3, valu
 	GLdouble lv4 = Double_val(v4);
 	GLdouble lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramParameter4dNV);
-	(*stub_glProgramParameter4dNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramParameter4dNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11282,7 +11227,7 @@ value glstub_glProgramParameter4dvNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramParameter4dvNV);
-	(*stub_glProgramParameter4dvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramParameter4dvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11298,7 +11243,7 @@ value glstub_glProgramParameter4fNV(value v0, value v1, value v2, value v3, valu
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glProgramParameter4fNV);
-	(*stub_glProgramParameter4fNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glProgramParameter4fNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11315,7 +11260,7 @@ value glstub_glProgramParameter4fvNV(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glProgramParameter4fvNV);
-	(*stub_glProgramParameter4fvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramParameter4fvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11327,7 +11272,7 @@ value glstub_glProgramParameteriEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glProgramParameteriEXT);
-	(*stub_glProgramParameteriEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glProgramParameteriEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11340,7 +11285,7 @@ value glstub_glProgramParameters4dvNV(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLdouble* lv3 = (Tag_val(v3) == Double_array_tag)? (double *)v3: Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramParameters4dvNV);
-	(*stub_glProgramParameters4dvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramParameters4dvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11353,7 +11298,7 @@ value glstub_glProgramParameters4fvNV(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glProgramParameters4fvNV);
-	(*stub_glProgramParameters4fvNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramParameters4fvNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11366,7 +11311,7 @@ value glstub_glProgramStringARB(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glProgramStringARB);
-	(*stub_glProgramStringARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glProgramStringARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11377,7 +11322,7 @@ value glstub_glProgramVertexLimitNV(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glProgramVertexLimitNV);
-	(*stub_glProgramVertexLimitNV)(lv0, lv1);
+	CALL_FUNCTION(glProgramVertexLimitNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11387,7 +11332,7 @@ value glstub_glPushAttrib(value v0)
 	CAMLparam1(v0);
 	GLbitfield lv0 = Int_val(v0);
 	LOAD_FUNCTION(glPushAttrib);
-	(*stub_glPushAttrib)(lv0);
+	CALL_FUNCTION(glPushAttrib)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11397,7 +11342,7 @@ value glstub_glPushClientAttrib(value v0)
 	CAMLparam1(v0);
 	GLbitfield lv0 = Int_val(v0);
 	LOAD_FUNCTION(glPushClientAttrib);
-	(*stub_glPushClientAttrib)(lv0);
+	CALL_FUNCTION(glPushClientAttrib)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11406,7 +11351,7 @@ value glstub_glPushMatrix(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glPushMatrix);
-	(*stub_glPushMatrix)();
+	CALL_FUNCTION(glPushMatrix)();
 	CAMLreturn(Val_unit);
 }
 
@@ -11416,7 +11361,7 @@ value glstub_glPushName(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glPushName);
-	(*stub_glPushName)(lv0);
+	CALL_FUNCTION(glPushName)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11427,7 +11372,7 @@ value glstub_glRasterPos2d(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glRasterPos2d);
-	(*stub_glRasterPos2d)(lv0, lv1);
+	CALL_FUNCTION(glRasterPos2d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11437,7 +11382,7 @@ value glstub_glRasterPos2dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos2dv);
-	(*stub_glRasterPos2dv)(lv0);
+	CALL_FUNCTION(glRasterPos2dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11448,7 +11393,7 @@ value glstub_glRasterPos2f(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glRasterPos2f);
-	(*stub_glRasterPos2f)(lv0, lv1);
+	CALL_FUNCTION(glRasterPos2f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11458,7 +11403,7 @@ value glstub_glRasterPos2fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos2fv);
-	(*stub_glRasterPos2fv)(lv0);
+	CALL_FUNCTION(glRasterPos2fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11469,7 +11414,7 @@ value glstub_glRasterPos2i(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glRasterPos2i);
-	(*stub_glRasterPos2i)(lv0, lv1);
+	CALL_FUNCTION(glRasterPos2i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11479,7 +11424,7 @@ value glstub_glRasterPos2iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos2iv);
-	(*stub_glRasterPos2iv)(lv0);
+	CALL_FUNCTION(glRasterPos2iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11490,7 +11435,7 @@ value glstub_glRasterPos2s(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glRasterPos2s);
-	(*stub_glRasterPos2s)(lv0, lv1);
+	CALL_FUNCTION(glRasterPos2s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11500,7 +11445,7 @@ value glstub_glRasterPos2sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos2sv);
-	(*stub_glRasterPos2sv)(lv0);
+	CALL_FUNCTION(glRasterPos2sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11512,7 +11457,7 @@ value glstub_glRasterPos3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glRasterPos3d);
-	(*stub_glRasterPos3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glRasterPos3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11522,7 +11467,7 @@ value glstub_glRasterPos3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos3dv);
-	(*stub_glRasterPos3dv)(lv0);
+	CALL_FUNCTION(glRasterPos3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11534,7 +11479,7 @@ value glstub_glRasterPos3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glRasterPos3f);
-	(*stub_glRasterPos3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glRasterPos3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11544,7 +11489,7 @@ value glstub_glRasterPos3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos3fv);
-	(*stub_glRasterPos3fv)(lv0);
+	CALL_FUNCTION(glRasterPos3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11556,7 +11501,7 @@ value glstub_glRasterPos3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glRasterPos3i);
-	(*stub_glRasterPos3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glRasterPos3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11566,7 +11511,7 @@ value glstub_glRasterPos3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos3iv);
-	(*stub_glRasterPos3iv)(lv0);
+	CALL_FUNCTION(glRasterPos3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11578,7 +11523,7 @@ value glstub_glRasterPos3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glRasterPos3s);
-	(*stub_glRasterPos3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glRasterPos3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11588,7 +11533,7 @@ value glstub_glRasterPos3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos3sv);
-	(*stub_glRasterPos3sv)(lv0);
+	CALL_FUNCTION(glRasterPos3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11601,7 +11546,7 @@ value glstub_glRasterPos4d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRasterPos4d);
-	(*stub_glRasterPos4d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRasterPos4d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11611,7 +11556,7 @@ value glstub_glRasterPos4dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos4dv);
-	(*stub_glRasterPos4dv)(lv0);
+	CALL_FUNCTION(glRasterPos4dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11624,7 +11569,7 @@ value glstub_glRasterPos4f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRasterPos4f);
-	(*stub_glRasterPos4f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRasterPos4f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11634,7 +11579,7 @@ value glstub_glRasterPos4fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos4fv);
-	(*stub_glRasterPos4fv)(lv0);
+	CALL_FUNCTION(glRasterPos4fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11647,7 +11592,7 @@ value glstub_glRasterPos4i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glRasterPos4i);
-	(*stub_glRasterPos4i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRasterPos4i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11657,7 +11602,7 @@ value glstub_glRasterPos4iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos4iv);
-	(*stub_glRasterPos4iv)(lv0);
+	CALL_FUNCTION(glRasterPos4iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11670,7 +11615,7 @@ value glstub_glRasterPos4s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glRasterPos4s);
-	(*stub_glRasterPos4s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRasterPos4s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11680,7 +11625,7 @@ value glstub_glRasterPos4sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glRasterPos4sv);
-	(*stub_glRasterPos4sv)(lv0);
+	CALL_FUNCTION(glRasterPos4sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11690,21 +11635,7 @@ value glstub_glReadBuffer(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glReadBuffer);
-	(*stub_glReadBuffer)(lv0);
-	CAMLreturn(Val_unit);
-}
-
-DECLARE_FUNCTION(glReadBufferRegionEXT,(GLuint, GLint, GLint, GLsizei, GLsizei),void);
-value glstub_glReadBufferRegionEXT(value v0, value v1, value v2, value v3, value v4)
-{
-	CAMLparam5(v0, v1, v2, v3, v4);
-	GLuint lv0 = Int_val(v0);
-	GLint lv1 = Int_val(v1);
-	GLint lv2 = Int_val(v2);
-	GLsizei lv3 = Int_val(v3);
-	GLsizei lv4 = Int_val(v4);
-	LOAD_FUNCTION(glReadBufferRegionEXT);
-	(*stub_glReadBufferRegionEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glReadBuffer)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11721,7 +11652,7 @@ value glstub_glReadPixels(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glReadPixels);
-	(*stub_glReadPixels)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glReadPixels)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -11743,7 +11674,7 @@ value glstub_glReadVideoPixelsSUN(value v0, value v1, value v2, value v3, value 
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glReadVideoPixelsSUN);
-	(*stub_glReadVideoPixelsSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glReadVideoPixelsSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -11761,7 +11692,7 @@ value glstub_glRectd(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRectd);
-	(*stub_glRectd)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRectd)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11772,7 +11703,7 @@ value glstub_glRectdv(value v0, value v1)
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glRectdv);
-	(*stub_glRectdv)(lv0, lv1);
+	CALL_FUNCTION(glRectdv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11785,7 +11716,7 @@ value glstub_glRectf(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRectf);
-	(*stub_glRectf)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRectf)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11796,7 +11727,7 @@ value glstub_glRectfv(value v0, value v1)
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glRectfv);
-	(*stub_glRectfv)(lv0, lv1);
+	CALL_FUNCTION(glRectfv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11809,7 +11740,7 @@ value glstub_glRecti(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glRecti);
-	(*stub_glRecti)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRecti)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11820,7 +11751,7 @@ value glstub_glRectiv(value v0, value v1)
 	GLint* lv0 = Data_bigarray_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glRectiv);
-	(*stub_glRectiv)(lv0, lv1);
+	CALL_FUNCTION(glRectiv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11833,7 +11764,7 @@ value glstub_glRects(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glRects);
-	(*stub_glRects)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRects)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11844,7 +11775,7 @@ value glstub_glRectsv(value v0, value v1)
 	GLshort* lv0 = Data_bigarray_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glRectsv);
-	(*stub_glRectsv)(lv0, lv1);
+	CALL_FUNCTION(glRectsv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -11854,7 +11785,7 @@ value glstub_glReferencePlaneSGIX(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glReferencePlaneSGIX);
-	(*stub_glReferencePlaneSGIX)(lv0);
+	CALL_FUNCTION(glReferencePlaneSGIX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11866,7 +11797,7 @@ value glstub_glRenderMode(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLint ret;
 	LOAD_FUNCTION(glRenderMode);
-	ret = (*stub_glRenderMode)(lv0);
+	ret = CALL_FUNCTION(glRenderMode)(lv0);
 	result = Val_int(ret);
 	CAMLreturn(result);
 }
@@ -11880,7 +11811,7 @@ value glstub_glRenderbufferStorageEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glRenderbufferStorageEXT);
-	(*stub_glRenderbufferStorageEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRenderbufferStorageEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -11896,7 +11827,7 @@ value glstub_glRenderbufferStorageMultisampleCoverageNV(value v0, value v1, valu
 	GLsizei lv4 = Int_val(v4);
 	GLsizei lv5 = Int_val(v5);
 	LOAD_FUNCTION(glRenderbufferStorageMultisampleCoverageNV);
-	(*stub_glRenderbufferStorageMultisampleCoverageNV)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glRenderbufferStorageMultisampleCoverageNV)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -11915,7 +11846,7 @@ value glstub_glRenderbufferStorageMultisampleEXT(value v0, value v1, value v2, v
 	GLsizei lv3 = Int_val(v3);
 	GLsizei lv4 = Int_val(v4);
 	LOAD_FUNCTION(glRenderbufferStorageMultisampleEXT);
-	(*stub_glRenderbufferStorageMultisampleEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glRenderbufferStorageMultisampleEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -11927,7 +11858,7 @@ value glstub_glReplacementCodePointerSUN(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glReplacementCodePointerSUN);
-	(*stub_glReplacementCodePointerSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glReplacementCodePointerSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -11937,7 +11868,7 @@ value glstub_glReplacementCodeubSUN(value v0)
 	CAMLparam1(v0);
 	GLubyte lv0 = Int_val(v0);
 	LOAD_FUNCTION(glReplacementCodeubSUN);
-	(*stub_glReplacementCodeubSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeubSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11947,7 +11878,7 @@ value glstub_glReplacementCodeubvSUN(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glReplacementCodeubvSUN);
-	(*stub_glReplacementCodeubvSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeubvSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -11964,7 +11895,7 @@ value glstub_glReplacementCodeuiColor3fVertex3fSUN(value v0, value v1, value v2,
 	GLfloat lv5 = Double_val(v5);
 	GLfloat lv6 = Double_val(v6);
 	LOAD_FUNCTION(glReplacementCodeuiColor3fVertex3fSUN);
-	(*stub_glReplacementCodeuiColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glReplacementCodeuiColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -11981,7 +11912,7 @@ value glstub_glReplacementCodeuiColor3fVertex3fvSUN(value v0, value v1, value v2
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glReplacementCodeuiColor3fVertex3fvSUN);
-	(*stub_glReplacementCodeuiColor3fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glReplacementCodeuiColor3fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12003,7 +11934,7 @@ value glstub_glReplacementCodeuiColor4fNormal3fVertex3fSUN(value v0, value v1, v
 	GLfloat lv9 = Double_val(v9);
 	GLfloat lv10 = Double_val(v10);
 	LOAD_FUNCTION(glReplacementCodeuiColor4fNormal3fVertex3fSUN);
-	(*stub_glReplacementCodeuiColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glReplacementCodeuiColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -12021,7 +11952,7 @@ value glstub_glReplacementCodeuiColor4fNormal3fVertex3fvSUN(value v0, value v1, 
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glReplacementCodeuiColor4fNormal3fVertex3fvSUN);
-	(*stub_glReplacementCodeuiColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glReplacementCodeuiColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12039,7 +11970,7 @@ value glstub_glReplacementCodeuiColor4ubVertex3fSUN(value v0, value v1, value v2
 	GLfloat lv6 = Double_val(v6);
 	GLfloat lv7 = Double_val(v7);
 	LOAD_FUNCTION(glReplacementCodeuiColor4ubVertex3fSUN);
-	(*stub_glReplacementCodeuiColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glReplacementCodeuiColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -12056,7 +11987,7 @@ value glstub_glReplacementCodeuiColor4ubVertex3fvSUN(value v0, value v1, value v
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glReplacementCodeuiColor4ubVertex3fvSUN);
-	(*stub_glReplacementCodeuiColor4ubVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glReplacementCodeuiColor4ubVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12073,7 +12004,7 @@ value glstub_glReplacementCodeuiNormal3fVertex3fSUN(value v0, value v1, value v2
 	GLfloat lv5 = Double_val(v5);
 	GLfloat lv6 = Double_val(v6);
 	LOAD_FUNCTION(glReplacementCodeuiNormal3fVertex3fSUN);
-	(*stub_glReplacementCodeuiNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glReplacementCodeuiNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -12090,7 +12021,7 @@ value glstub_glReplacementCodeuiNormal3fVertex3fvSUN(value v0, value v1, value v
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glReplacementCodeuiNormal3fVertex3fvSUN);
-	(*stub_glReplacementCodeuiNormal3fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glReplacementCodeuiNormal3fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12100,7 +12031,7 @@ value glstub_glReplacementCodeuiSUN(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glReplacementCodeuiSUN);
-	(*stub_glReplacementCodeuiSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeuiSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12124,7 +12055,7 @@ value glstub_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN(value v0, v
 	GLfloat lv11 = Double_val(v11);
 	GLfloat lv12 = Double_val(v12);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN);
-	(*stub_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
 	CAMLreturn(Val_unit);
 }
 
@@ -12143,7 +12074,7 @@ value glstub_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN(value v0, 
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	GLfloat* lv4 = Data_bigarray_val(v4);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN);
-	(*stub_glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -12162,7 +12093,7 @@ value glstub_glReplacementCodeuiTexCoord2fNormal3fVertex3fSUN(value v0, value v1
 	GLfloat lv7 = Double_val(v7);
 	GLfloat lv8 = Double_val(v8);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fNormal3fVertex3fSUN);
-	(*stub_glReplacementCodeuiTexCoord2fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -12180,7 +12111,7 @@ value glstub_glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN(value v0, value v
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN);
-	(*stub_glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12196,7 +12127,7 @@ value glstub_glReplacementCodeuiTexCoord2fVertex3fSUN(value v0, value v1, value 
 	GLfloat lv4 = Double_val(v4);
 	GLfloat lv5 = Double_val(v5);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fVertex3fSUN);
-	(*stub_glReplacementCodeuiTexCoord2fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -12213,7 +12144,7 @@ value glstub_glReplacementCodeuiTexCoord2fVertex3fvSUN(value v0, value v1, value
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glReplacementCodeuiTexCoord2fVertex3fvSUN);
-	(*stub_glReplacementCodeuiTexCoord2fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glReplacementCodeuiTexCoord2fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12226,7 +12157,7 @@ value glstub_glReplacementCodeuiVertex3fSUN(value v0, value v1, value v2, value 
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glReplacementCodeuiVertex3fSUN);
-	(*stub_glReplacementCodeuiVertex3fSUN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glReplacementCodeuiVertex3fSUN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12237,7 +12168,7 @@ value glstub_glReplacementCodeuiVertex3fvSUN(value v0, value v1)
 	GLuint* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glReplacementCodeuiVertex3fvSUN);
-	(*stub_glReplacementCodeuiVertex3fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glReplacementCodeuiVertex3fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12247,7 +12178,7 @@ value glstub_glReplacementCodeuivSUN(value v0)
 	CAMLparam1(v0);
 	GLuint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glReplacementCodeuivSUN);
-	(*stub_glReplacementCodeuivSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeuivSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12257,7 +12188,7 @@ value glstub_glReplacementCodeusSUN(value v0)
 	CAMLparam1(v0);
 	GLushort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glReplacementCodeusSUN);
-	(*stub_glReplacementCodeusSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeusSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12267,7 +12198,7 @@ value glstub_glReplacementCodeusvSUN(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glReplacementCodeusvSUN);
-	(*stub_glReplacementCodeusvSUN)(lv0);
+	CALL_FUNCTION(glReplacementCodeusvSUN)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12278,7 +12209,7 @@ value glstub_glRequestResidentProgramsNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glRequestResidentProgramsNV);
-	(*stub_glRequestResidentProgramsNV)(lv0, lv1);
+	CALL_FUNCTION(glRequestResidentProgramsNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12288,7 +12219,7 @@ value glstub_glResetHistogram(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glResetHistogram);
-	(*stub_glResetHistogram)(lv0);
+	CALL_FUNCTION(glResetHistogram)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12298,7 +12229,7 @@ value glstub_glResetHistogramEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glResetHistogramEXT);
-	(*stub_glResetHistogramEXT)(lv0);
+	CALL_FUNCTION(glResetHistogramEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12308,7 +12239,7 @@ value glstub_glResetMinmax(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glResetMinmax);
-	(*stub_glResetMinmax)(lv0);
+	CALL_FUNCTION(glResetMinmax)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12318,7 +12249,7 @@ value glstub_glResetMinmaxEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glResetMinmaxEXT);
-	(*stub_glResetMinmaxEXT)(lv0);
+	CALL_FUNCTION(glResetMinmaxEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12327,7 +12258,7 @@ value glstub_glResizeBuffersMESA(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glResizeBuffersMESA);
-	(*stub_glResizeBuffersMESA)();
+	CALL_FUNCTION(glResizeBuffersMESA)();
 	CAMLreturn(Val_unit);
 }
 
@@ -12340,7 +12271,7 @@ value glstub_glRotated(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRotated);
-	(*stub_glRotated)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRotated)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12353,7 +12284,7 @@ value glstub_glRotatef(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glRotatef);
-	(*stub_glRotatef)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glRotatef)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12364,7 +12295,7 @@ value glstub_glSampleCoverage(value v0, value v1)
 	GLclampf lv0 = Double_val(v0);
 	GLboolean lv1 = Bool_val(v1);
 	LOAD_FUNCTION(glSampleCoverage);
-	(*stub_glSampleCoverage)(lv0, lv1);
+	CALL_FUNCTION(glSampleCoverage)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12375,7 +12306,7 @@ value glstub_glSampleCoverageARB(value v0, value v1)
 	GLclampf lv0 = Double_val(v0);
 	GLboolean lv1 = Bool_val(v1);
 	LOAD_FUNCTION(glSampleCoverageARB);
-	(*stub_glSampleCoverageARB)(lv0, lv1);
+	CALL_FUNCTION(glSampleCoverageARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12387,7 +12318,7 @@ value glstub_glSampleMapATI(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSampleMapATI);
-	(*stub_glSampleMapATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSampleMapATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12398,7 +12329,7 @@ value glstub_glSampleMaskEXT(value v0, value v1)
 	GLclampf lv0 = Double_val(v0);
 	GLboolean lv1 = Bool_val(v1);
 	LOAD_FUNCTION(glSampleMaskEXT);
-	(*stub_glSampleMaskEXT)(lv0, lv1);
+	CALL_FUNCTION(glSampleMaskEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12409,7 +12340,7 @@ value glstub_glSampleMaskSGIS(value v0, value v1)
 	GLclampf lv0 = Double_val(v0);
 	GLboolean lv1 = Bool_val(v1);
 	LOAD_FUNCTION(glSampleMaskSGIS);
-	(*stub_glSampleMaskSGIS)(lv0, lv1);
+	CALL_FUNCTION(glSampleMaskSGIS)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12419,7 +12350,7 @@ value glstub_glSamplePatternEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glSamplePatternEXT);
-	(*stub_glSamplePatternEXT)(lv0);
+	CALL_FUNCTION(glSamplePatternEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12429,7 +12360,7 @@ value glstub_glSamplePatternSGIS(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glSamplePatternSGIS);
-	(*stub_glSamplePatternSGIS)(lv0);
+	CALL_FUNCTION(glSamplePatternSGIS)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12441,7 +12372,7 @@ value glstub_glScaled(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glScaled);
-	(*stub_glScaled)(lv0, lv1, lv2);
+	CALL_FUNCTION(glScaled)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12453,7 +12384,7 @@ value glstub_glScalef(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glScalef);
-	(*stub_glScalef)(lv0, lv1, lv2);
+	CALL_FUNCTION(glScalef)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12466,7 +12397,7 @@ value glstub_glScissor(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glScissor);
-	(*stub_glScissor)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glScissor)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12478,7 +12409,7 @@ value glstub_glSecondaryColor3b(value v0, value v1, value v2)
 	GLbyte lv1 = Int_val(v1);
 	GLbyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3b);
-	(*stub_glSecondaryColor3b)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3b)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12490,7 +12421,7 @@ value glstub_glSecondaryColor3bEXT(value v0, value v1, value v2)
 	GLbyte lv1 = Int_val(v1);
 	GLbyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3bEXT);
-	(*stub_glSecondaryColor3bEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3bEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12500,7 +12431,7 @@ value glstub_glSecondaryColor3bv(value v0)
 	CAMLparam1(v0);
 	GLbyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3bv);
-	(*stub_glSecondaryColor3bv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3bv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12510,7 +12441,7 @@ value glstub_glSecondaryColor3bvEXT(value v0)
 	CAMLparam1(v0);
 	GLbyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3bvEXT);
-	(*stub_glSecondaryColor3bvEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3bvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12522,7 +12453,7 @@ value glstub_glSecondaryColor3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3d);
-	(*stub_glSecondaryColor3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12534,7 +12465,7 @@ value glstub_glSecondaryColor3dEXT(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3dEXT);
-	(*stub_glSecondaryColor3dEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3dEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12544,7 +12475,7 @@ value glstub_glSecondaryColor3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3dv);
-	(*stub_glSecondaryColor3dv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12554,7 +12485,7 @@ value glstub_glSecondaryColor3dvEXT(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3dvEXT);
-	(*stub_glSecondaryColor3dvEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3dvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12566,7 +12497,7 @@ value glstub_glSecondaryColor3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3f);
-	(*stub_glSecondaryColor3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12578,7 +12509,7 @@ value glstub_glSecondaryColor3fEXT(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3fEXT);
-	(*stub_glSecondaryColor3fEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3fEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12588,7 +12519,7 @@ value glstub_glSecondaryColor3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3fv);
-	(*stub_glSecondaryColor3fv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12598,7 +12529,7 @@ value glstub_glSecondaryColor3fvEXT(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3fvEXT);
-	(*stub_glSecondaryColor3fvEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3fvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12610,7 +12541,7 @@ value glstub_glSecondaryColor3hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3hNV);
-	(*stub_glSecondaryColor3hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12620,7 +12551,7 @@ value glstub_glSecondaryColor3hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3hvNV);
-	(*stub_glSecondaryColor3hvNV)(lv0);
+	CALL_FUNCTION(glSecondaryColor3hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12632,7 +12563,7 @@ value glstub_glSecondaryColor3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3i);
-	(*stub_glSecondaryColor3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12644,7 +12575,7 @@ value glstub_glSecondaryColor3iEXT(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3iEXT);
-	(*stub_glSecondaryColor3iEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3iEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12654,7 +12585,7 @@ value glstub_glSecondaryColor3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3iv);
-	(*stub_glSecondaryColor3iv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12664,7 +12595,7 @@ value glstub_glSecondaryColor3ivEXT(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3ivEXT);
-	(*stub_glSecondaryColor3ivEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3ivEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12676,7 +12607,7 @@ value glstub_glSecondaryColor3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3s);
-	(*stub_glSecondaryColor3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12688,7 +12619,7 @@ value glstub_glSecondaryColor3sEXT(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3sEXT);
-	(*stub_glSecondaryColor3sEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3sEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12698,7 +12629,7 @@ value glstub_glSecondaryColor3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3sv);
-	(*stub_glSecondaryColor3sv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12708,7 +12639,7 @@ value glstub_glSecondaryColor3svEXT(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3svEXT);
-	(*stub_glSecondaryColor3svEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3svEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12720,7 +12651,7 @@ value glstub_glSecondaryColor3ub(value v0, value v1, value v2)
 	GLubyte lv1 = Int_val(v1);
 	GLubyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3ub);
-	(*stub_glSecondaryColor3ub)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3ub)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12732,7 +12663,7 @@ value glstub_glSecondaryColor3ubEXT(value v0, value v1, value v2)
 	GLubyte lv1 = Int_val(v1);
 	GLubyte lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3ubEXT);
-	(*stub_glSecondaryColor3ubEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3ubEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12742,7 +12673,7 @@ value glstub_glSecondaryColor3ubv(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3ubv);
-	(*stub_glSecondaryColor3ubv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3ubv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12752,7 +12683,7 @@ value glstub_glSecondaryColor3ubvEXT(value v0)
 	CAMLparam1(v0);
 	GLubyte* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3ubvEXT);
-	(*stub_glSecondaryColor3ubvEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3ubvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12764,7 +12695,7 @@ value glstub_glSecondaryColor3ui(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3ui);
-	(*stub_glSecondaryColor3ui)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3ui)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12776,7 +12707,7 @@ value glstub_glSecondaryColor3uiEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3uiEXT);
-	(*stub_glSecondaryColor3uiEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3uiEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12786,7 +12717,7 @@ value glstub_glSecondaryColor3uiv(value v0)
 	CAMLparam1(v0);
 	GLuint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3uiv);
-	(*stub_glSecondaryColor3uiv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3uiv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12796,7 +12727,7 @@ value glstub_glSecondaryColor3uivEXT(value v0)
 	CAMLparam1(v0);
 	GLuint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3uivEXT);
-	(*stub_glSecondaryColor3uivEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3uivEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12808,7 +12739,7 @@ value glstub_glSecondaryColor3us(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3us);
-	(*stub_glSecondaryColor3us)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3us)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12820,7 +12751,7 @@ value glstub_glSecondaryColor3usEXT(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glSecondaryColor3usEXT);
-	(*stub_glSecondaryColor3usEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSecondaryColor3usEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12830,7 +12761,7 @@ value glstub_glSecondaryColor3usv(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3usv);
-	(*stub_glSecondaryColor3usv)(lv0);
+	CALL_FUNCTION(glSecondaryColor3usv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12840,7 +12771,7 @@ value glstub_glSecondaryColor3usvEXT(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glSecondaryColor3usvEXT);
-	(*stub_glSecondaryColor3usvEXT)(lv0);
+	CALL_FUNCTION(glSecondaryColor3usvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12853,7 +12784,7 @@ value glstub_glSecondaryColorPointer(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glSecondaryColorPointer);
-	(*stub_glSecondaryColorPointer)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glSecondaryColorPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12866,7 +12797,7 @@ value glstub_glSecondaryColorPointerEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glSecondaryColorPointerEXT);
-	(*stub_glSecondaryColorPointerEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glSecondaryColorPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -12880,7 +12811,7 @@ value glstub_glSecondaryColorPointerListIBM(value v0, value v1, value v2, value 
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glSecondaryColorPointerListIBM);
-	(*stub_glSecondaryColorPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glSecondaryColorPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -12891,7 +12822,7 @@ value glstub_glSelectBuffer(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glSelectBuffer);
-	(*stub_glSelectBuffer)(lv0, lv1);
+	CALL_FUNCTION(glSelectBuffer)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12909,7 +12840,7 @@ value glstub_glSeparableFilter2D(value v0, value v1, value v2, value v3, value v
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glSeparableFilter2D);
-	(*stub_glSeparableFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glSeparableFilter2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -12932,7 +12863,7 @@ value glstub_glSeparableFilter2DEXT(value v0, value v1, value v2, value v3, valu
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glSeparableFilter2DEXT);
-	(*stub_glSeparableFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glSeparableFilter2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -12947,7 +12878,7 @@ value glstub_glSetFenceAPPLE(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glSetFenceAPPLE);
-	(*stub_glSetFenceAPPLE)(lv0);
+	CALL_FUNCTION(glSetFenceAPPLE)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -12958,7 +12889,7 @@ value glstub_glSetFenceNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glSetFenceNV);
-	(*stub_glSetFenceNV)(lv0, lv1);
+	CALL_FUNCTION(glSetFenceNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12969,7 +12900,7 @@ value glstub_glSetFragmentShaderConstantATI(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glSetFragmentShaderConstantATI);
-	(*stub_glSetFragmentShaderConstantATI)(lv0, lv1);
+	CALL_FUNCTION(glSetFragmentShaderConstantATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -12981,7 +12912,7 @@ value glstub_glSetInvariantEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glSetInvariantEXT);
-	(*stub_glSetInvariantEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSetInvariantEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -12993,7 +12924,7 @@ value glstub_glSetLocalConstantEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glSetLocalConstantEXT);
-	(*stub_glSetLocalConstantEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSetLocalConstantEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13003,7 +12934,7 @@ value glstub_glShadeModel(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glShadeModel);
-	(*stub_glShadeModel)(lv0);
+	CALL_FUNCTION(glShadeModel)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13015,7 +12946,7 @@ value glstub_glShaderOp1EXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glShaderOp1EXT);
-	(*stub_glShaderOp1EXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glShaderOp1EXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13028,7 +12959,7 @@ value glstub_glShaderOp2EXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glShaderOp2EXT);
-	(*stub_glShaderOp2EXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glShaderOp2EXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13042,7 +12973,7 @@ value glstub_glShaderOp3EXT(value v0, value v1, value v2, value v3, value v4)
 	GLuint lv3 = Int_val(v3);
 	GLuint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glShaderOp3EXT);
-	(*stub_glShaderOp3EXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glShaderOp3EXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -13055,7 +12986,7 @@ value glstub_glShaderSource(value v0, value v1, value v2, value v3)
 	GLchar** lv2 = (GLchar** )(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glShaderSource);
-	(*stub_glShaderSource)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glShaderSource)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13068,7 +12999,7 @@ value glstub_glShaderSourceARB(value v0, value v1, value v2, value v3)
 	GLchar** lv2 = (GLchar** )(v2);
 	GLint* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glShaderSourceARB);
-	(*stub_glShaderSourceARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glShaderSourceARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13080,7 +13011,7 @@ value glstub_glSharpenTexFuncSGIS(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glSharpenTexFuncSGIS);
-	(*stub_glSharpenTexFuncSGIS)(lv0, lv1, lv2);
+	CALL_FUNCTION(glSharpenTexFuncSGIS)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13091,7 +13022,7 @@ value glstub_glSpriteParameterfSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glSpriteParameterfSGIX);
-	(*stub_glSpriteParameterfSGIX)(lv0, lv1);
+	CALL_FUNCTION(glSpriteParameterfSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13102,7 +13033,7 @@ value glstub_glSpriteParameterfvSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glSpriteParameterfvSGIX);
-	(*stub_glSpriteParameterfvSGIX)(lv0, lv1);
+	CALL_FUNCTION(glSpriteParameterfvSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13113,7 +13044,7 @@ value glstub_glSpriteParameteriSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glSpriteParameteriSGIX);
-	(*stub_glSpriteParameteriSGIX)(lv0, lv1);
+	CALL_FUNCTION(glSpriteParameteriSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13124,7 +13055,7 @@ value glstub_glSpriteParameterivSGIX(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glSpriteParameterivSGIX);
-	(*stub_glSpriteParameterivSGIX)(lv0, lv1);
+	CALL_FUNCTION(glSpriteParameterivSGIX)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13136,7 +13067,7 @@ value glstub_glStencilFunc(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glStencilFunc);
-	(*stub_glStencilFunc)(lv0, lv1, lv2);
+	CALL_FUNCTION(glStencilFunc)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13149,7 +13080,7 @@ value glstub_glStencilFuncSeparate(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glStencilFuncSeparate);
-	(*stub_glStencilFuncSeparate)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glStencilFuncSeparate)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13162,7 +13093,7 @@ value glstub_glStencilFuncSeparateATI(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glStencilFuncSeparateATI);
-	(*stub_glStencilFuncSeparateATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glStencilFuncSeparateATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13172,7 +13103,7 @@ value glstub_glStencilMask(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glStencilMask);
-	(*stub_glStencilMask)(lv0);
+	CALL_FUNCTION(glStencilMask)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13183,7 +13114,7 @@ value glstub_glStencilMaskSeparate(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glStencilMaskSeparate);
-	(*stub_glStencilMaskSeparate)(lv0, lv1);
+	CALL_FUNCTION(glStencilMaskSeparate)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13195,7 +13126,7 @@ value glstub_glStencilOp(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	LOAD_FUNCTION(glStencilOp);
-	(*stub_glStencilOp)(lv0, lv1, lv2);
+	CALL_FUNCTION(glStencilOp)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13208,7 +13139,7 @@ value glstub_glStencilOpSeparate(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glStencilOpSeparate);
-	(*stub_glStencilOpSeparate)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glStencilOpSeparate)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13221,7 +13152,7 @@ value glstub_glStencilOpSeparateATI(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glStencilOpSeparateATI);
-	(*stub_glStencilOpSeparateATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glStencilOpSeparateATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13232,7 +13163,7 @@ value glstub_glStringMarkerGREMEDY(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glStringMarkerGREMEDY);
-	(*stub_glStringMarkerGREMEDY)(lv0, lv1);
+	CALL_FUNCTION(glStringMarkerGREMEDY)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13248,7 +13179,7 @@ value glstub_glSwizzleEXT(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
 	LOAD_FUNCTION(glSwizzleEXT);
-	(*stub_glSwizzleEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glSwizzleEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -13262,7 +13193,7 @@ value glstub_glTagSampleBufferSGIX(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glTagSampleBufferSGIX);
-	(*stub_glTagSampleBufferSGIX)();
+	CALL_FUNCTION(glTagSampleBufferSGIX)();
 	CAMLreturn(Val_unit);
 }
 
@@ -13274,7 +13205,7 @@ value glstub_glTangentPointerEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glTangentPointerEXT);
-	(*stub_glTangentPointerEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTangentPointerEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13284,7 +13215,7 @@ value glstub_glTbufferMask3DFX(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTbufferMask3DFX);
-	(*stub_glTbufferMask3DFX)(lv0);
+	CALL_FUNCTION(glTbufferMask3DFX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13296,7 +13227,7 @@ value glstub_glTestFenceAPPLE(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glTestFenceAPPLE);
-	ret = (*stub_glTestFenceAPPLE)(lv0);
+	ret = CALL_FUNCTION(glTestFenceAPPLE)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -13309,7 +13240,7 @@ value glstub_glTestFenceNV(value v0)
 	GLuint lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glTestFenceNV);
-	ret = (*stub_glTestFenceNV)(lv0);
+	ret = CALL_FUNCTION(glTestFenceNV)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -13323,7 +13254,7 @@ value glstub_glTestObjectAPPLE(value v0, value v1)
 	GLuint lv1 = Int_val(v1);
 	GLboolean ret;
 	LOAD_FUNCTION(glTestObjectAPPLE);
-	ret = (*stub_glTestObjectAPPLE)(lv0, lv1);
+	ret = CALL_FUNCTION(glTestObjectAPPLE)(lv0, lv1);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -13336,7 +13267,7 @@ value glstub_glTexBufferEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexBufferEXT);
-	(*stub_glTexBufferEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexBufferEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13347,7 +13278,7 @@ value glstub_glTexBumpParameterfvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glTexBumpParameterfvATI);
-	(*stub_glTexBumpParameterfvATI)(lv0, lv1);
+	CALL_FUNCTION(glTexBumpParameterfvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13358,7 +13289,7 @@ value glstub_glTexBumpParameterivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glTexBumpParameterivATI);
-	(*stub_glTexBumpParameterivATI)(lv0, lv1);
+	CALL_FUNCTION(glTexBumpParameterivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13368,7 +13299,7 @@ value glstub_glTexCoord1d(value v0)
 	CAMLparam1(v0);
 	GLdouble lv0 = Double_val(v0);
 	LOAD_FUNCTION(glTexCoord1d);
-	(*stub_glTexCoord1d)(lv0);
+	CALL_FUNCTION(glTexCoord1d)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13378,7 +13309,7 @@ value glstub_glTexCoord1dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord1dv);
-	(*stub_glTexCoord1dv)(lv0);
+	CALL_FUNCTION(glTexCoord1dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13388,7 +13319,7 @@ value glstub_glTexCoord1f(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glTexCoord1f);
-	(*stub_glTexCoord1f)(lv0);
+	CALL_FUNCTION(glTexCoord1f)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13398,7 +13329,7 @@ value glstub_glTexCoord1fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord1fv);
-	(*stub_glTexCoord1fv)(lv0);
+	CALL_FUNCTION(glTexCoord1fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13408,7 +13339,7 @@ value glstub_glTexCoord1hNV(value v0)
 	CAMLparam1(v0);
 	GLushort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTexCoord1hNV);
-	(*stub_glTexCoord1hNV)(lv0);
+	CALL_FUNCTION(glTexCoord1hNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13418,7 +13349,7 @@ value glstub_glTexCoord1hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord1hvNV);
-	(*stub_glTexCoord1hvNV)(lv0);
+	CALL_FUNCTION(glTexCoord1hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13428,7 +13359,7 @@ value glstub_glTexCoord1i(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTexCoord1i);
-	(*stub_glTexCoord1i)(lv0);
+	CALL_FUNCTION(glTexCoord1i)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13438,7 +13369,7 @@ value glstub_glTexCoord1iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord1iv);
-	(*stub_glTexCoord1iv)(lv0);
+	CALL_FUNCTION(glTexCoord1iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13448,7 +13379,7 @@ value glstub_glTexCoord1s(value v0)
 	CAMLparam1(v0);
 	GLshort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTexCoord1s);
-	(*stub_glTexCoord1s)(lv0);
+	CALL_FUNCTION(glTexCoord1s)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13458,7 +13389,7 @@ value glstub_glTexCoord1sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord1sv);
-	(*stub_glTexCoord1sv)(lv0);
+	CALL_FUNCTION(glTexCoord1sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13469,7 +13400,7 @@ value glstub_glTexCoord2d(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glTexCoord2d);
-	(*stub_glTexCoord2d)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13479,7 +13410,7 @@ value glstub_glTexCoord2dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord2dv);
-	(*stub_glTexCoord2dv)(lv0);
+	CALL_FUNCTION(glTexCoord2dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13490,7 +13421,7 @@ value glstub_glTexCoord2f(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glTexCoord2f);
-	(*stub_glTexCoord2f)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13508,7 +13439,7 @@ value glstub_glTexCoord2fColor3fVertex3fSUN(value v0, value v1, value v2, value 
 	GLfloat lv6 = Double_val(v6);
 	GLfloat lv7 = Double_val(v7);
 	LOAD_FUNCTION(glTexCoord2fColor3fVertex3fSUN);
-	(*stub_glTexCoord2fColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glTexCoord2fColor3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -13525,7 +13456,7 @@ value glstub_glTexCoord2fColor3fVertex3fvSUN(value v0, value v1, value v2)
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexCoord2fColor3fVertex3fvSUN);
-	(*stub_glTexCoord2fColor3fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord2fColor3fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13548,7 +13479,7 @@ value glstub_glTexCoord2fColor4fNormal3fVertex3fSUN(value v0, value v1, value v2
 	GLfloat lv10 = Double_val(v10);
 	GLfloat lv11 = Double_val(v11);
 	LOAD_FUNCTION(glTexCoord2fColor4fNormal3fVertex3fSUN);
-	(*stub_glTexCoord2fColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11);
+	CALL_FUNCTION(glTexCoord2fColor4fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11);
 	CAMLreturn(Val_unit);
 }
 
@@ -13566,7 +13497,7 @@ value glstub_glTexCoord2fColor4fNormal3fVertex3fvSUN(value v0, value v1, value v
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glTexCoord2fColor4fNormal3fVertex3fvSUN);
-	(*stub_glTexCoord2fColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord2fColor4fNormal3fVertex3fvSUN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13585,7 +13516,7 @@ value glstub_glTexCoord2fColor4ubVertex3fSUN(value v0, value v1, value v2, value
 	GLfloat lv7 = Double_val(v7);
 	GLfloat lv8 = Double_val(v8);
 	LOAD_FUNCTION(glTexCoord2fColor4ubVertex3fSUN);
-	(*stub_glTexCoord2fColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glTexCoord2fColor4ubVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -13602,7 +13533,7 @@ value glstub_glTexCoord2fColor4ubVertex3fvSUN(value v0, value v1, value v2)
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexCoord2fColor4ubVertex3fvSUN);
-	(*stub_glTexCoord2fColor4ubVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord2fColor4ubVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13620,7 +13551,7 @@ value glstub_glTexCoord2fNormal3fVertex3fSUN(value v0, value v1, value v2, value
 	GLfloat lv6 = Double_val(v6);
 	GLfloat lv7 = Double_val(v7);
 	LOAD_FUNCTION(glTexCoord2fNormal3fVertex3fSUN);
-	(*stub_glTexCoord2fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glTexCoord2fNormal3fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -13637,7 +13568,7 @@ value glstub_glTexCoord2fNormal3fVertex3fvSUN(value v0, value v1, value v2)
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexCoord2fNormal3fVertex3fvSUN);
-	(*stub_glTexCoord2fNormal3fVertex3fvSUN)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord2fNormal3fVertex3fvSUN)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13651,7 +13582,7 @@ value glstub_glTexCoord2fVertex3fSUN(value v0, value v1, value v2, value v3, val
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glTexCoord2fVertex3fSUN);
-	(*stub_glTexCoord2fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glTexCoord2fVertex3fSUN)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -13662,7 +13593,7 @@ value glstub_glTexCoord2fVertex3fvSUN(value v0, value v1)
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glTexCoord2fVertex3fvSUN);
-	(*stub_glTexCoord2fVertex3fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2fVertex3fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13672,7 +13603,7 @@ value glstub_glTexCoord2fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord2fv);
-	(*stub_glTexCoord2fv)(lv0);
+	CALL_FUNCTION(glTexCoord2fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13683,7 +13614,7 @@ value glstub_glTexCoord2hNV(value v0, value v1)
 	GLushort lv0 = Int_val(v0);
 	GLushort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glTexCoord2hNV);
-	(*stub_glTexCoord2hNV)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2hNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13693,7 +13624,7 @@ value glstub_glTexCoord2hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord2hvNV);
-	(*stub_glTexCoord2hvNV)(lv0);
+	CALL_FUNCTION(glTexCoord2hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13704,7 +13635,7 @@ value glstub_glTexCoord2i(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glTexCoord2i);
-	(*stub_glTexCoord2i)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13714,7 +13645,7 @@ value glstub_glTexCoord2iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord2iv);
-	(*stub_glTexCoord2iv)(lv0);
+	CALL_FUNCTION(glTexCoord2iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13725,7 +13656,7 @@ value glstub_glTexCoord2s(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glTexCoord2s);
-	(*stub_glTexCoord2s)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord2s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13735,7 +13666,7 @@ value glstub_glTexCoord2sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord2sv);
-	(*stub_glTexCoord2sv)(lv0);
+	CALL_FUNCTION(glTexCoord2sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13747,7 +13678,7 @@ value glstub_glTexCoord3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexCoord3d);
-	(*stub_glTexCoord3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13757,7 +13688,7 @@ value glstub_glTexCoord3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord3dv);
-	(*stub_glTexCoord3dv)(lv0);
+	CALL_FUNCTION(glTexCoord3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13769,7 +13700,7 @@ value glstub_glTexCoord3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexCoord3f);
-	(*stub_glTexCoord3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13779,7 +13710,7 @@ value glstub_glTexCoord3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord3fv);
-	(*stub_glTexCoord3fv)(lv0);
+	CALL_FUNCTION(glTexCoord3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13791,7 +13722,7 @@ value glstub_glTexCoord3hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexCoord3hNV);
-	(*stub_glTexCoord3hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord3hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13801,7 +13732,7 @@ value glstub_glTexCoord3hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord3hvNV);
-	(*stub_glTexCoord3hvNV)(lv0);
+	CALL_FUNCTION(glTexCoord3hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13813,7 +13744,7 @@ value glstub_glTexCoord3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexCoord3i);
-	(*stub_glTexCoord3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13823,7 +13754,7 @@ value glstub_glTexCoord3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord3iv);
-	(*stub_glTexCoord3iv)(lv0);
+	CALL_FUNCTION(glTexCoord3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13835,7 +13766,7 @@ value glstub_glTexCoord3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexCoord3s);
-	(*stub_glTexCoord3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoord3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -13845,7 +13776,7 @@ value glstub_glTexCoord3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord3sv);
-	(*stub_glTexCoord3sv)(lv0);
+	CALL_FUNCTION(glTexCoord3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13858,7 +13789,7 @@ value glstub_glTexCoord4d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glTexCoord4d);
-	(*stub_glTexCoord4d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13868,7 +13799,7 @@ value glstub_glTexCoord4dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord4dv);
-	(*stub_glTexCoord4dv)(lv0);
+	CALL_FUNCTION(glTexCoord4dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13881,7 +13812,7 @@ value glstub_glTexCoord4f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glTexCoord4f);
-	(*stub_glTexCoord4f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13907,7 +13838,7 @@ value glstub_glTexCoord4fColor4fNormal3fVertex4fSUN(value v0, value v1, value v2
 	GLfloat lv13 = Double_val(v13);
 	GLfloat lv14 = Double_val(v14);
 	LOAD_FUNCTION(glTexCoord4fColor4fNormal3fVertex4fSUN);
-	(*stub_glTexCoord4fColor4fNormal3fVertex4fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12, lv13, lv14);
+	CALL_FUNCTION(glTexCoord4fColor4fNormal3fVertex4fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12, lv13, lv14);
 	CAMLreturn(Val_unit);
 }
 
@@ -13925,7 +13856,7 @@ value glstub_glTexCoord4fColor4fNormal3fVertex4fvSUN(value v0, value v1, value v
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glTexCoord4fColor4fNormal3fVertex4fvSUN);
-	(*stub_glTexCoord4fColor4fNormal3fVertex4fvSUN)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4fColor4fNormal3fVertex4fvSUN)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13943,7 +13874,7 @@ value glstub_glTexCoord4fVertex4fSUN(value v0, value v1, value v2, value v3, val
 	GLfloat lv6 = Double_val(v6);
 	GLfloat lv7 = Double_val(v7);
 	LOAD_FUNCTION(glTexCoord4fVertex4fSUN);
-	(*stub_glTexCoord4fVertex4fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glTexCoord4fVertex4fSUN)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -13959,7 +13890,7 @@ value glstub_glTexCoord4fVertex4fvSUN(value v0, value v1)
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glTexCoord4fVertex4fvSUN);
-	(*stub_glTexCoord4fVertex4fvSUN)(lv0, lv1);
+	CALL_FUNCTION(glTexCoord4fVertex4fvSUN)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -13969,7 +13900,7 @@ value glstub_glTexCoord4fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord4fv);
-	(*stub_glTexCoord4fv)(lv0);
+	CALL_FUNCTION(glTexCoord4fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -13982,7 +13913,7 @@ value glstub_glTexCoord4hNV(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glTexCoord4hNV);
-	(*stub_glTexCoord4hNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4hNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -13992,7 +13923,7 @@ value glstub_glTexCoord4hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord4hvNV);
-	(*stub_glTexCoord4hvNV)(lv0);
+	CALL_FUNCTION(glTexCoord4hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14005,7 +13936,7 @@ value glstub_glTexCoord4i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glTexCoord4i);
-	(*stub_glTexCoord4i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14015,7 +13946,7 @@ value glstub_glTexCoord4iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord4iv);
-	(*stub_glTexCoord4iv)(lv0);
+	CALL_FUNCTION(glTexCoord4iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14028,7 +13959,7 @@ value glstub_glTexCoord4s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glTexCoord4s);
-	(*stub_glTexCoord4s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoord4s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14038,7 +13969,7 @@ value glstub_glTexCoord4sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glTexCoord4sv);
-	(*stub_glTexCoord4sv)(lv0);
+	CALL_FUNCTION(glTexCoord4sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14051,7 +13982,7 @@ value glstub_glTexCoordPointer(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glTexCoordPointer);
-	(*stub_glTexCoordPointer)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexCoordPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14065,7 +13996,7 @@ value glstub_glTexCoordPointerEXT(value v0, value v1, value v2, value v3, value 
 	GLsizei lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glTexCoordPointerEXT);
-	(*stub_glTexCoordPointerEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glTexCoordPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -14079,7 +14010,7 @@ value glstub_glTexCoordPointerListIBM(value v0, value v1, value v2, value v3, va
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glTexCoordPointerListIBM);
-	(*stub_glTexCoordPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glTexCoordPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -14091,7 +14022,7 @@ value glstub_glTexCoordPointervINTEL(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexCoordPointervINTEL);
-	(*stub_glTexCoordPointervINTEL)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexCoordPointervINTEL)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14103,7 +14034,7 @@ value glstub_glTexEnvf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexEnvf);
-	(*stub_glTexEnvf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexEnvf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14115,7 +14046,7 @@ value glstub_glTexEnvfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexEnvfv);
-	(*stub_glTexEnvfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexEnvfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14127,7 +14058,7 @@ value glstub_glTexEnvi(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexEnvi);
-	(*stub_glTexEnvi)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexEnvi)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14139,7 +14070,7 @@ value glstub_glTexEnviv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexEnviv);
-	(*stub_glTexEnviv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexEnviv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14152,7 +14083,7 @@ value glstub_glTexFilterFuncSGIS(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glTexFilterFuncSGIS);
-	(*stub_glTexFilterFuncSGIS)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTexFilterFuncSGIS)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14164,7 +14095,7 @@ value glstub_glTexGend(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexGend);
-	(*stub_glTexGend)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGend)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14176,7 +14107,7 @@ value glstub_glTexGendv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexGendv);
-	(*stub_glTexGendv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGendv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14188,7 +14119,7 @@ value glstub_glTexGenf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexGenf);
-	(*stub_glTexGenf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGenf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14200,7 +14131,7 @@ value glstub_glTexGenfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexGenfv);
-	(*stub_glTexGenfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGenfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14212,7 +14143,7 @@ value glstub_glTexGeni(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexGeni);
-	(*stub_glTexGeni)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGeni)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14224,7 +14155,7 @@ value glstub_glTexGeniv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexGeniv);
-	(*stub_glTexGeniv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexGeniv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14242,7 +14173,7 @@ value glstub_glTexImage1D(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv6 = Int_val(v6);
 	GLvoid* lv7 = (Is_long(v7) ? (GLvoid*)Long_val(v7) : ((Tag_val(v7) == String_tag)? (String_val(v7)) : (Data_bigarray_val(v7))));
 	LOAD_FUNCTION(glTexImage1D);
-	(*stub_glTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
+	CALL_FUNCTION(glTexImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7);
 	CAMLreturn(Val_unit);
 }
 
@@ -14266,7 +14197,7 @@ value glstub_glTexImage2D(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexImage2D);
-	(*stub_glTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glTexImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -14291,7 +14222,7 @@ value glstub_glTexImage3D(value v0, value v1, value v2, value v3, value v4, valu
 	GLenum lv8 = Int_val(v8);
 	GLvoid* lv9 = (Is_long(v9) ? (GLvoid*)Long_val(v9) : ((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9))));
 	LOAD_FUNCTION(glTexImage3D);
-	(*stub_glTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glTexImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -14316,7 +14247,7 @@ value glstub_glTexImage3DEXT(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv8 = Int_val(v8);
 	GLvoid* lv9 = (Is_long(v9) ? (GLvoid*)Long_val(v9) : ((Tag_val(v9) == String_tag)? (String_val(v9)) : (Data_bigarray_val(v9))));
 	LOAD_FUNCTION(glTexImage3DEXT);
-	(*stub_glTexImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
+	CALL_FUNCTION(glTexImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9);
 	CAMLreturn(Val_unit);
 }
 
@@ -14343,7 +14274,7 @@ value glstub_glTexImage4DSGIS(value v0, value v1, value v2, value v3, value v4, 
 	GLenum lv9 = Int_val(v9);
 	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexImage4DSGIS);
-	(*stub_glTexImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glTexImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -14360,7 +14291,7 @@ value glstub_glTexParameterIivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexParameterIivEXT);
-	(*stub_glTexParameterIivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameterIivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14372,7 +14303,7 @@ value glstub_glTexParameterIuivEXT(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexParameterIuivEXT);
-	(*stub_glTexParameterIuivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameterIuivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14384,7 +14315,7 @@ value glstub_glTexParameterf(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexParameterf);
-	(*stub_glTexParameterf)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameterf)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14396,7 +14327,7 @@ value glstub_glTexParameterfv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexParameterfv);
-	(*stub_glTexParameterfv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameterfv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14408,7 +14339,7 @@ value glstub_glTexParameteri(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexParameteri);
-	(*stub_glTexParameteri)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameteri)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14420,7 +14351,7 @@ value glstub_glTexParameteriv(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glTexParameteriv);
-	(*stub_glTexParameteriv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexParameteriv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14432,7 +14363,7 @@ value glstub_glTexScissorFuncINTEL(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLenum lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTexScissorFuncINTEL);
-	(*stub_glTexScissorFuncINTEL)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexScissorFuncINTEL)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14444,7 +14375,7 @@ value glstub_glTexScissorINTEL(value v0, value v1, value v2)
 	GLclampf lv1 = Double_val(v1);
 	GLclampf lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTexScissorINTEL);
-	(*stub_glTexScissorINTEL)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTexScissorINTEL)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14461,7 +14392,7 @@ value glstub_glTexSubImage1D(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glTexSubImage1D);
-	(*stub_glTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glTexSubImage1D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -14483,7 +14414,7 @@ value glstub_glTexSubImage1DEXT(value v0, value v1, value v2, value v3, value v4
 	GLenum lv5 = Int_val(v5);
 	GLvoid* lv6 = (Is_long(v6) ? (GLvoid*)Long_val(v6) : ((Tag_val(v6) == String_tag)? (String_val(v6)) : (Data_bigarray_val(v6))));
 	LOAD_FUNCTION(glTexSubImage1DEXT);
-	(*stub_glTexSubImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glTexSubImage1DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -14507,7 +14438,7 @@ value glstub_glTexSubImage2D(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexSubImage2D);
-	(*stub_glTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glTexSubImage2D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -14531,7 +14462,7 @@ value glstub_glTexSubImage2DEXT(value v0, value v1, value v2, value v3, value v4
 	GLenum lv7 = Int_val(v7);
 	GLvoid* lv8 = (Is_long(v8) ? (GLvoid*)Long_val(v8) : ((Tag_val(v8) == String_tag)? (String_val(v8)) : (Data_bigarray_val(v8))));
 	LOAD_FUNCTION(glTexSubImage2DEXT);
-	(*stub_glTexSubImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
+	CALL_FUNCTION(glTexSubImage2DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8);
 	CAMLreturn(Val_unit);
 }
 
@@ -14558,7 +14489,7 @@ value glstub_glTexSubImage3D(value v0, value v1, value v2, value v3, value v4, v
 	GLenum lv9 = Int_val(v9);
 	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexSubImage3D);
-	(*stub_glTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glTexSubImage3D)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -14585,7 +14516,7 @@ value glstub_glTexSubImage3DEXT(value v0, value v1, value v2, value v3, value v4
 	GLenum lv9 = Int_val(v9);
 	GLvoid* lv10 = (Is_long(v10) ? (GLvoid*)Long_val(v10) : ((Tag_val(v10) == String_tag)? (String_val(v10)) : (Data_bigarray_val(v10))));
 	LOAD_FUNCTION(glTexSubImage3DEXT);
-	(*stub_glTexSubImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
+	CALL_FUNCTION(glTexSubImage3DEXT)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10);
 	CAMLreturn(Val_unit);
 }
 
@@ -14614,7 +14545,7 @@ value glstub_glTexSubImage4DSGIS(value v0, value v1, value v2, value v3, value v
 	GLenum lv11 = Int_val(v11);
 	GLvoid* lv12 = (Is_long(v12) ? (GLvoid*)Long_val(v12) : ((Tag_val(v12) == String_tag)? (String_val(v12)) : (Data_bigarray_val(v12))));
 	LOAD_FUNCTION(glTexSubImage4DSGIS);
-	(*stub_glTexSubImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
+	CALL_FUNCTION(glTexSubImage4DSGIS)(lv0, lv1, lv2, lv3, lv4, lv5, lv6, lv7, lv8, lv9, lv10, lv11, lv12);
 	CAMLreturn(Val_unit);
 }
 
@@ -14629,7 +14560,7 @@ value glstub_glTextureFogSGIX(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTextureFogSGIX);
-	(*stub_glTextureFogSGIX)(lv0);
+	CALL_FUNCTION(glTextureFogSGIX)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14639,7 +14570,7 @@ value glstub_glTextureLightEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTextureLightEXT);
-	(*stub_glTextureLightEXT)(lv0);
+	CALL_FUNCTION(glTextureLightEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14650,7 +14581,7 @@ value glstub_glTextureMaterialEXT(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLenum lv1 = Int_val(v1);
 	LOAD_FUNCTION(glTextureMaterialEXT);
-	(*stub_glTextureMaterialEXT)(lv0, lv1);
+	CALL_FUNCTION(glTextureMaterialEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14660,7 +14591,7 @@ value glstub_glTextureNormalEXT(value v0)
 	CAMLparam1(v0);
 	GLenum lv0 = Int_val(v0);
 	LOAD_FUNCTION(glTextureNormalEXT);
-	(*stub_glTextureNormalEXT)(lv0);
+	CALL_FUNCTION(glTextureNormalEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -14672,7 +14603,7 @@ value glstub_glTextureRangeAPPLE(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLvoid* lv2 = (Is_long(v2) ? (GLvoid*)Long_val(v2) : ((Tag_val(v2) == String_tag)? (String_val(v2)) : (Data_bigarray_val(v2))));
 	LOAD_FUNCTION(glTextureRangeAPPLE);
-	(*stub_glTextureRangeAPPLE)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTextureRangeAPPLE)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14685,7 +14616,7 @@ value glstub_glTrackMatrixNV(value v0, value v1, value v2, value v3)
 	GLenum lv2 = Int_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glTrackMatrixNV);
-	(*stub_glTrackMatrixNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTrackMatrixNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14697,7 +14628,7 @@ value glstub_glTransformFeedbackAttribsNV(value v0, value v1, value v2)
 	GLint* lv1 = Data_bigarray_val(v1);
 	GLenum lv2 = Int_val(v2);
 	LOAD_FUNCTION(glTransformFeedbackAttribsNV);
-	(*stub_glTransformFeedbackAttribsNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTransformFeedbackAttribsNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14710,7 +14641,7 @@ value glstub_glTransformFeedbackVaryingsNV(value v0, value v1, value v2, value v
 	GLint* lv2 = Data_bigarray_val(v2);
 	GLenum lv3 = Int_val(v3);
 	LOAD_FUNCTION(glTransformFeedbackVaryingsNV);
-	(*stub_glTransformFeedbackVaryingsNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glTransformFeedbackVaryingsNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14722,7 +14653,7 @@ value glstub_glTranslated(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTranslated);
-	(*stub_glTranslated)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTranslated)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14734,7 +14665,7 @@ value glstub_glTranslatef(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glTranslatef);
-	(*stub_glTranslatef)(lv0, lv1, lv2);
+	CALL_FUNCTION(glTranslatef)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14745,7 +14676,7 @@ value glstub_glUniform1f(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glUniform1f);
-	(*stub_glUniform1f)(lv0, lv1);
+	CALL_FUNCTION(glUniform1f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14756,7 +14687,7 @@ value glstub_glUniform1fARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glUniform1fARB);
-	(*stub_glUniform1fARB)(lv0, lv1);
+	CALL_FUNCTION(glUniform1fARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14768,7 +14699,7 @@ value glstub_glUniform1fv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform1fv);
-	(*stub_glUniform1fv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform1fv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14780,7 +14711,7 @@ value glstub_glUniform1fvARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform1fvARB);
-	(*stub_glUniform1fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform1fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14791,7 +14722,7 @@ value glstub_glUniform1i(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glUniform1i);
-	(*stub_glUniform1i)(lv0, lv1);
+	CALL_FUNCTION(glUniform1i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14802,7 +14733,7 @@ value glstub_glUniform1iARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glUniform1iARB);
-	(*stub_glUniform1iARB)(lv0, lv1);
+	CALL_FUNCTION(glUniform1iARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14814,7 +14745,7 @@ value glstub_glUniform1iv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform1iv);
-	(*stub_glUniform1iv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform1iv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14826,7 +14757,7 @@ value glstub_glUniform1ivARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform1ivARB);
-	(*stub_glUniform1ivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform1ivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14837,7 +14768,7 @@ value glstub_glUniform1uiEXT(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glUniform1uiEXT);
-	(*stub_glUniform1uiEXT)(lv0, lv1);
+	CALL_FUNCTION(glUniform1uiEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -14849,7 +14780,7 @@ value glstub_glUniform1uivEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform1uivEXT);
-	(*stub_glUniform1uivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform1uivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14861,7 +14792,7 @@ value glstub_glUniform2f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glUniform2f);
-	(*stub_glUniform2f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14873,7 +14804,7 @@ value glstub_glUniform2fARB(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glUniform2fARB);
-	(*stub_glUniform2fARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2fARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14885,7 +14816,7 @@ value glstub_glUniform2fv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform2fv);
-	(*stub_glUniform2fv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2fv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14897,7 +14828,7 @@ value glstub_glUniform2fvARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform2fvARB);
-	(*stub_glUniform2fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14909,7 +14840,7 @@ value glstub_glUniform2i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glUniform2i);
-	(*stub_glUniform2i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14921,7 +14852,7 @@ value glstub_glUniform2iARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glUniform2iARB);
-	(*stub_glUniform2iARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2iARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14933,7 +14864,7 @@ value glstub_glUniform2iv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform2iv);
-	(*stub_glUniform2iv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2iv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14945,7 +14876,7 @@ value glstub_glUniform2ivARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform2ivARB);
-	(*stub_glUniform2ivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2ivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14957,7 +14888,7 @@ value glstub_glUniform2uiEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glUniform2uiEXT);
-	(*stub_glUniform2uiEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2uiEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14969,7 +14900,7 @@ value glstub_glUniform2uivEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform2uivEXT);
-	(*stub_glUniform2uivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform2uivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -14982,7 +14913,7 @@ value glstub_glUniform3f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glUniform3f);
-	(*stub_glUniform3f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniform3f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -14995,7 +14926,7 @@ value glstub_glUniform3fARB(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glUniform3fARB);
-	(*stub_glUniform3fARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniform3fARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15007,7 +14938,7 @@ value glstub_glUniform3fv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform3fv);
-	(*stub_glUniform3fv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform3fv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15019,7 +14950,7 @@ value glstub_glUniform3fvARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform3fvARB);
-	(*stub_glUniform3fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform3fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15032,7 +14963,7 @@ value glstub_glUniform3i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glUniform3i);
-	(*stub_glUniform3i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniform3i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15045,7 +14976,7 @@ value glstub_glUniform3iARB(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glUniform3iARB);
-	(*stub_glUniform3iARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniform3iARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15057,7 +14988,7 @@ value glstub_glUniform3iv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform3iv);
-	(*stub_glUniform3iv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform3iv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15069,7 +15000,7 @@ value glstub_glUniform3ivARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform3ivARB);
-	(*stub_glUniform3ivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform3ivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15082,7 +15013,7 @@ value glstub_glUniform3uiEXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glUniform3uiEXT);
-	(*stub_glUniform3uiEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniform3uiEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15094,7 +15025,7 @@ value glstub_glUniform3uivEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform3uivEXT);
-	(*stub_glUniform3uivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform3uivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15108,7 +15039,7 @@ value glstub_glUniform4f(value v0, value v1, value v2, value v3, value v4)
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glUniform4f);
-	(*stub_glUniform4f)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUniform4f)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15122,7 +15053,7 @@ value glstub_glUniform4fARB(value v0, value v1, value v2, value v3, value v4)
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glUniform4fARB);
-	(*stub_glUniform4fARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUniform4fARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15134,7 +15065,7 @@ value glstub_glUniform4fv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform4fv);
-	(*stub_glUniform4fv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform4fv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15146,7 +15077,7 @@ value glstub_glUniform4fvARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform4fvARB);
-	(*stub_glUniform4fvARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform4fvARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15160,7 +15091,7 @@ value glstub_glUniform4i(value v0, value v1, value v2, value v3, value v4)
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glUniform4i);
-	(*stub_glUniform4i)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUniform4i)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15174,7 +15105,7 @@ value glstub_glUniform4iARB(value v0, value v1, value v2, value v3, value v4)
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glUniform4iARB);
-	(*stub_glUniform4iARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUniform4iARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15186,7 +15117,7 @@ value glstub_glUniform4iv(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform4iv);
-	(*stub_glUniform4iv)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform4iv)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15198,7 +15129,7 @@ value glstub_glUniform4ivARB(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform4ivARB);
-	(*stub_glUniform4ivARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform4ivARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15212,7 +15143,7 @@ value glstub_glUniform4uiEXT(value v0, value v1, value v2, value v3, value v4)
 	GLuint lv3 = Int_val(v3);
 	GLuint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glUniform4uiEXT);
-	(*stub_glUniform4uiEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUniform4uiEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15224,7 +15155,7 @@ value glstub_glUniform4uivEXT(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLuint* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glUniform4uivEXT);
-	(*stub_glUniform4uivEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniform4uivEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15236,7 +15167,7 @@ value glstub_glUniformBufferEXT(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glUniformBufferEXT);
-	(*stub_glUniformBufferEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glUniformBufferEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15249,7 +15180,7 @@ value glstub_glUniformMatrix2fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix2fv);
-	(*stub_glUniformMatrix2fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix2fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15262,7 +15193,7 @@ value glstub_glUniformMatrix2fvARB(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix2fvARB);
-	(*stub_glUniformMatrix2fvARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix2fvARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15275,7 +15206,7 @@ value glstub_glUniformMatrix2x3fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix2x3fv);
-	(*stub_glUniformMatrix2x3fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix2x3fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15288,7 +15219,7 @@ value glstub_glUniformMatrix2x4fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix2x4fv);
-	(*stub_glUniformMatrix2x4fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix2x4fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15301,7 +15232,7 @@ value glstub_glUniformMatrix3fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix3fv);
-	(*stub_glUniformMatrix3fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix3fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15314,7 +15245,7 @@ value glstub_glUniformMatrix3fvARB(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix3fvARB);
-	(*stub_glUniformMatrix3fvARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix3fvARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15327,7 +15258,7 @@ value glstub_glUniformMatrix3x2fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix3x2fv);
-	(*stub_glUniformMatrix3x2fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix3x2fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15340,7 +15271,7 @@ value glstub_glUniformMatrix3x4fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix3x4fv);
-	(*stub_glUniformMatrix3x4fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix3x4fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15353,7 +15284,7 @@ value glstub_glUniformMatrix4fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix4fv);
-	(*stub_glUniformMatrix4fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix4fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15366,7 +15297,7 @@ value glstub_glUniformMatrix4fvARB(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix4fvARB);
-	(*stub_glUniformMatrix4fvARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix4fvARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15379,7 +15310,7 @@ value glstub_glUniformMatrix4x2fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix4x2fv);
-	(*stub_glUniformMatrix4x2fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix4x2fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15392,7 +15323,7 @@ value glstub_glUniformMatrix4x3fv(value v0, value v1, value v2, value v3)
 	GLboolean lv2 = Bool_val(v2);
 	GLfloat* lv3 = Data_bigarray_val(v3);
 	LOAD_FUNCTION(glUniformMatrix4x3fv);
-	(*stub_glUniformMatrix4x3fv)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glUniformMatrix4x3fv)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15401,7 +15332,7 @@ value glstub_glUnlockArraysEXT(value v0)
 {
 	CAMLparam1(v0);
 	LOAD_FUNCTION(glUnlockArraysEXT);
-	(*stub_glUnlockArraysEXT)();
+	CALL_FUNCTION(glUnlockArraysEXT)();
 	CAMLreturn(Val_unit);
 }
 
@@ -15413,7 +15344,7 @@ value glstub_glUnmapBuffer(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glUnmapBuffer);
-	ret = (*stub_glUnmapBuffer)(lv0);
+	ret = CALL_FUNCTION(glUnmapBuffer)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -15426,7 +15357,7 @@ value glstub_glUnmapBufferARB(value v0)
 	GLenum lv0 = Int_val(v0);
 	GLboolean ret;
 	LOAD_FUNCTION(glUnmapBufferARB);
-	ret = (*stub_glUnmapBufferARB)(lv0);
+	ret = CALL_FUNCTION(glUnmapBufferARB)(lv0);
 	result = Val_bool(ret);
 	CAMLreturn(result);
 }
@@ -15437,7 +15368,7 @@ value glstub_glUnmapObjectBufferATI(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glUnmapObjectBufferATI);
-	(*stub_glUnmapObjectBufferATI)(lv0);
+	CALL_FUNCTION(glUnmapObjectBufferATI)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15451,7 +15382,7 @@ value glstub_glUpdateObjectBufferATI(value v0, value v1, value v2, value v3, val
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	GLenum lv4 = Int_val(v4);
 	LOAD_FUNCTION(glUpdateObjectBufferATI);
-	(*stub_glUpdateObjectBufferATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glUpdateObjectBufferATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15461,7 +15392,7 @@ value glstub_glUseProgram(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glUseProgram);
-	(*stub_glUseProgram)(lv0);
+	CALL_FUNCTION(glUseProgram)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15471,7 +15402,7 @@ value glstub_glUseProgramObjectARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glUseProgramObjectARB);
-	(*stub_glUseProgramObjectARB)(lv0);
+	CALL_FUNCTION(glUseProgramObjectARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15481,7 +15412,7 @@ value glstub_glValidateProgram(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glValidateProgram);
-	(*stub_glValidateProgram)(lv0);
+	CALL_FUNCTION(glValidateProgram)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15491,7 +15422,7 @@ value glstub_glValidateProgramARB(value v0)
 	CAMLparam1(v0);
 	GLuint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glValidateProgramARB);
-	(*stub_glValidateProgramARB)(lv0);
+	CALL_FUNCTION(glValidateProgramARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15505,7 +15436,7 @@ value glstub_glVariantArrayObjectATI(value v0, value v1, value v2, value v3, val
 	GLuint lv3 = Int_val(v3);
 	GLuint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVariantArrayObjectATI);
-	(*stub_glVariantArrayObjectATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVariantArrayObjectATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -15518,7 +15449,7 @@ value glstub_glVariantPointerEXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVariantPointerEXT);
-	(*stub_glVariantPointerEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVariantPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15529,7 +15460,7 @@ value glstub_glVariantbvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantbvEXT);
-	(*stub_glVariantbvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantbvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15540,7 +15471,7 @@ value glstub_glVariantdvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantdvEXT);
-	(*stub_glVariantdvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantdvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15551,7 +15482,7 @@ value glstub_glVariantfvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantfvEXT);
-	(*stub_glVariantfvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantfvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15562,7 +15493,7 @@ value glstub_glVariantivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantivEXT);
-	(*stub_glVariantivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15573,7 +15504,7 @@ value glstub_glVariantsvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantsvEXT);
-	(*stub_glVariantsvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantsvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15584,7 +15515,7 @@ value glstub_glVariantubvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantubvEXT);
-	(*stub_glVariantubvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantubvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15595,7 +15526,7 @@ value glstub_glVariantuivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantuivEXT);
-	(*stub_glVariantuivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantuivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15606,7 +15537,7 @@ value glstub_glVariantusvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVariantusvEXT);
-	(*stub_glVariantusvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVariantusvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15617,7 +15548,7 @@ value glstub_glVertex2d(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertex2d);
-	(*stub_glVertex2d)(lv0, lv1);
+	CALL_FUNCTION(glVertex2d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15627,7 +15558,7 @@ value glstub_glVertex2dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex2dv);
-	(*stub_glVertex2dv)(lv0);
+	CALL_FUNCTION(glVertex2dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15638,7 +15569,7 @@ value glstub_glVertex2f(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertex2f);
-	(*stub_glVertex2f)(lv0, lv1);
+	CALL_FUNCTION(glVertex2f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15648,7 +15579,7 @@ value glstub_glVertex2fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex2fv);
-	(*stub_glVertex2fv)(lv0);
+	CALL_FUNCTION(glVertex2fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15659,7 +15590,7 @@ value glstub_glVertex2hNV(value v0, value v1)
 	GLushort lv0 = Int_val(v0);
 	GLushort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertex2hNV);
-	(*stub_glVertex2hNV)(lv0, lv1);
+	CALL_FUNCTION(glVertex2hNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15669,7 +15600,7 @@ value glstub_glVertex2hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex2hvNV);
-	(*stub_glVertex2hvNV)(lv0);
+	CALL_FUNCTION(glVertex2hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15680,7 +15611,7 @@ value glstub_glVertex2i(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertex2i);
-	(*stub_glVertex2i)(lv0, lv1);
+	CALL_FUNCTION(glVertex2i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15690,7 +15621,7 @@ value glstub_glVertex2iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex2iv);
-	(*stub_glVertex2iv)(lv0);
+	CALL_FUNCTION(glVertex2iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15701,7 +15632,7 @@ value glstub_glVertex2s(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertex2s);
-	(*stub_glVertex2s)(lv0, lv1);
+	CALL_FUNCTION(glVertex2s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15711,7 +15642,7 @@ value glstub_glVertex2sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex2sv);
-	(*stub_glVertex2sv)(lv0);
+	CALL_FUNCTION(glVertex2sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15723,7 +15654,7 @@ value glstub_glVertex3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertex3d);
-	(*stub_glVertex3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertex3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15733,7 +15664,7 @@ value glstub_glVertex3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex3dv);
-	(*stub_glVertex3dv)(lv0);
+	CALL_FUNCTION(glVertex3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15745,7 +15676,7 @@ value glstub_glVertex3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertex3f);
-	(*stub_glVertex3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertex3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15755,7 +15686,7 @@ value glstub_glVertex3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex3fv);
-	(*stub_glVertex3fv)(lv0);
+	CALL_FUNCTION(glVertex3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15767,7 +15698,7 @@ value glstub_glVertex3hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertex3hNV);
-	(*stub_glVertex3hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertex3hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15777,7 +15708,7 @@ value glstub_glVertex3hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex3hvNV);
-	(*stub_glVertex3hvNV)(lv0);
+	CALL_FUNCTION(glVertex3hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15789,7 +15720,7 @@ value glstub_glVertex3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertex3i);
-	(*stub_glVertex3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertex3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15799,7 +15730,7 @@ value glstub_glVertex3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex3iv);
-	(*stub_glVertex3iv)(lv0);
+	CALL_FUNCTION(glVertex3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15811,7 +15742,7 @@ value glstub_glVertex3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertex3s);
-	(*stub_glVertex3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertex3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -15821,7 +15752,7 @@ value glstub_glVertex3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex3sv);
-	(*stub_glVertex3sv)(lv0);
+	CALL_FUNCTION(glVertex3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15834,7 +15765,7 @@ value glstub_glVertex4d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertex4d);
-	(*stub_glVertex4d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertex4d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15844,7 +15775,7 @@ value glstub_glVertex4dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex4dv);
-	(*stub_glVertex4dv)(lv0);
+	CALL_FUNCTION(glVertex4dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15857,7 +15788,7 @@ value glstub_glVertex4f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertex4f);
-	(*stub_glVertex4f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertex4f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15867,7 +15798,7 @@ value glstub_glVertex4fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex4fv);
-	(*stub_glVertex4fv)(lv0);
+	CALL_FUNCTION(glVertex4fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15880,7 +15811,7 @@ value glstub_glVertex4hNV(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertex4hNV);
-	(*stub_glVertex4hNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertex4hNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15890,7 +15821,7 @@ value glstub_glVertex4hvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex4hvNV);
-	(*stub_glVertex4hvNV)(lv0);
+	CALL_FUNCTION(glVertex4hvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15903,7 +15834,7 @@ value glstub_glVertex4i(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertex4i);
-	(*stub_glVertex4i)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertex4i)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15913,7 +15844,7 @@ value glstub_glVertex4iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex4iv);
-	(*stub_glVertex4iv)(lv0);
+	CALL_FUNCTION(glVertex4iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15926,7 +15857,7 @@ value glstub_glVertex4s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertex4s);
-	(*stub_glVertex4s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertex4s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -15936,7 +15867,7 @@ value glstub_glVertex4sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertex4sv);
-	(*stub_glVertex4sv)(lv0);
+	CALL_FUNCTION(glVertex4sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -15947,7 +15878,7 @@ value glstub_glVertexArrayParameteriAPPLE(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexArrayParameteriAPPLE);
-	(*stub_glVertexArrayParameteriAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glVertexArrayParameteriAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15958,7 +15889,7 @@ value glstub_glVertexArrayRangeAPPLE(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glVertexArrayRangeAPPLE);
-	(*stub_glVertexArrayRangeAPPLE)(lv0, lv1);
+	CALL_FUNCTION(glVertexArrayRangeAPPLE)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15969,7 +15900,7 @@ value glstub_glVertexArrayRangeNV(value v0, value v1)
 	GLsizei lv0 = Int_val(v0);
 	GLvoid* lv1 = (Is_long(v1) ? (GLvoid*)Long_val(v1) : ((Tag_val(v1) == String_tag)? (String_val(v1)) : (Data_bigarray_val(v1))));
 	LOAD_FUNCTION(glVertexArrayRangeNV);
-	(*stub_glVertexArrayRangeNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexArrayRangeNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15980,7 +15911,7 @@ value glstub_glVertexAttrib1d(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1d);
-	(*stub_glVertexAttrib1d)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -15991,7 +15922,7 @@ value glstub_glVertexAttrib1dARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1dARB);
-	(*stub_glVertexAttrib1dARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1dARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16002,7 +15933,7 @@ value glstub_glVertexAttrib1dNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1dNV);
-	(*stub_glVertexAttrib1dNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1dNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16013,7 +15944,7 @@ value glstub_glVertexAttrib1dv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1dv);
-	(*stub_glVertexAttrib1dv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16024,7 +15955,7 @@ value glstub_glVertexAttrib1dvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1dvARB);
-	(*stub_glVertexAttrib1dvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16035,7 +15966,7 @@ value glstub_glVertexAttrib1dvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1dvNV);
-	(*stub_glVertexAttrib1dvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1dvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16046,7 +15977,7 @@ value glstub_glVertexAttrib1f(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1f);
-	(*stub_glVertexAttrib1f)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16057,7 +15988,7 @@ value glstub_glVertexAttrib1fARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1fARB);
-	(*stub_glVertexAttrib1fARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1fARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16068,7 +15999,7 @@ value glstub_glVertexAttrib1fNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1fNV);
-	(*stub_glVertexAttrib1fNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1fNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16079,7 +16010,7 @@ value glstub_glVertexAttrib1fv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1fv);
-	(*stub_glVertexAttrib1fv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16090,7 +16021,7 @@ value glstub_glVertexAttrib1fvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1fvARB);
-	(*stub_glVertexAttrib1fvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16101,7 +16032,7 @@ value glstub_glVertexAttrib1fvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1fvNV);
-	(*stub_glVertexAttrib1fvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1fvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16112,7 +16043,7 @@ value glstub_glVertexAttrib1hNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1hNV);
-	(*stub_glVertexAttrib1hNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1hNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16123,7 +16054,7 @@ value glstub_glVertexAttrib1hvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1hvNV);
-	(*stub_glVertexAttrib1hvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16134,7 +16065,7 @@ value glstub_glVertexAttrib1s(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1s);
-	(*stub_glVertexAttrib1s)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16145,7 +16076,7 @@ value glstub_glVertexAttrib1sARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1sARB);
-	(*stub_glVertexAttrib1sARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1sARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16156,7 +16087,7 @@ value glstub_glVertexAttrib1sNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1sNV);
-	(*stub_glVertexAttrib1sNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1sNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16167,7 +16098,7 @@ value glstub_glVertexAttrib1sv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1sv);
-	(*stub_glVertexAttrib1sv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16178,7 +16109,7 @@ value glstub_glVertexAttrib1svARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1svARB);
-	(*stub_glVertexAttrib1svARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16189,7 +16120,7 @@ value glstub_glVertexAttrib1svNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib1svNV);
-	(*stub_glVertexAttrib1svNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib1svNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16201,7 +16132,7 @@ value glstub_glVertexAttrib2d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2d);
-	(*stub_glVertexAttrib2d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16213,7 +16144,7 @@ value glstub_glVertexAttrib2dARB(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2dARB);
-	(*stub_glVertexAttrib2dARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2dARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16225,7 +16156,7 @@ value glstub_glVertexAttrib2dNV(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2dNV);
-	(*stub_glVertexAttrib2dNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2dNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16236,7 +16167,7 @@ value glstub_glVertexAttrib2dv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2dv);
-	(*stub_glVertexAttrib2dv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16247,7 +16178,7 @@ value glstub_glVertexAttrib2dvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2dvARB);
-	(*stub_glVertexAttrib2dvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16258,7 +16189,7 @@ value glstub_glVertexAttrib2dvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2dvNV);
-	(*stub_glVertexAttrib2dvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2dvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16270,7 +16201,7 @@ value glstub_glVertexAttrib2f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2f);
-	(*stub_glVertexAttrib2f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16282,7 +16213,7 @@ value glstub_glVertexAttrib2fARB(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2fARB);
-	(*stub_glVertexAttrib2fARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2fARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16294,7 +16225,7 @@ value glstub_glVertexAttrib2fNV(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2fNV);
-	(*stub_glVertexAttrib2fNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2fNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16305,7 +16236,7 @@ value glstub_glVertexAttrib2fv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2fv);
-	(*stub_glVertexAttrib2fv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16316,7 +16247,7 @@ value glstub_glVertexAttrib2fvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2fvARB);
-	(*stub_glVertexAttrib2fvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16327,7 +16258,7 @@ value glstub_glVertexAttrib2fvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2fvNV);
-	(*stub_glVertexAttrib2fvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2fvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16339,7 +16270,7 @@ value glstub_glVertexAttrib2hNV(value v0, value v1, value v2)
 	GLushort lv1 = Int_val(v1);
 	GLushort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2hNV);
-	(*stub_glVertexAttrib2hNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2hNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16350,7 +16281,7 @@ value glstub_glVertexAttrib2hvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2hvNV);
-	(*stub_glVertexAttrib2hvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16362,7 +16293,7 @@ value glstub_glVertexAttrib2s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2s);
-	(*stub_glVertexAttrib2s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16374,7 +16305,7 @@ value glstub_glVertexAttrib2sARB(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2sARB);
-	(*stub_glVertexAttrib2sARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2sARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16386,7 +16317,7 @@ value glstub_glVertexAttrib2sNV(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttrib2sNV);
-	(*stub_glVertexAttrib2sNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttrib2sNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -16397,7 +16328,7 @@ value glstub_glVertexAttrib2sv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2sv);
-	(*stub_glVertexAttrib2sv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16408,7 +16339,7 @@ value glstub_glVertexAttrib2svARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2svARB);
-	(*stub_glVertexAttrib2svARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16419,7 +16350,7 @@ value glstub_glVertexAttrib2svNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib2svNV);
-	(*stub_glVertexAttrib2svNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib2svNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16432,7 +16363,7 @@ value glstub_glVertexAttrib3d(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3d);
-	(*stub_glVertexAttrib3d)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3d)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16445,7 +16376,7 @@ value glstub_glVertexAttrib3dARB(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3dARB);
-	(*stub_glVertexAttrib3dARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3dARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16458,7 +16389,7 @@ value glstub_glVertexAttrib3dNV(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3dNV);
-	(*stub_glVertexAttrib3dNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3dNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16469,7 +16400,7 @@ value glstub_glVertexAttrib3dv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3dv);
-	(*stub_glVertexAttrib3dv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16480,7 +16411,7 @@ value glstub_glVertexAttrib3dvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3dvARB);
-	(*stub_glVertexAttrib3dvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16491,7 +16422,7 @@ value glstub_glVertexAttrib3dvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3dvNV);
-	(*stub_glVertexAttrib3dvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3dvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16504,7 +16435,7 @@ value glstub_glVertexAttrib3f(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3f);
-	(*stub_glVertexAttrib3f)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3f)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16517,7 +16448,7 @@ value glstub_glVertexAttrib3fARB(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3fARB);
-	(*stub_glVertexAttrib3fARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3fARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16530,7 +16461,7 @@ value glstub_glVertexAttrib3fNV(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3fNV);
-	(*stub_glVertexAttrib3fNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3fNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16541,7 +16472,7 @@ value glstub_glVertexAttrib3fv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3fv);
-	(*stub_glVertexAttrib3fv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16552,7 +16483,7 @@ value glstub_glVertexAttrib3fvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3fvARB);
-	(*stub_glVertexAttrib3fvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16563,7 +16494,7 @@ value glstub_glVertexAttrib3fvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3fvNV);
-	(*stub_glVertexAttrib3fvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3fvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16576,7 +16507,7 @@ value glstub_glVertexAttrib3hNV(value v0, value v1, value v2, value v3)
 	GLushort lv2 = Int_val(v2);
 	GLushort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3hNV);
-	(*stub_glVertexAttrib3hNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3hNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16587,7 +16518,7 @@ value glstub_glVertexAttrib3hvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3hvNV);
-	(*stub_glVertexAttrib3hvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16600,7 +16531,7 @@ value glstub_glVertexAttrib3s(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3s);
-	(*stub_glVertexAttrib3s)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3s)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16613,7 +16544,7 @@ value glstub_glVertexAttrib3sARB(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3sARB);
-	(*stub_glVertexAttrib3sARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3sARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16626,7 +16557,7 @@ value glstub_glVertexAttrib3sNV(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttrib3sNV);
-	(*stub_glVertexAttrib3sNV)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttrib3sNV)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -16637,7 +16568,7 @@ value glstub_glVertexAttrib3sv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3sv);
-	(*stub_glVertexAttrib3sv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16648,7 +16579,7 @@ value glstub_glVertexAttrib3svARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3svARB);
-	(*stub_glVertexAttrib3svARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16659,7 +16590,7 @@ value glstub_glVertexAttrib3svNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib3svNV);
-	(*stub_glVertexAttrib3svNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib3svNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16670,7 +16601,7 @@ value glstub_glVertexAttrib4Nbv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Nbv);
-	(*stub_glVertexAttrib4Nbv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Nbv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16681,7 +16612,7 @@ value glstub_glVertexAttrib4NbvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NbvARB);
-	(*stub_glVertexAttrib4NbvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NbvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16692,7 +16623,7 @@ value glstub_glVertexAttrib4Niv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Niv);
-	(*stub_glVertexAttrib4Niv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Niv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16703,7 +16634,7 @@ value glstub_glVertexAttrib4NivARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NivARB);
-	(*stub_glVertexAttrib4NivARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16714,7 +16645,7 @@ value glstub_glVertexAttrib4Nsv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Nsv);
-	(*stub_glVertexAttrib4Nsv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Nsv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16725,7 +16656,7 @@ value glstub_glVertexAttrib4NsvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NsvARB);
-	(*stub_glVertexAttrib4NsvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NsvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16739,7 +16670,7 @@ value glstub_glVertexAttrib4Nub(value v0, value v1, value v2, value v3, value v4
 	GLubyte lv3 = Int_val(v3);
 	GLubyte lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4Nub);
-	(*stub_glVertexAttrib4Nub)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4Nub)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16753,7 +16684,7 @@ value glstub_glVertexAttrib4NubARB(value v0, value v1, value v2, value v3, value
 	GLubyte lv3 = Int_val(v3);
 	GLubyte lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4NubARB);
-	(*stub_glVertexAttrib4NubARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4NubARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16764,7 +16695,7 @@ value glstub_glVertexAttrib4Nubv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Nubv);
-	(*stub_glVertexAttrib4Nubv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Nubv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16775,7 +16706,7 @@ value glstub_glVertexAttrib4NubvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NubvARB);
-	(*stub_glVertexAttrib4NubvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NubvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16786,7 +16717,7 @@ value glstub_glVertexAttrib4Nuiv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Nuiv);
-	(*stub_glVertexAttrib4Nuiv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Nuiv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16797,7 +16728,7 @@ value glstub_glVertexAttrib4NuivARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NuivARB);
-	(*stub_glVertexAttrib4NuivARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NuivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16808,7 +16739,7 @@ value glstub_glVertexAttrib4Nusv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4Nusv);
-	(*stub_glVertexAttrib4Nusv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4Nusv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16819,7 +16750,7 @@ value glstub_glVertexAttrib4NusvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4NusvARB);
-	(*stub_glVertexAttrib4NusvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4NusvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16830,7 +16761,7 @@ value glstub_glVertexAttrib4bv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4bv);
-	(*stub_glVertexAttrib4bv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4bv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16841,7 +16772,7 @@ value glstub_glVertexAttrib4bvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4bvARB);
-	(*stub_glVertexAttrib4bvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4bvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16855,7 +16786,7 @@ value glstub_glVertexAttrib4d(value v0, value v1, value v2, value v3, value v4)
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4d);
-	(*stub_glVertexAttrib4d)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4d)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16869,7 +16800,7 @@ value glstub_glVertexAttrib4dARB(value v0, value v1, value v2, value v3, value v
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4dARB);
-	(*stub_glVertexAttrib4dARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4dARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16883,7 +16814,7 @@ value glstub_glVertexAttrib4dNV(value v0, value v1, value v2, value v3, value v4
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4dNV);
-	(*stub_glVertexAttrib4dNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4dNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16894,7 +16825,7 @@ value glstub_glVertexAttrib4dv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4dv);
-	(*stub_glVertexAttrib4dv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4dv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16905,7 +16836,7 @@ value glstub_glVertexAttrib4dvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4dvARB);
-	(*stub_glVertexAttrib4dvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4dvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16916,7 +16847,7 @@ value glstub_glVertexAttrib4dvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4dvNV);
-	(*stub_glVertexAttrib4dvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4dvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16930,7 +16861,7 @@ value glstub_glVertexAttrib4f(value v0, value v1, value v2, value v3, value v4)
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4f);
-	(*stub_glVertexAttrib4f)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4f)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16944,7 +16875,7 @@ value glstub_glVertexAttrib4fARB(value v0, value v1, value v2, value v3, value v
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4fARB);
-	(*stub_glVertexAttrib4fARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4fARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16958,7 +16889,7 @@ value glstub_glVertexAttrib4fNV(value v0, value v1, value v2, value v3, value v4
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4fNV);
-	(*stub_glVertexAttrib4fNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4fNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -16969,7 +16900,7 @@ value glstub_glVertexAttrib4fv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4fv);
-	(*stub_glVertexAttrib4fv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4fv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16980,7 +16911,7 @@ value glstub_glVertexAttrib4fvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4fvARB);
-	(*stub_glVertexAttrib4fvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4fvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -16991,7 +16922,7 @@ value glstub_glVertexAttrib4fvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4fvNV);
-	(*stub_glVertexAttrib4fvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4fvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17005,7 +16936,7 @@ value glstub_glVertexAttrib4hNV(value v0, value v1, value v2, value v3, value v4
 	GLushort lv3 = Int_val(v3);
 	GLushort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4hNV);
-	(*stub_glVertexAttrib4hNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4hNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17016,7 +16947,7 @@ value glstub_glVertexAttrib4hvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4hvNV);
-	(*stub_glVertexAttrib4hvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4hvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17027,7 +16958,7 @@ value glstub_glVertexAttrib4iv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4iv);
-	(*stub_glVertexAttrib4iv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4iv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17038,7 +16969,7 @@ value glstub_glVertexAttrib4ivARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4ivARB);
-	(*stub_glVertexAttrib4ivARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4ivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17052,7 +16983,7 @@ value glstub_glVertexAttrib4s(value v0, value v1, value v2, value v3, value v4)
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4s);
-	(*stub_glVertexAttrib4s)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4s)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17066,7 +16997,7 @@ value glstub_glVertexAttrib4sARB(value v0, value v1, value v2, value v3, value v
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4sARB);
-	(*stub_glVertexAttrib4sARB)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4sARB)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17080,7 +17011,7 @@ value glstub_glVertexAttrib4sNV(value v0, value v1, value v2, value v3, value v4
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4sNV);
-	(*stub_glVertexAttrib4sNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4sNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17091,7 +17022,7 @@ value glstub_glVertexAttrib4sv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4sv);
-	(*stub_glVertexAttrib4sv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4sv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17102,7 +17033,7 @@ value glstub_glVertexAttrib4svARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4svARB);
-	(*stub_glVertexAttrib4svARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4svARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17113,7 +17044,7 @@ value glstub_glVertexAttrib4svNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4svNV);
-	(*stub_glVertexAttrib4svNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4svNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17127,7 +17058,7 @@ value glstub_glVertexAttrib4ubNV(value v0, value v1, value v2, value v3, value v
 	GLubyte lv3 = Int_val(v3);
 	GLubyte lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttrib4ubNV);
-	(*stub_glVertexAttrib4ubNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttrib4ubNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17138,7 +17069,7 @@ value glstub_glVertexAttrib4ubv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4ubv);
-	(*stub_glVertexAttrib4ubv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4ubv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17149,7 +17080,7 @@ value glstub_glVertexAttrib4ubvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4ubvARB);
-	(*stub_glVertexAttrib4ubvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4ubvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17160,7 +17091,7 @@ value glstub_glVertexAttrib4ubvNV(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4ubvNV);
-	(*stub_glVertexAttrib4ubvNV)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4ubvNV)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17171,7 +17102,7 @@ value glstub_glVertexAttrib4uiv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4uiv);
-	(*stub_glVertexAttrib4uiv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4uiv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17182,7 +17113,7 @@ value glstub_glVertexAttrib4uivARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4uivARB);
-	(*stub_glVertexAttrib4uivARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4uivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17193,7 +17124,7 @@ value glstub_glVertexAttrib4usv(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4usv);
-	(*stub_glVertexAttrib4usv)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4usv)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17204,7 +17135,7 @@ value glstub_glVertexAttrib4usvARB(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttrib4usvARB);
-	(*stub_glVertexAttrib4usvARB)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttrib4usvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17221,7 +17152,7 @@ value glstub_glVertexAttribArrayObjectATI(value v0, value v1, value v2, value v3
 	GLuint lv5 = Int_val(v5);
 	GLuint lv6 = Int_val(v6);
 	LOAD_FUNCTION(glVertexAttribArrayObjectATI);
-	(*stub_glVertexAttribArrayObjectATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
+	CALL_FUNCTION(glVertexAttribArrayObjectATI)(lv0, lv1, lv2, lv3, lv4, lv5, lv6);
 	CAMLreturn(Val_unit);
 }
 
@@ -17237,7 +17168,7 @@ value glstub_glVertexAttribI1iEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttribI1iEXT);
-	(*stub_glVertexAttribI1iEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI1iEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17248,7 +17179,7 @@ value glstub_glVertexAttribI1ivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI1ivEXT);
-	(*stub_glVertexAttribI1ivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI1ivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17259,7 +17190,7 @@ value glstub_glVertexAttribI1uiEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexAttribI1uiEXT);
-	(*stub_glVertexAttribI1uiEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI1uiEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17270,7 +17201,7 @@ value glstub_glVertexAttribI1uivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI1uivEXT);
-	(*stub_glVertexAttribI1uivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI1uivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17282,7 +17213,7 @@ value glstub_glVertexAttribI2iEXT(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttribI2iEXT);
-	(*stub_glVertexAttribI2iEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribI2iEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17293,7 +17224,7 @@ value glstub_glVertexAttribI2ivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI2ivEXT);
-	(*stub_glVertexAttribI2ivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI2ivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17305,7 +17236,7 @@ value glstub_glVertexAttribI2uiEXT(value v0, value v1, value v2)
 	GLuint lv1 = Int_val(v1);
 	GLuint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexAttribI2uiEXT);
-	(*stub_glVertexAttribI2uiEXT)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribI2uiEXT)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17316,7 +17247,7 @@ value glstub_glVertexAttribI2uivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI2uivEXT);
-	(*stub_glVertexAttribI2uivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI2uivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17329,7 +17260,7 @@ value glstub_glVertexAttribI3iEXT(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttribI3iEXT);
-	(*stub_glVertexAttribI3iEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttribI3iEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17340,7 +17271,7 @@ value glstub_glVertexAttribI3ivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI3ivEXT);
-	(*stub_glVertexAttribI3ivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI3ivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17353,7 +17284,7 @@ value glstub_glVertexAttribI3uiEXT(value v0, value v1, value v2, value v3)
 	GLuint lv2 = Int_val(v2);
 	GLuint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexAttribI3uiEXT);
-	(*stub_glVertexAttribI3uiEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexAttribI3uiEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17364,7 +17295,7 @@ value glstub_glVertexAttribI3uivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI3uivEXT);
-	(*stub_glVertexAttribI3uivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI3uivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17375,7 +17306,7 @@ value glstub_glVertexAttribI4bvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4bvEXT);
-	(*stub_glVertexAttribI4bvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4bvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17389,7 +17320,7 @@ value glstub_glVertexAttribI4iEXT(value v0, value v1, value v2, value v3, value 
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttribI4iEXT);
-	(*stub_glVertexAttribI4iEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttribI4iEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17400,7 +17331,7 @@ value glstub_glVertexAttribI4ivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4ivEXT);
-	(*stub_glVertexAttribI4ivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4ivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17411,7 +17342,7 @@ value glstub_glVertexAttribI4svEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4svEXT);
-	(*stub_glVertexAttribI4svEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4svEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17422,7 +17353,7 @@ value glstub_glVertexAttribI4ubvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4ubvEXT);
-	(*stub_glVertexAttribI4ubvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4ubvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17436,7 +17367,7 @@ value glstub_glVertexAttribI4uiEXT(value v0, value v1, value v2, value v3, value
 	GLuint lv3 = Int_val(v3);
 	GLuint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexAttribI4uiEXT);
-	(*stub_glVertexAttribI4uiEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttribI4uiEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17447,7 +17378,7 @@ value glstub_glVertexAttribI4uivEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4uivEXT);
-	(*stub_glVertexAttribI4uivEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4uivEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17458,7 +17389,7 @@ value glstub_glVertexAttribI4usvEXT(value v0, value v1)
 	GLuint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexAttribI4usvEXT);
-	(*stub_glVertexAttribI4usvEXT)(lv0, lv1);
+	CALL_FUNCTION(glVertexAttribI4usvEXT)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17472,7 +17403,7 @@ value glstub_glVertexAttribIPointerEXT(value v0, value v1, value v2, value v3, v
 	GLsizei lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexAttribIPointerEXT);
-	(*stub_glVertexAttribIPointerEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttribIPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17488,7 +17419,7 @@ value glstub_glVertexAttribPointer(value v0, value v1, value v2, value v3, value
 	GLsizei lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glVertexAttribPointer);
-	(*stub_glVertexAttribPointer)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glVertexAttribPointer)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -17509,7 +17440,7 @@ value glstub_glVertexAttribPointerARB(value v0, value v1, value v2, value v3, va
 	GLsizei lv4 = Int_val(v4);
 	GLvoid* lv5 = (Is_long(v5) ? (GLvoid*)Long_val(v5) : ((Tag_val(v5) == String_tag)? (String_val(v5)) : (Data_bigarray_val(v5))));
 	LOAD_FUNCTION(glVertexAttribPointerARB);
-	(*stub_glVertexAttribPointerARB)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glVertexAttribPointerARB)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
@@ -17528,7 +17459,7 @@ value glstub_glVertexAttribPointerNV(value v0, value v1, value v2, value v3, val
 	GLsizei lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexAttribPointerNV);
-	(*stub_glVertexAttribPointerNV)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexAttribPointerNV)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17540,7 +17471,7 @@ value glstub_glVertexAttribs1dvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs1dvNV);
-	(*stub_glVertexAttribs1dvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs1dvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17552,7 +17483,7 @@ value glstub_glVertexAttribs1fvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs1fvNV);
-	(*stub_glVertexAttribs1fvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs1fvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17564,7 +17495,7 @@ value glstub_glVertexAttribs1hvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLushort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs1hvNV);
-	(*stub_glVertexAttribs1hvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs1hvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17576,7 +17507,7 @@ value glstub_glVertexAttribs1svNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLshort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs1svNV);
-	(*stub_glVertexAttribs1svNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs1svNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17588,7 +17519,7 @@ value glstub_glVertexAttribs2dvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs2dvNV);
-	(*stub_glVertexAttribs2dvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs2dvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17600,7 +17531,7 @@ value glstub_glVertexAttribs2fvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs2fvNV);
-	(*stub_glVertexAttribs2fvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs2fvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17612,7 +17543,7 @@ value glstub_glVertexAttribs2hvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLushort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs2hvNV);
-	(*stub_glVertexAttribs2hvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs2hvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17624,7 +17555,7 @@ value glstub_glVertexAttribs2svNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLshort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs2svNV);
-	(*stub_glVertexAttribs2svNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs2svNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17636,7 +17567,7 @@ value glstub_glVertexAttribs3dvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs3dvNV);
-	(*stub_glVertexAttribs3dvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs3dvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17648,7 +17579,7 @@ value glstub_glVertexAttribs3fvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs3fvNV);
-	(*stub_glVertexAttribs3fvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs3fvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17660,7 +17591,7 @@ value glstub_glVertexAttribs3hvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLushort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs3hvNV);
-	(*stub_glVertexAttribs3hvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs3hvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17672,7 +17603,7 @@ value glstub_glVertexAttribs3svNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLshort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs3svNV);
-	(*stub_glVertexAttribs3svNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs3svNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17684,7 +17615,7 @@ value glstub_glVertexAttribs4dvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLdouble* lv2 = (Tag_val(v2) == Double_array_tag)? (double *)v2: Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs4dvNV);
-	(*stub_glVertexAttribs4dvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs4dvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17696,7 +17627,7 @@ value glstub_glVertexAttribs4fvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLfloat* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs4fvNV);
-	(*stub_glVertexAttribs4fvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs4fvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17708,7 +17639,7 @@ value glstub_glVertexAttribs4hvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLushort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs4hvNV);
-	(*stub_glVertexAttribs4hvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs4hvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17720,7 +17651,7 @@ value glstub_glVertexAttribs4svNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLshort* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs4svNV);
-	(*stub_glVertexAttribs4svNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs4svNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17732,7 +17663,7 @@ value glstub_glVertexAttribs4ubvNV(value v0, value v1, value v2)
 	GLsizei lv1 = Int_val(v1);
 	GLubyte* lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexAttribs4ubvNV);
-	(*stub_glVertexAttribs4ubvNV)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexAttribs4ubvNV)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17742,7 +17673,7 @@ value glstub_glVertexBlendARB(value v0)
 	CAMLparam1(v0);
 	GLint lv0 = Int_val(v0);
 	LOAD_FUNCTION(glVertexBlendARB);
-	(*stub_glVertexBlendARB)(lv0);
+	CALL_FUNCTION(glVertexBlendARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -17753,7 +17684,7 @@ value glstub_glVertexBlendEnvfATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glVertexBlendEnvfATI);
-	(*stub_glVertexBlendEnvfATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexBlendEnvfATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17764,7 +17695,7 @@ value glstub_glVertexBlendEnviATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glVertexBlendEnviATI);
-	(*stub_glVertexBlendEnviATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexBlendEnviATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17777,7 +17708,7 @@ value glstub_glVertexPointer(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVertexPointer);
-	(*stub_glVertexPointer)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexPointer)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17791,7 +17722,7 @@ value glstub_glVertexPointerEXT(value v0, value v1, value v2, value v3, value v4
 	GLsizei lv3 = Int_val(v3);
 	GLvoid* lv4 = (Is_long(v4) ? (GLvoid*)Long_val(v4) : ((Tag_val(v4) == String_tag)? (String_val(v4)) : (Data_bigarray_val(v4))));
 	LOAD_FUNCTION(glVertexPointerEXT);
-	(*stub_glVertexPointerEXT)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexPointerEXT)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17805,7 +17736,7 @@ value glstub_glVertexPointerListIBM(value v0, value v1, value v2, value v3, valu
 	GLvoid** lv3 = Data_bigarray_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexPointerListIBM);
-	(*stub_glVertexPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexPointerListIBM)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -17817,7 +17748,7 @@ value glstub_glVertexPointervINTEL(value v0, value v1, value v2)
 	GLenum lv1 = Int_val(v1);
 	GLvoid** lv2 = Data_bigarray_val(v2);
 	LOAD_FUNCTION(glVertexPointervINTEL);
-	(*stub_glVertexPointervINTEL)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexPointervINTEL)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17829,7 +17760,7 @@ value glstub_glVertexStream2dATI(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexStream2dATI);
-	(*stub_glVertexStream2dATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexStream2dATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17840,7 +17771,7 @@ value glstub_glVertexStream2dvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream2dvATI);
-	(*stub_glVertexStream2dvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream2dvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17852,7 +17783,7 @@ value glstub_glVertexStream2fATI(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glVertexStream2fATI);
-	(*stub_glVertexStream2fATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexStream2fATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17863,7 +17794,7 @@ value glstub_glVertexStream2fvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream2fvATI);
-	(*stub_glVertexStream2fvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream2fvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17875,7 +17806,7 @@ value glstub_glVertexStream2iATI(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexStream2iATI);
-	(*stub_glVertexStream2iATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexStream2iATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17886,7 +17817,7 @@ value glstub_glVertexStream2ivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream2ivATI);
-	(*stub_glVertexStream2ivATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream2ivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17898,7 +17829,7 @@ value glstub_glVertexStream2sATI(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glVertexStream2sATI);
-	(*stub_glVertexStream2sATI)(lv0, lv1, lv2);
+	CALL_FUNCTION(glVertexStream2sATI)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -17909,7 +17840,7 @@ value glstub_glVertexStream2svATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream2svATI);
-	(*stub_glVertexStream2svATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream2svATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17922,7 +17853,7 @@ value glstub_glVertexStream3dATI(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexStream3dATI);
-	(*stub_glVertexStream3dATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexStream3dATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17933,7 +17864,7 @@ value glstub_glVertexStream3dvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream3dvATI);
-	(*stub_glVertexStream3dvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream3dvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17946,7 +17877,7 @@ value glstub_glVertexStream3fATI(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glVertexStream3fATI);
-	(*stub_glVertexStream3fATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexStream3fATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17957,7 +17888,7 @@ value glstub_glVertexStream3fvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream3fvATI);
-	(*stub_glVertexStream3fvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream3fvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17970,7 +17901,7 @@ value glstub_glVertexStream3iATI(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexStream3iATI);
-	(*stub_glVertexStream3iATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexStream3iATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -17981,7 +17912,7 @@ value glstub_glVertexStream3ivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream3ivATI);
-	(*stub_glVertexStream3ivATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream3ivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -17994,7 +17925,7 @@ value glstub_glVertexStream3sATI(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glVertexStream3sATI);
-	(*stub_glVertexStream3sATI)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexStream3sATI)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18005,7 +17936,7 @@ value glstub_glVertexStream3svATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream3svATI);
-	(*stub_glVertexStream3svATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream3svATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18019,7 +17950,7 @@ value glstub_glVertexStream4dATI(value v0, value v1, value v2, value v3, value v
 	GLdouble lv3 = Double_val(v3);
 	GLdouble lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexStream4dATI);
-	(*stub_glVertexStream4dATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexStream4dATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -18030,7 +17961,7 @@ value glstub_glVertexStream4dvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream4dvATI);
-	(*stub_glVertexStream4dvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream4dvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18044,7 +17975,7 @@ value glstub_glVertexStream4fATI(value v0, value v1, value v2, value v3, value v
 	GLfloat lv3 = Double_val(v3);
 	GLfloat lv4 = Double_val(v4);
 	LOAD_FUNCTION(glVertexStream4fATI);
-	(*stub_glVertexStream4fATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexStream4fATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -18055,7 +17986,7 @@ value glstub_glVertexStream4fvATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream4fvATI);
-	(*stub_glVertexStream4fvATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream4fvATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18069,7 +18000,7 @@ value glstub_glVertexStream4iATI(value v0, value v1, value v2, value v3, value v
 	GLint lv3 = Int_val(v3);
 	GLint lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexStream4iATI);
-	(*stub_glVertexStream4iATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexStream4iATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -18080,7 +18011,7 @@ value glstub_glVertexStream4ivATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream4ivATI);
-	(*stub_glVertexStream4ivATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream4ivATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18094,7 +18025,7 @@ value glstub_glVertexStream4sATI(value v0, value v1, value v2, value v3, value v
 	GLshort lv3 = Int_val(v3);
 	GLshort lv4 = Int_val(v4);
 	LOAD_FUNCTION(glVertexStream4sATI);
-	(*stub_glVertexStream4sATI)(lv0, lv1, lv2, lv3, lv4);
+	CALL_FUNCTION(glVertexStream4sATI)(lv0, lv1, lv2, lv3, lv4);
 	CAMLreturn(Val_unit);
 }
 
@@ -18105,7 +18036,7 @@ value glstub_glVertexStream4svATI(value v0, value v1)
 	GLenum lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glVertexStream4svATI);
-	(*stub_glVertexStream4svATI)(lv0, lv1);
+	CALL_FUNCTION(glVertexStream4svATI)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18118,7 +18049,7 @@ value glstub_glVertexWeightPointerEXT(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glVertexWeightPointerEXT);
-	(*stub_glVertexWeightPointerEXT)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glVertexWeightPointerEXT)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18128,7 +18059,7 @@ value glstub_glVertexWeightfEXT(value v0)
 	CAMLparam1(v0);
 	GLfloat lv0 = Double_val(v0);
 	LOAD_FUNCTION(glVertexWeightfEXT);
-	(*stub_glVertexWeightfEXT)(lv0);
+	CALL_FUNCTION(glVertexWeightfEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18138,7 +18069,7 @@ value glstub_glVertexWeightfvEXT(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertexWeightfvEXT);
-	(*stub_glVertexWeightfvEXT)(lv0);
+	CALL_FUNCTION(glVertexWeightfvEXT)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18148,7 +18079,7 @@ value glstub_glVertexWeighthNV(value v0)
 	CAMLparam1(v0);
 	GLushort lv0 = Int_val(v0);
 	LOAD_FUNCTION(glVertexWeighthNV);
-	(*stub_glVertexWeighthNV)(lv0);
+	CALL_FUNCTION(glVertexWeighthNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18158,7 +18089,7 @@ value glstub_glVertexWeighthvNV(value v0)
 	CAMLparam1(v0);
 	GLushort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glVertexWeighthvNV);
-	(*stub_glVertexWeighthvNV)(lv0);
+	CALL_FUNCTION(glVertexWeighthvNV)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18171,7 +18102,7 @@ value glstub_glViewport(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLsizei lv3 = Int_val(v3);
 	LOAD_FUNCTION(glViewport);
-	(*stub_glViewport)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glViewport)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18184,7 +18115,7 @@ value glstub_glWeightPointerARB(value v0, value v1, value v2, value v3)
 	GLsizei lv2 = Int_val(v2);
 	GLvoid* lv3 = (Is_long(v3) ? (GLvoid*)Long_val(v3) : ((Tag_val(v3) == String_tag)? (String_val(v3)) : (Data_bigarray_val(v3))));
 	LOAD_FUNCTION(glWeightPointerARB);
-	(*stub_glWeightPointerARB)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glWeightPointerARB)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18195,7 +18126,7 @@ value glstub_glWeightbvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLbyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightbvARB);
-	(*stub_glWeightbvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightbvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18206,7 +18137,7 @@ value glstub_glWeightdvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLdouble* lv1 = (Tag_val(v1) == Double_array_tag)? (double *)v1: Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightdvARB);
-	(*stub_glWeightdvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightdvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18217,7 +18148,7 @@ value glstub_glWeightfvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLfloat* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightfvARB);
-	(*stub_glWeightfvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightfvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18228,7 +18159,7 @@ value glstub_glWeightivARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightivARB);
-	(*stub_glWeightivARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18239,7 +18170,7 @@ value glstub_glWeightsvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLshort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightsvARB);
-	(*stub_glWeightsvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightsvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18250,7 +18181,7 @@ value glstub_glWeightubvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLubyte* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightubvARB);
-	(*stub_glWeightubvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightubvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18261,7 +18192,7 @@ value glstub_glWeightuivARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLuint* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightuivARB);
-	(*stub_glWeightuivARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightuivARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18272,7 +18203,7 @@ value glstub_glWeightusvARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLushort* lv1 = Data_bigarray_val(v1);
 	LOAD_FUNCTION(glWeightusvARB);
-	(*stub_glWeightusvARB)(lv0, lv1);
+	CALL_FUNCTION(glWeightusvARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18283,7 +18214,7 @@ value glstub_glWindowPos2d(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2d);
-	(*stub_glWindowPos2d)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2d)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18294,7 +18225,7 @@ value glstub_glWindowPos2dARB(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2dARB);
-	(*stub_glWindowPos2dARB)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2dARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18305,7 +18236,7 @@ value glstub_glWindowPos2dMESA(value v0, value v1)
 	GLdouble lv0 = Double_val(v0);
 	GLdouble lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2dMESA);
-	(*stub_glWindowPos2dMESA)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2dMESA)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18315,7 +18246,7 @@ value glstub_glWindowPos2dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2dv);
-	(*stub_glWindowPos2dv)(lv0);
+	CALL_FUNCTION(glWindowPos2dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18325,7 +18256,7 @@ value glstub_glWindowPos2dvARB(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2dvARB);
-	(*stub_glWindowPos2dvARB)(lv0);
+	CALL_FUNCTION(glWindowPos2dvARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18335,7 +18266,7 @@ value glstub_glWindowPos2dvMESA(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2dvMESA);
-	(*stub_glWindowPos2dvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos2dvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18346,7 +18277,7 @@ value glstub_glWindowPos2f(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2f);
-	(*stub_glWindowPos2f)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2f)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18357,7 +18288,7 @@ value glstub_glWindowPos2fARB(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2fARB);
-	(*stub_glWindowPos2fARB)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2fARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18368,7 +18299,7 @@ value glstub_glWindowPos2fMESA(value v0, value v1)
 	GLfloat lv0 = Double_val(v0);
 	GLfloat lv1 = Double_val(v1);
 	LOAD_FUNCTION(glWindowPos2fMESA);
-	(*stub_glWindowPos2fMESA)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2fMESA)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18378,7 +18309,7 @@ value glstub_glWindowPos2fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2fv);
-	(*stub_glWindowPos2fv)(lv0);
+	CALL_FUNCTION(glWindowPos2fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18388,7 +18319,7 @@ value glstub_glWindowPos2fvARB(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2fvARB);
-	(*stub_glWindowPos2fvARB)(lv0);
+	CALL_FUNCTION(glWindowPos2fvARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18398,7 +18329,7 @@ value glstub_glWindowPos2fvMESA(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2fvMESA);
-	(*stub_glWindowPos2fvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos2fvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18409,7 +18340,7 @@ value glstub_glWindowPos2i(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2i);
-	(*stub_glWindowPos2i)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2i)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18420,7 +18351,7 @@ value glstub_glWindowPos2iARB(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2iARB);
-	(*stub_glWindowPos2iARB)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2iARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18431,7 +18362,7 @@ value glstub_glWindowPos2iMESA(value v0, value v1)
 	GLint lv0 = Int_val(v0);
 	GLint lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2iMESA);
-	(*stub_glWindowPos2iMESA)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2iMESA)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18441,7 +18372,7 @@ value glstub_glWindowPos2iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2iv);
-	(*stub_glWindowPos2iv)(lv0);
+	CALL_FUNCTION(glWindowPos2iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18451,7 +18382,7 @@ value glstub_glWindowPos2ivARB(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2ivARB);
-	(*stub_glWindowPos2ivARB)(lv0);
+	CALL_FUNCTION(glWindowPos2ivARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18461,7 +18392,7 @@ value glstub_glWindowPos2ivMESA(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2ivMESA);
-	(*stub_glWindowPos2ivMESA)(lv0);
+	CALL_FUNCTION(glWindowPos2ivMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18472,7 +18403,7 @@ value glstub_glWindowPos2s(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2s);
-	(*stub_glWindowPos2s)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2s)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18483,7 +18414,7 @@ value glstub_glWindowPos2sARB(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2sARB);
-	(*stub_glWindowPos2sARB)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2sARB)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18494,7 +18425,7 @@ value glstub_glWindowPos2sMESA(value v0, value v1)
 	GLshort lv0 = Int_val(v0);
 	GLshort lv1 = Int_val(v1);
 	LOAD_FUNCTION(glWindowPos2sMESA);
-	(*stub_glWindowPos2sMESA)(lv0, lv1);
+	CALL_FUNCTION(glWindowPos2sMESA)(lv0, lv1);
 	CAMLreturn(Val_unit);
 }
 
@@ -18504,7 +18435,7 @@ value glstub_glWindowPos2sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2sv);
-	(*stub_glWindowPos2sv)(lv0);
+	CALL_FUNCTION(glWindowPos2sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18514,7 +18445,7 @@ value glstub_glWindowPos2svARB(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2svARB);
-	(*stub_glWindowPos2svARB)(lv0);
+	CALL_FUNCTION(glWindowPos2svARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18524,7 +18455,7 @@ value glstub_glWindowPos2svMESA(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos2svMESA);
-	(*stub_glWindowPos2svMESA)(lv0);
+	CALL_FUNCTION(glWindowPos2svMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18536,7 +18467,7 @@ value glstub_glWindowPos3d(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3d);
-	(*stub_glWindowPos3d)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3d)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18548,7 +18479,7 @@ value glstub_glWindowPos3dARB(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3dARB);
-	(*stub_glWindowPos3dARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3dARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18560,7 +18491,7 @@ value glstub_glWindowPos3dMESA(value v0, value v1, value v2)
 	GLdouble lv1 = Double_val(v1);
 	GLdouble lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3dMESA);
-	(*stub_glWindowPos3dMESA)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3dMESA)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18570,7 +18501,7 @@ value glstub_glWindowPos3dv(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3dv);
-	(*stub_glWindowPos3dv)(lv0);
+	CALL_FUNCTION(glWindowPos3dv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18580,7 +18511,7 @@ value glstub_glWindowPos3dvARB(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3dvARB);
-	(*stub_glWindowPos3dvARB)(lv0);
+	CALL_FUNCTION(glWindowPos3dvARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18590,7 +18521,7 @@ value glstub_glWindowPos3dvMESA(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3dvMESA);
-	(*stub_glWindowPos3dvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos3dvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18602,7 +18533,7 @@ value glstub_glWindowPos3f(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3f);
-	(*stub_glWindowPos3f)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3f)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18614,7 +18545,7 @@ value glstub_glWindowPos3fARB(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3fARB);
-	(*stub_glWindowPos3fARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3fARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18626,7 +18557,7 @@ value glstub_glWindowPos3fMESA(value v0, value v1, value v2)
 	GLfloat lv1 = Double_val(v1);
 	GLfloat lv2 = Double_val(v2);
 	LOAD_FUNCTION(glWindowPos3fMESA);
-	(*stub_glWindowPos3fMESA)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3fMESA)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18636,7 +18567,7 @@ value glstub_glWindowPos3fv(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3fv);
-	(*stub_glWindowPos3fv)(lv0);
+	CALL_FUNCTION(glWindowPos3fv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18646,7 +18577,7 @@ value glstub_glWindowPos3fvARB(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3fvARB);
-	(*stub_glWindowPos3fvARB)(lv0);
+	CALL_FUNCTION(glWindowPos3fvARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18656,7 +18587,7 @@ value glstub_glWindowPos3fvMESA(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3fvMESA);
-	(*stub_glWindowPos3fvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos3fvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18668,7 +18599,7 @@ value glstub_glWindowPos3i(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3i);
-	(*stub_glWindowPos3i)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3i)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18680,7 +18611,7 @@ value glstub_glWindowPos3iARB(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3iARB);
-	(*stub_glWindowPos3iARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3iARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18692,7 +18623,7 @@ value glstub_glWindowPos3iMESA(value v0, value v1, value v2)
 	GLint lv1 = Int_val(v1);
 	GLint lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3iMESA);
-	(*stub_glWindowPos3iMESA)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3iMESA)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18702,7 +18633,7 @@ value glstub_glWindowPos3iv(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3iv);
-	(*stub_glWindowPos3iv)(lv0);
+	CALL_FUNCTION(glWindowPos3iv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18712,7 +18643,7 @@ value glstub_glWindowPos3ivARB(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3ivARB);
-	(*stub_glWindowPos3ivARB)(lv0);
+	CALL_FUNCTION(glWindowPos3ivARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18722,7 +18653,7 @@ value glstub_glWindowPos3ivMESA(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3ivMESA);
-	(*stub_glWindowPos3ivMESA)(lv0);
+	CALL_FUNCTION(glWindowPos3ivMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18734,7 +18665,7 @@ value glstub_glWindowPos3s(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3s);
-	(*stub_glWindowPos3s)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3s)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18746,7 +18677,7 @@ value glstub_glWindowPos3sARB(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3sARB);
-	(*stub_glWindowPos3sARB)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3sARB)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18758,7 +18689,7 @@ value glstub_glWindowPos3sMESA(value v0, value v1, value v2)
 	GLshort lv1 = Int_val(v1);
 	GLshort lv2 = Int_val(v2);
 	LOAD_FUNCTION(glWindowPos3sMESA);
-	(*stub_glWindowPos3sMESA)(lv0, lv1, lv2);
+	CALL_FUNCTION(glWindowPos3sMESA)(lv0, lv1, lv2);
 	CAMLreturn(Val_unit);
 }
 
@@ -18768,7 +18699,7 @@ value glstub_glWindowPos3sv(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3sv);
-	(*stub_glWindowPos3sv)(lv0);
+	CALL_FUNCTION(glWindowPos3sv)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18778,7 +18709,7 @@ value glstub_glWindowPos3svARB(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3svARB);
-	(*stub_glWindowPos3svARB)(lv0);
+	CALL_FUNCTION(glWindowPos3svARB)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18788,7 +18719,7 @@ value glstub_glWindowPos3svMESA(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos3svMESA);
-	(*stub_glWindowPos3svMESA)(lv0);
+	CALL_FUNCTION(glWindowPos3svMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18801,7 +18732,7 @@ value glstub_glWindowPos4dMESA(value v0, value v1, value v2, value v3)
 	GLdouble lv2 = Double_val(v2);
 	GLdouble lv3 = Double_val(v3);
 	LOAD_FUNCTION(glWindowPos4dMESA);
-	(*stub_glWindowPos4dMESA)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glWindowPos4dMESA)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18811,7 +18742,7 @@ value glstub_glWindowPos4dvMESA(value v0)
 	CAMLparam1(v0);
 	GLdouble* lv0 = (Tag_val(v0) == Double_array_tag)? (double *)v0: Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos4dvMESA);
-	(*stub_glWindowPos4dvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos4dvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18824,7 +18755,7 @@ value glstub_glWindowPos4fMESA(value v0, value v1, value v2, value v3)
 	GLfloat lv2 = Double_val(v2);
 	GLfloat lv3 = Double_val(v3);
 	LOAD_FUNCTION(glWindowPos4fMESA);
-	(*stub_glWindowPos4fMESA)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glWindowPos4fMESA)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18834,7 +18765,7 @@ value glstub_glWindowPos4fvMESA(value v0)
 	CAMLparam1(v0);
 	GLfloat* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos4fvMESA);
-	(*stub_glWindowPos4fvMESA)(lv0);
+	CALL_FUNCTION(glWindowPos4fvMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18847,7 +18778,7 @@ value glstub_glWindowPos4iMESA(value v0, value v1, value v2, value v3)
 	GLint lv2 = Int_val(v2);
 	GLint lv3 = Int_val(v3);
 	LOAD_FUNCTION(glWindowPos4iMESA);
-	(*stub_glWindowPos4iMESA)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glWindowPos4iMESA)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18857,7 +18788,7 @@ value glstub_glWindowPos4ivMESA(value v0)
 	CAMLparam1(v0);
 	GLint* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos4ivMESA);
-	(*stub_glWindowPos4ivMESA)(lv0);
+	CALL_FUNCTION(glWindowPos4ivMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18870,7 +18801,7 @@ value glstub_glWindowPos4sMESA(value v0, value v1, value v2, value v3)
 	GLshort lv2 = Int_val(v2);
 	GLshort lv3 = Int_val(v3);
 	LOAD_FUNCTION(glWindowPos4sMESA);
-	(*stub_glWindowPos4sMESA)(lv0, lv1, lv2, lv3);
+	CALL_FUNCTION(glWindowPos4sMESA)(lv0, lv1, lv2, lv3);
 	CAMLreturn(Val_unit);
 }
 
@@ -18880,7 +18811,7 @@ value glstub_glWindowPos4svMESA(value v0)
 	CAMLparam1(v0);
 	GLshort* lv0 = Data_bigarray_val(v0);
 	LOAD_FUNCTION(glWindowPos4svMESA);
-	(*stub_glWindowPos4svMESA)(lv0);
+	CALL_FUNCTION(glWindowPos4svMESA)(lv0);
 	CAMLreturn(Val_unit);
 }
 
@@ -18896,12 +18827,24 @@ value glstub_glWriteMaskEXT(value v0, value v1, value v2, value v3, value v4, va
 	GLenum lv4 = Int_val(v4);
 	GLenum lv5 = Int_val(v5);
 	LOAD_FUNCTION(glWriteMaskEXT);
-	(*stub_glWriteMaskEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
+	CALL_FUNCTION(glWriteMaskEXT)(lv0, lv1, lv2, lv3, lv4, lv5);
 	CAMLreturn(Val_unit);
 }
 
 value glstub_glWriteMaskEXT_byte(value * argv, int n)
 {
 	return glstub_glWriteMaskEXT(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+}
+
+DECLARE_FUNCTION(glewInit,(void),GLint);
+value glstub_glewInit(value v0)
+{
+	CAMLparam1(v0);
+	CAMLlocal1(result);
+	GLint ret;
+	LOAD_FUNCTION(glewInit);
+	ret = CALL_FUNCTION(glewInit)();
+	result = Val_int(ret);
+	CAMLreturn(result);
 }
 

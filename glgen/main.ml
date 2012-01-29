@@ -88,7 +88,7 @@ let make_func_call f =
   if (f.freturn.pptr = VOID) then "" else "ret = "
   in
   (sprintf "\tLOAD_FUNCTION(%s);\n"  f.fname) ^
-  (sprintf "\t%s(*stub_%s)(%s);\n"  return f.fname args)
+  (sprintf "\t%sCALL_FUNCTION(%s)(%s);\n"  return f.fname args)
 
 (* Load ML value into C type *)
 let ml_var_to_c i p =
