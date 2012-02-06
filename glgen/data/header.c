@@ -61,7 +61,7 @@ typedef char GLchar;
 typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptr;
 #endif
-typedef char* GLstring;
+typedef const unsigned char* GLstring;
 
 #if defined(__GLEW_H__)
 #define DECLARE_FUNCTION(func, args, ret)

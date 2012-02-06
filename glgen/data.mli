@@ -21,7 +21,8 @@ val pfunc : glfunction -> unit
 val qconstants : glconstant list ref
 val qfunctions : glfunction list ref
 val val_translate : string -> string -> string
+val const_qualifier: bool -> string;;
 val translate_val : string -> string
 val translate_ptr : string -> string -> string
-val translate_dblptr : string -> string -> string
+val translate_dblptr : bool -> string -> string -> string
 val translate_ml : string -> string

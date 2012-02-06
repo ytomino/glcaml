@@ -50,7 +50,7 @@ let mkconst2 name reference =
   { cname = name; cval = Reference reference}
 
 let mktype1 name =
-  { pname = name; pconst = true; pptr = classify_ptr name }
+  { pname = name; pconst = false; pptr = classify_ptr name }
 
 let mktype2 name =
   { pname = name; pconst = false; pptr = classify_ptr name }
@@ -118,8 +118,11 @@ let val_translate t s =
     | "GLbyte"      -> p "Val_int(%s)" s
     | "void*"   -> p "(value)(%s)" s
     | "GLvoid*"   -> p "(value)(%s)" s
-    | "GLstring"  -> p "caml_copy_string(%s)" s
+    | "GLstring"  -> p "caml_copy_string((const char *)%s)" s
     | _             -> "unknown"
+
+(* Add const qualifer *)
+let const_qualifier c = if c then "const " else ""
 
 (* Extract the C value from an ML FFI value *)
 let translate_val t =
@@ -175,13 +178,13 @@ let translate_ptr t s =
   | _ -> "unknown"
 
 (* Translate an ML array to C double pointer *)
-let translate_dblptr t s =
+let translate_dblptr c t s =
   let p = sprintf in
   match t with
   | "void**"    -> p "Data_bigarray_val(%s)" s
   | "GLvoid**"  -> p "Data_bigarray_val(%s)" s
   | "GLboolean**" -> p "Data_bigarray_val(%s)" s
-  | "GLchar**"  -> p "(GLchar** )(%s)" s
+  | "GLchar**"  -> p "(%sGLchar**)(%s)" (const_qualifier c) s
   | _ -> "unknown"
 
 

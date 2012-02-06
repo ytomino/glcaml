@@ -620,7 +620,6 @@ val gl_storage_shared_apple : int
 val gl_texture_range_length_apple : int
 val gl_texture_range_pointer_apple : int
 val gl_transform_hint_apple : int
-val gl_vertex_array_binding_apple : int
 val gl_vertex_array_range_apple : int
 val gl_vertex_array_range_length_apple : int
 val gl_vertex_array_storage_hint_apple : int
@@ -629,11 +628,6 @@ val gl_vertex_array_range_pointer_apple : int
 val gl_ycbcr_422_apple : int
 val gl_unsigned_short_8_8_apple : int
 val gl_unsigned_short_8_8_rev_apple : int
-val gl_rgba_float_mode_arb : int
-val gl_clamp_vertex_color_arb : int
-val gl_clamp_fragment_color_arb : int
-val gl_clamp_read_color_arb : int
-val gl_fixed_only_arb : int
 val gl_depth_component16_arb : int
 val gl_depth_component24_arb : int
 val gl_depth_component32_arb : int
@@ -674,7 +668,6 @@ val gl_max_texture_image_units_arb : int
 val gl_fragment_shader_arb : int
 val gl_max_fragment_uniform_components_arb : int
 val gl_fragment_shader_derivative_hint_arb : int
-val gl_half_float_arb : int
 val gl_multisample_arb : int
 val gl_sample_alpha_to_coverage_arb : int
 val gl_sample_alpha_to_one_arb : int
@@ -786,26 +779,6 @@ val gl_operand1_alpha_arb : int
 val gl_operand2_alpha_arb : int
 val gl_dot3_rgb_arb : int
 val gl_dot3_rgba_arb : int
-val gl_rgba32f_arb : int
-val gl_rgb32f_arb : int
-val gl_alpha32f_arb : int
-val gl_intensity32f_arb : int
-val gl_luminance32f_arb : int
-val gl_luminance_alpha32f_arb : int
-val gl_rgba16f_arb : int
-val gl_rgb16f_arb : int
-val gl_alpha16f_arb : int
-val gl_intensity16f_arb : int
-val gl_luminance16f_arb : int
-val gl_luminance_alpha16f_arb : int
-val gl_texture_red_type_arb : int
-val gl_texture_green_type_arb : int
-val gl_texture_blue_type_arb : int
-val gl_texture_alpha_type_arb : int
-val gl_texture_luminance_type_arb : int
-val gl_texture_intensity_type_arb : int
-val gl_texture_depth_type_arb : int
-val gl_unsigned_normalized_arb : int
 val gl_mirrored_repeat_arb : int
 val gl_texture_rectangle_arb : int
 val gl_texture_binding_rectangle_arb : int
@@ -1115,66 +1088,6 @@ val gl_fragment_light_model_ambient_ext : int
 val gl_fragment_light_model_normal_interpolation_ext : int
 val gl_fragment_light0_ext : int
 val gl_fragment_light7_ext : int
-val gl_draw_framebuffer_binding_ext : int
-val gl_read_framebuffer_ext : int
-val gl_draw_framebuffer_ext : int
-val gl_read_framebuffer_binding_ext : int
-val gl_renderbuffer_samples_ext : int
-val gl_framebuffer_incomplete_multisample_ext : int
-val gl_max_samples_ext : int
-val gl_invalid_framebuffer_operation_ext : int
-val gl_max_renderbuffer_size_ext : int
-val gl_framebuffer_binding_ext : int
-val gl_renderbuffer_binding_ext : int
-val gl_framebuffer_attachment_object_type_ext : int
-val gl_framebuffer_attachment_object_name_ext : int
-val gl_framebuffer_attachment_texture_level_ext : int
-val gl_framebuffer_attachment_texture_cube_map_face_ext : int
-val gl_framebuffer_attachment_texture_3d_zoffset_ext : int
-val gl_framebuffer_complete_ext : int
-val gl_framebuffer_incomplete_attachment_ext : int
-val gl_framebuffer_incomplete_missing_attachment_ext : int
-val gl_framebuffer_incomplete_dimensions_ext : int
-val gl_framebuffer_incomplete_formats_ext : int
-val gl_framebuffer_incomplete_draw_buffer_ext : int
-val gl_framebuffer_incomplete_read_buffer_ext : int
-val gl_framebuffer_unsupported_ext : int
-val gl_max_color_attachments_ext : int
-val gl_color_attachment0_ext : int
-val gl_color_attachment1_ext : int
-val gl_color_attachment2_ext : int
-val gl_color_attachment3_ext : int
-val gl_color_attachment4_ext : int
-val gl_color_attachment5_ext : int
-val gl_color_attachment6_ext : int
-val gl_color_attachment7_ext : int
-val gl_color_attachment8_ext : int
-val gl_color_attachment9_ext : int
-val gl_color_attachment10_ext : int
-val gl_color_attachment11_ext : int
-val gl_color_attachment12_ext : int
-val gl_color_attachment13_ext : int
-val gl_color_attachment14_ext : int
-val gl_color_attachment15_ext : int
-val gl_depth_attachment_ext : int
-val gl_stencil_attachment_ext : int
-val gl_framebuffer_ext : int
-val gl_renderbuffer_ext : int
-val gl_renderbuffer_width_ext : int
-val gl_renderbuffer_height_ext : int
-val gl_renderbuffer_internal_format_ext : int
-val gl_stencil_index1_ext : int
-val gl_stencil_index4_ext : int
-val gl_stencil_index8_ext : int
-val gl_stencil_index16_ext : int
-val gl_renderbuffer_red_size_ext : int
-val gl_renderbuffer_green_size_ext : int
-val gl_renderbuffer_blue_size_ext : int
-val gl_renderbuffer_alpha_size_ext : int
-val gl_renderbuffer_depth_size_ext : int
-val gl_renderbuffer_stencil_size_ext : int
-val gl_framebuffer_srgb_ext : int
-val gl_framebuffer_srgb_capable_ext : int
 val gl_geometry_shader_ext : int
 val gl_max_geometry_varying_components_ext : int
 val gl_max_vertex_varying_components_ext : int
@@ -1195,32 +1108,6 @@ val gl_framebuffer_incomplete_layer_targets_ext : int
 val gl_framebuffer_incomplete_layer_count_ext : int
 val gl_framebuffer_attachment_texture_layer_ext : int
 val gl_program_point_size_ext : int
-val gl_sampler_1d_array_ext : int
-val gl_sampler_2d_array_ext : int
-val gl_sampler_buffer_ext : int
-val gl_sampler_1d_array_shadow_ext : int
-val gl_sampler_2d_array_shadow_ext : int
-val gl_sampler_cube_shadow_ext : int
-val gl_unsigned_int_vec2_ext : int
-val gl_unsigned_int_vec3_ext : int
-val gl_unsigned_int_vec4_ext : int
-val gl_int_sampler_1d_ext : int
-val gl_int_sampler_2d_ext : int
-val gl_int_sampler_3d_ext : int
-val gl_int_sampler_cube_ext : int
-val gl_int_sampler_2d_rect_ext : int
-val gl_int_sampler_1d_array_ext : int
-val gl_int_sampler_2d_array_ext : int
-val gl_int_sampler_buffer_ext : int
-val gl_unsigned_int_sampler_1d_ext : int
-val gl_unsigned_int_sampler_2d_ext : int
-val gl_unsigned_int_sampler_3d_ext : int
-val gl_unsigned_int_sampler_cube_ext : int
-val gl_unsigned_int_sampler_2d_rect_ext : int
-val gl_unsigned_int_sampler_1d_array_ext : int
-val gl_unsigned_int_sampler_2d_array_ext : int
-val gl_unsigned_int_sampler_buffer_ext : int
-val gl_vertex_attrib_array_integer_ext : int
 val gl_histogram_ext : int
 val gl_proxy_histogram_ext : int
 val gl_histogram_width_ext : int
@@ -1260,13 +1147,6 @@ val gl_sample_mask_value_ext : int
 val gl_sample_mask_invert_ext : int
 val gl_sample_pattern_ext : int
 val gl_multisample_bit_ext : int
-val gl_depth_stencil_ext : int
-val gl_unsigned_int_24_8_ext : int
-val gl_depth24_stencil8_ext : int
-val gl_texture_stencil_size_ext : int
-val gl_r11f_g11f_b10f_ext : int
-val gl_unsigned_int_10f_11f_11f_rev_ext : int
-val gl_rgba_signed_components_ext : int
 val gl_unsigned_byte_3_3_2_ext : int
 val gl_unsigned_short_4_4_4_4_ext : int
 val gl_unsigned_short_5_5_5_1_ext : int
@@ -1358,14 +1238,6 @@ val gl_texture_3d_ext : int
 val gl_texture_depth_ext : int
 val gl_texture_wrap_r_ext : int
 val gl_max_3d_texture_size_ext : int
-val gl_texture_1d_array_ext : int
-val gl_proxy_texture_1d_array_ext : int
-val gl_texture_2d_array_ext : int
-val gl_proxy_texture_2d_array_ext : int
-val gl_texture_binding_1d_array_ext : int
-val gl_texture_binding_2d_array_ext : int
-val gl_max_array_texture_layers_ext : int
-val gl_compare_ref_depth_to_texture_ext : int
 val gl_texture_buffer_ext : int
 val gl_max_texture_buffer_size_ext : int
 val gl_texture_binding_buffer_ext : int
@@ -1375,10 +1247,6 @@ val gl_compressed_luminance_latc1_ext : int
 val gl_compressed_signed_luminance_latc1_ext : int
 val gl_compressed_luminance_alpha_latc2_ext : int
 val gl_compressed_signed_luminance_alpha_latc2_ext : int
-val gl_compressed_red_rgtc1_ext : int
-val gl_compressed_signed_red_rgtc1_ext : int
-val gl_compressed_red_green_rgtc2_ext : int
-val gl_compressed_signed_red_green_rgtc2_ext : int
 val gl_compressed_rgb_s3tc_dxt1_ext : int
 val gl_compressed_rgba_s3tc_dxt1_ext : int
 val gl_compressed_rgba_s3tc_dxt3_ext : int
@@ -1419,53 +1287,6 @@ val gl_dot3_rgb_ext : int
 val gl_dot3_rgba_ext : int
 val gl_texture_max_anisotropy_ext : int
 val gl_max_texture_max_anisotropy_ext : int
-val gl_rgba32ui_ext : int
-val gl_rgb32ui_ext : int
-val gl_alpha32ui_ext : int
-val gl_intensity32ui_ext : int
-val gl_luminance32ui_ext : int
-val gl_luminance_alpha32ui_ext : int
-val gl_rgba16ui_ext : int
-val gl_rgb16ui_ext : int
-val gl_alpha16ui_ext : int
-val gl_intensity16ui_ext : int
-val gl_luminance16ui_ext : int
-val gl_luminance_alpha16ui_ext : int
-val gl_rgba8ui_ext : int
-val gl_rgb8ui_ext : int
-val gl_alpha8ui_ext : int
-val gl_intensity8ui_ext : int
-val gl_luminance8ui_ext : int
-val gl_luminance_alpha8ui_ext : int
-val gl_rgba32i_ext : int
-val gl_rgb32i_ext : int
-val gl_alpha32i_ext : int
-val gl_intensity32i_ext : int
-val gl_luminance32i_ext : int
-val gl_luminance_alpha32i_ext : int
-val gl_rgba16i_ext : int
-val gl_rgb16i_ext : int
-val gl_alpha16i_ext : int
-val gl_intensity16i_ext : int
-val gl_luminance16i_ext : int
-val gl_luminance_alpha16i_ext : int
-val gl_rgba8i_ext : int
-val gl_rgb8i_ext : int
-val gl_alpha8i_ext : int
-val gl_intensity8i_ext : int
-val gl_luminance8i_ext : int
-val gl_luminance_alpha8i_ext : int
-val gl_red_integer_ext : int
-val gl_green_integer_ext : int
-val gl_blue_integer_ext : int
-val gl_alpha_integer_ext : int
-val gl_rgb_integer_ext : int
-val gl_rgba_integer_ext : int
-val gl_bgr_integer_ext : int
-val gl_bgra_integer_ext : int
-val gl_luminance_integer_ext : int
-val gl_luminance_alpha_integer_ext : int
-val gl_rgba_integer_mode_ext : int
 val gl_max_texture_lod_bias_ext : int
 val gl_texture_filter_control_ext : int
 val gl_texture_lod_bias_ext : int
@@ -1479,9 +1300,6 @@ val gl_texture_2d_binding_ext : int
 val gl_texture_3d_binding_ext : int
 val gl_perturb_ext : int
 val gl_texture_normal_ext : int
-val gl_rgb9_e5_ext : int
-val gl_unsigned_int_5_9_9_9_rev_ext : int
-val gl_texture_shared_size_ext : int
 val gl_srgb_ext : int
 val gl_srgb8_ext : int
 val gl_srgb_alpha_ext : int
@@ -1593,10 +1411,6 @@ val gl_unsigned_short_8_8_rev_mesa : int
 val gl_ycbcr_mesa : int
 val gl_depth_stencil_to_rgba_nv : int
 val gl_depth_stencil_to_bgra_nv : int
-val gl_depth_component32f_nv : int
-val gl_depth32f_stencil8_nv : int
-val gl_float_32_unsigned_int_24_8_rev_nv : int
-val gl_depth_buffer_float_mode_nv : int
 val gl_depth_clamp_nv : int
 val gl_sample_count_bits_nv : int
 val gl_current_sample_count_query_nv : int
@@ -1669,7 +1483,6 @@ val gl_max_program_attrib_components_nv : int
 val gl_max_program_result_components_nv : int
 val gl_max_program_generic_attribs_nv : int
 val gl_max_program_generic_results_nv : int
-val gl_half_float_nv : int
 val gl_max_shininess_nv : int
 val gl_max_spot_exponent_nv : int
 val gl_multisample_filter_hint_nv : int
@@ -3055,6 +2868,214 @@ val gl_compressed_srgb : int
 val gl_compressed_srgb_alpha : int
 val gl_compressed_sluminance : int
 val gl_compressed_sluminance_alpha : int
+val gl_sampler_1d_array_ext : int
+val gl_sampler_2d_array_ext : int
+val gl_sampler_buffer_ext : int
+val gl_sampler_1d_array_shadow_ext : int
+val gl_sampler_2d_array_shadow_ext : int
+val gl_sampler_cube_shadow_ext : int
+val gl_unsigned_int_vec2_ext : int
+val gl_unsigned_int_vec3_ext : int
+val gl_unsigned_int_vec4_ext : int
+val gl_int_sampler_1d_ext : int
+val gl_int_sampler_2d_ext : int
+val gl_int_sampler_3d_ext : int
+val gl_int_sampler_cube_ext : int
+val gl_int_sampler_2d_rect_ext : int
+val gl_int_sampler_1d_array_ext : int
+val gl_int_sampler_2d_array_ext : int
+val gl_int_sampler_buffer_ext : int
+val gl_unsigned_int_sampler_1d_ext : int
+val gl_unsigned_int_sampler_2d_ext : int
+val gl_unsigned_int_sampler_3d_ext : int
+val gl_unsigned_int_sampler_cube_ext : int
+val gl_unsigned_int_sampler_2d_rect_ext : int
+val gl_unsigned_int_sampler_1d_array_ext : int
+val gl_unsigned_int_sampler_2d_array_ext : int
+val gl_unsigned_int_sampler_buffer_ext : int
+val gl_vertex_attrib_array_integer_ext : int
+val gl_query_wait_nv : int
+val gl_query_no_wait_nv : int
+val gl_query_by_region_wait_nv : int
+val gl_query_by_region_no_wait_nv : int
+val gl_buffer_serialized_modify_apple : int
+val gl_buffer_flushing_unmap_apple : int
+val gl_rgba_float_mode_arb : int
+val gl_clamp_vertex_color_arb : int
+val gl_clamp_fragment_color_arb : int
+val gl_clamp_read_color_arb : int
+val gl_fixed_only_arb : int
+val gl_depth_component32f_nv : int
+val gl_depth32f_stencil8_nv : int
+val gl_float_32_unsigned_int_24_8_rev_nv : int
+val gl_depth_buffer_float_mode_nv : int
+val gl_rgba32f_arb : int
+val gl_rgb32f_arb : int
+val gl_alpha32f_arb : int
+val gl_intensity32f_arb : int
+val gl_luminance32f_arb : int
+val gl_luminance_alpha32f_arb : int
+val gl_rgba16f_arb : int
+val gl_rgb16f_arb : int
+val gl_alpha16f_arb : int
+val gl_intensity16f_arb : int
+val gl_luminance16f_arb : int
+val gl_luminance_alpha16f_arb : int
+val gl_texture_red_type_arb : int
+val gl_texture_green_type_arb : int
+val gl_texture_blue_type_arb : int
+val gl_texture_alpha_type_arb : int
+val gl_texture_luminance_type_arb : int
+val gl_texture_intensity_type_arb : int
+val gl_texture_depth_type_arb : int
+val gl_unsigned_normalized_arb : int
+val gl_r11f_g11f_b10f_ext : int
+val gl_unsigned_int_10f_11f_11f_rev_ext : int
+val gl_rgba_signed_components_ext : int
+val gl_rgb9_e5_ext : int
+val gl_unsigned_int_5_9_9_9_rev_ext : int
+val gl_texture_shared_size_ext : int
+val gl_invalid_framebuffer_operation_ext : int
+val gl_max_renderbuffer_size_ext : int
+val gl_framebuffer_binding_ext : int
+val gl_renderbuffer_binding_ext : int
+val gl_framebuffer_attachment_object_type_ext : int
+val gl_framebuffer_attachment_object_name_ext : int
+val gl_framebuffer_attachment_texture_level_ext : int
+val gl_framebuffer_attachment_texture_cube_map_face_ext : int
+val gl_framebuffer_attachment_texture_3d_zoffset_ext : int
+val gl_framebuffer_complete_ext : int
+val gl_framebuffer_incomplete_attachment_ext : int
+val gl_framebuffer_incomplete_missing_attachment_ext : int
+val gl_framebuffer_incomplete_dimensions_ext : int
+val gl_framebuffer_incomplete_formats_ext : int
+val gl_framebuffer_incomplete_draw_buffer_ext : int
+val gl_framebuffer_incomplete_read_buffer_ext : int
+val gl_framebuffer_unsupported_ext : int
+val gl_max_color_attachments_ext : int
+val gl_color_attachment0_ext : int
+val gl_color_attachment1_ext : int
+val gl_color_attachment2_ext : int
+val gl_color_attachment3_ext : int
+val gl_color_attachment4_ext : int
+val gl_color_attachment5_ext : int
+val gl_color_attachment6_ext : int
+val gl_color_attachment7_ext : int
+val gl_color_attachment8_ext : int
+val gl_color_attachment9_ext : int
+val gl_color_attachment10_ext : int
+val gl_color_attachment11_ext : int
+val gl_color_attachment12_ext : int
+val gl_color_attachment13_ext : int
+val gl_color_attachment14_ext : int
+val gl_color_attachment15_ext : int
+val gl_depth_attachment_ext : int
+val gl_stencil_attachment_ext : int
+val gl_framebuffer_ext : int
+val gl_renderbuffer_ext : int
+val gl_renderbuffer_width_ext : int
+val gl_renderbuffer_height_ext : int
+val gl_renderbuffer_internal_format_ext : int
+val gl_stencil_index1_ext : int
+val gl_stencil_index4_ext : int
+val gl_stencil_index8_ext : int
+val gl_stencil_index16_ext : int
+val gl_renderbuffer_red_size_ext : int
+val gl_renderbuffer_green_size_ext : int
+val gl_renderbuffer_blue_size_ext : int
+val gl_renderbuffer_alpha_size_ext : int
+val gl_renderbuffer_depth_size_ext : int
+val gl_renderbuffer_stencil_size_ext : int
+val gl_half_float_nv : int
+val gl_half_float_arb : int
+val gl_renderbuffer_samples_ext : int
+val gl_framebuffer_incomplete_multisample_ext : int
+val gl_max_samples_ext : int
+val gl_draw_framebuffer_binding_ext : int
+val gl_read_framebuffer_ext : int
+val gl_draw_framebuffer_ext : int
+val gl_read_framebuffer_binding_ext : int
+val gl_rgba32ui_ext : int
+val gl_rgb32ui_ext : int
+val gl_alpha32ui_ext : int
+val gl_intensity32ui_ext : int
+val gl_luminance32ui_ext : int
+val gl_luminance_alpha32ui_ext : int
+val gl_rgba16ui_ext : int
+val gl_rgb16ui_ext : int
+val gl_alpha16ui_ext : int
+val gl_intensity16ui_ext : int
+val gl_luminance16ui_ext : int
+val gl_luminance_alpha16ui_ext : int
+val gl_rgba8ui_ext : int
+val gl_rgb8ui_ext : int
+val gl_alpha8ui_ext : int
+val gl_intensity8ui_ext : int
+val gl_luminance8ui_ext : int
+val gl_luminance_alpha8ui_ext : int
+val gl_rgba32i_ext : int
+val gl_rgb32i_ext : int
+val gl_alpha32i_ext : int
+val gl_intensity32i_ext : int
+val gl_luminance32i_ext : int
+val gl_luminance_alpha32i_ext : int
+val gl_rgba16i_ext : int
+val gl_rgb16i_ext : int
+val gl_alpha16i_ext : int
+val gl_intensity16i_ext : int
+val gl_luminance16i_ext : int
+val gl_luminance_alpha16i_ext : int
+val gl_rgba8i_ext : int
+val gl_rgb8i_ext : int
+val gl_alpha8i_ext : int
+val gl_intensity8i_ext : int
+val gl_luminance8i_ext : int
+val gl_luminance_alpha8i_ext : int
+val gl_red_integer_ext : int
+val gl_green_integer_ext : int
+val gl_blue_integer_ext : int
+val gl_alpha_integer_ext : int
+val gl_rgb_integer_ext : int
+val gl_rgba_integer_ext : int
+val gl_bgr_integer_ext : int
+val gl_bgra_integer_ext : int
+val gl_luminance_integer_ext : int
+val gl_luminance_alpha_integer_ext : int
+val gl_rgba_integer_mode_ext : int
+val gl_texture_1d_array_ext : int
+val gl_proxy_texture_1d_array_ext : int
+val gl_texture_2d_array_ext : int
+val gl_proxy_texture_2d_array_ext : int
+val gl_texture_binding_1d_array_ext : int
+val gl_texture_binding_2d_array_ext : int
+val gl_max_array_texture_layers_ext : int
+val gl_compare_ref_depth_to_texture_ext : int
+val gl_depth_stencil_ext : int
+val gl_unsigned_int_24_8_ext : int
+val gl_depth24_stencil8_ext : int
+val gl_texture_stencil_size_ext : int
+val gl_compressed_red_rgtc1_ext : int
+val gl_compressed_signed_red_rgtc1_ext : int
+val gl_compressed_red_green_rgtc2_ext : int
+val gl_compressed_signed_red_green_rgtc2_ext : int
+val gl_transform_feedback_buffer_ext : int
+val gl_transform_feedback_buffer_start_ext : int
+val gl_transform_feedback_buffer_size_ext : int
+val gl_transform_feedback_buffer_binding_ext : int
+val gl_interleaved_attribs_ext : int
+val gl_separate_attribs_ext : int
+val gl_primitives_generated_ext : int
+val gl_transform_feedback_primitives_written_ext : int
+val gl_rasterizer_discard_ext : int
+val gl_max_transform_feedback_interleaved_components_ext : int
+val gl_max_transform_feedback_separate_attribs_ext : int
+val gl_max_transform_feedback_separate_components_ext : int
+val gl_transform_feedback_varyings_ext : int
+val gl_transform_feedback_buffer_mode_ext : int
+val gl_transform_feedback_varying_max_length_ext : int
+val gl_vertex_array_binding_apple : int
+val gl_framebuffer_srgb_ext : int
+val gl_framebuffer_srgb_capable_ext : int
 external glAccum : int -> float -> unit = "glstub_glAccum" "glstub_glAccum"
 external glActiveStencilFaceEXT : int -> unit
   = "glstub_glActiveStencilFaceEXT" "glstub_glActiveStencilFaceEXT"
@@ -3097,6 +3118,8 @@ external glAttachObjectARB : int -> int -> unit = "glstub_glAttachObjectARB"
 external glAttachShader : int -> int -> unit = "glstub_glAttachShader"
   "glstub_glAttachShader"
 external glBegin : int -> unit = "glstub_glBegin" "glstub_glBegin"
+external glBeginConditionalRenderNV : int -> int -> unit
+  = "glstub_glBeginConditionalRenderNV" "glstub_glBeginConditionalRenderNV"
 external glBeginFragmentShaderATI : unit -> unit
   = "glstub_glBeginFragmentShaderATI" "glstub_glBeginFragmentShaderATI"
 external glBeginOcclusionQueryNV : int -> unit
@@ -3107,6 +3130,8 @@ external glBeginQueryARB : int -> int -> unit = "glstub_glBeginQueryARB"
   "glstub_glBeginQueryARB"
 external glBeginSceneEXT : unit -> unit = "glstub_glBeginSceneEXT"
   "glstub_glBeginSceneEXT"
+external glBeginTransformFeedbackEXT : int -> unit
+  = "glstub_glBeginTransformFeedbackEXT" "glstub_glBeginTransformFeedbackEXT"
 external glBeginTransformFeedbackNV : int -> unit
   = "glstub_glBeginTransformFeedbackNV" "glstub_glBeginTransformFeedbackNV"
 external glBeginVertexShaderEXT : unit -> unit
@@ -3119,10 +3144,16 @@ external glBindBuffer : int -> int -> unit = "glstub_glBindBuffer"
   "glstub_glBindBuffer"
 external glBindBufferARB : int -> int -> unit = "glstub_glBindBufferARB"
   "glstub_glBindBufferARB"
+external glBindBufferBaseEXT : int -> int -> int -> unit
+  = "glstub_glBindBufferBaseEXT" "glstub_glBindBufferBaseEXT"
 external glBindBufferBaseNV : int -> int -> int -> unit
   = "glstub_glBindBufferBaseNV" "glstub_glBindBufferBaseNV"
+external glBindBufferOffsetEXT : int -> int -> int -> int -> unit
+  = "glstub_glBindBufferOffsetEXT" "glstub_glBindBufferOffsetEXT"
 external glBindBufferOffsetNV : int -> int -> int -> int -> unit
   = "glstub_glBindBufferOffsetNV" "glstub_glBindBufferOffsetNV"
+external glBindBufferRangeEXT : int -> int -> int -> int -> int -> unit
+  = "glstub_glBindBufferRangeEXT" "glstub_glBindBufferRangeEXT"
 external glBindBufferRangeNV : int -> int -> int -> int -> int -> unit
   = "glstub_glBindBufferRangeNV" "glstub_glBindBufferRangeNV"
 external glBindFragDataLocationEXT : int -> int -> string -> unit
@@ -3187,6 +3218,8 @@ external glBufferData : int -> int -> 'a -> int -> unit
   = "glstub_glBufferData" "glstub_glBufferData"
 external glBufferDataARB : int -> int -> 'a -> int -> unit
   = "glstub_glBufferDataARB" "glstub_glBufferDataARB"
+external glBufferParameteriAPPLE : int -> int -> int -> unit
+  = "glstub_glBufferParameteriAPPLE" "glstub_glBufferParameteriAPPLE"
 external glBufferSubData : int -> int -> int -> 'a -> unit
   = "glstub_glBufferSubData" "glstub_glBufferSubData"
 external glBufferSubDataARB : int -> int -> int -> 'a -> unit
@@ -3617,6 +3650,8 @@ external glEnableVertexAttribArrayARB : int -> unit
   = "glstub_glEnableVertexAttribArrayARB"
   "glstub_glEnableVertexAttribArrayARB"
 external glEnd : unit -> unit = "glstub_glEnd" "glstub_glEnd"
+external glEndConditionalRenderNV : unit -> unit
+  = "glstub_glEndConditionalRenderNV" "glstub_glEndConditionalRenderNV"
 external glEndFragmentShaderATI : unit -> unit
   = "glstub_glEndFragmentShaderATI" "glstub_glEndFragmentShaderATI"
 external glEndList : unit -> unit = "glstub_glEndList" "glstub_glEndList"
@@ -3627,6 +3662,8 @@ external glEndQueryARB : int -> unit = "glstub_glEndQueryARB"
   "glstub_glEndQueryARB"
 external glEndSceneEXT : unit -> unit = "glstub_glEndSceneEXT"
   "glstub_glEndSceneEXT"
+external glEndTransformFeedbackEXT : unit -> unit
+  = "glstub_glEndTransformFeedbackEXT" "glstub_glEndTransformFeedbackEXT"
 external glEndTransformFeedbackNV : unit -> unit
   = "glstub_glEndTransformFeedbackNV" "glstub_glEndTransformFeedbackNV"
 external glEndVertexShaderEXT : unit -> unit = "glstub_glEndVertexShaderEXT"
@@ -3672,6 +3709,9 @@ external glFinishObjectAPPLE : int -> int -> unit
 external glFinishTextureSUNX : unit -> unit = "glstub_glFinishTextureSUNX"
   "glstub_glFinishTextureSUNX"
 external glFlush : unit -> unit = "glstub_glFlush" "glstub_glFlush"
+external glFlushMappedBufferRangeAPPLE : int -> int -> int -> unit
+  = "glstub_glFlushMappedBufferRangeAPPLE"
+  "glstub_glFlushMappedBufferRangeAPPLE"
 external glFlushPixelDataRangeNV : int -> unit
   = "glstub_glFlushPixelDataRangeNV" "glstub_glFlushPixelDataRangeNV"
 external glFlushRasterSGIX : unit -> unit = "glstub_glFlushRasterSGIX"
@@ -4013,6 +4053,8 @@ external glGetTexParameterPointervAPPLE : int -> int -> 'a -> unit
 val glGetTexParameterfv : int -> int -> float array -> unit
 val glGetTexParameteriv : int -> int -> int array -> unit
 val glGetTrackMatrixivNV : int -> int -> int -> int array -> unit
+val glGetTransformFeedbackVaryingEXT :
+  int -> int -> int -> int array -> int array -> int array -> string -> unit
 val glGetTransformFeedbackVaryingNV : int -> int -> int array -> unit
 external glGetUniformBufferSizeEXT : int -> int -> int
   = "glstub_glGetUniformBufferSizeEXT" "glstub_glGetUniformBufferSizeEXT"
@@ -5117,6 +5159,10 @@ external glTextureRangeAPPLE : int -> int -> 'a -> unit
 external glTrackMatrixNV : int -> int -> int -> int -> unit
   = "glstub_glTrackMatrixNV" "glstub_glTrackMatrixNV"
 val glTransformFeedbackAttribsNV : int -> int array -> int -> unit
+external glTransformFeedbackVaryingsEXT :
+  int -> int -> string array -> int -> unit
+  = "glstub_glTransformFeedbackVaryingsEXT"
+  "glstub_glTransformFeedbackVaryingsEXT"
 val glTransformFeedbackVaryingsNV : int -> int -> int array -> int -> unit
 external glTranslated : float -> float -> float -> unit
   = "glstub_glTranslated" "glstub_glTranslated"
