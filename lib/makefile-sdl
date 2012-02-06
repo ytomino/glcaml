@@ -69,11 +69,10 @@ OCAMLCFLAGS:=-w L
 ifneq ($(ComSpec),)
 CFLAGS:=-O2
 else
-ifneq ($(FRAMEWORK),)
+ifneq ($(FRAMEWORKS),)
 CFLAGS:=-O2 -framework SDL
 else
-PORTINCDIR=$(shell port dir libsdl)/../../../../../../../../include
-CFLAGS:=-O2 -I$(PORTINCDIR)
+CFLAGS:=-O2
 endif
 endif
 
@@ -85,8 +84,11 @@ else
 ifneq ($(FRAMEWORKS),)
 OCAMLMKLIBFLAGS=-lSDLmain -framework SDL -framework Cocoa
 else
-PORTLIBDIR=$(shell port dir libsdl)/../../../../../../../../lib
-OCAMLMKLIBFLAGS=-L$(PORTLIBDIR) -lSDLmain -lSDL -framework Cocoa
+ifneq ($(Apple_PubSub_Socket_Render),)
+OCAMLMKLIBFLAGS=-lSDLmain -lSDL -framework Cocoa
+else
+OCAMLMKLIBFLAGS=-lSDLmain -lSDL
+endif
 endif
 endif
 ########

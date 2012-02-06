@@ -72,8 +72,7 @@ else
 ifneq ($(FRAMEWORKS),)
 CFLAGS:=-O2 -W -Wall -DUSE_FRAMEWORK -I$(FRAMEWORKS)/SDL.framework/Headers -framework SDL_mixer
 else
-PORTINCDIR=$(shell port dir libsdl_mixer)/../../../../../../../../include
-CFLAGS:=-O2 -W -Wall -I$(PORTINCDIR)
+CFLAGS:=-O2 -W -Wall
 endif
 endif
 
@@ -85,8 +84,7 @@ else
 ifneq ($(FRAMEWORKS),)
 OCAMLMKLIBFLAGS=-framework SDL_mixer
 else
-PORTLIBDIR=$(shell port dir libsdl_mixer)/../../../../../../../../lib
-OCAMLMKLIBFLAGS=-L$(PORTLIBDIR) -lSDL_mixer -lSDL
+OCAMLMKLIBFLAGS=-lSDL_mixer -lSDL
 endif
 endif
 ########

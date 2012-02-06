@@ -25,6 +25,31 @@ make install # copy files from $(BUILDDIR) to $(DESTDIR)
 make uninstall # remove files in $(DESTDIR)
 
 
+make options
+------------
+
+BUILDDIR=./build (default)
+
+	working directory
+
+DESTDIR=`ocamlc -where` (default)
+
+	install directory
+
+FRAMEWORKS=not empty or empty (default)
+
+	not empty       -> use SDL.Framework on Mac OS X
+	empty (default) -> use libraries in /usr/local/lib
+
+LOADER=glew, dynamic, static or empty (default)
+
+	glew            -> use GLEW to load OpenGL functions
+	dynamic         -> use dlopen/dlsym (LoadLibrary/GetProcAddress on Windows)
+	static          -> try static linking (your linker may report errors)
+	empty (default) -> mixed mode, static linking for basic functions
+	                   and dynamic linking for extensions
+
+
 installation files
 ------------------
 

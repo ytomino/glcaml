@@ -70,8 +70,7 @@ else
 ifneq ($(FRAMEWORKS),)
 CFLAGS:=-O2 -W -Wall -DUSE_FRAMEWORK -I$(FRAMEWORKS)/SDL.framework/Headers -framework SDL_ttf
 else
-PORTINCDIR=$(shell port dir libsdl_ttf)/../../../../../../../../include
-CFLAGS:=-O2 -W -Wall -I$(PORTINCDIR)
+CFLAGS:=-O2 -W -Wall
 endif
 endif
 
@@ -83,8 +82,7 @@ else
 ifneq ($(FRAMEWORKS),)
 OCAMLMKLIBFLAGS=-framework SDL_ttf
 else
-PORTLIBDIR=$(shell port dir libsdl_ttf)/../../../../../../../../lib
-OCAMLMKLIBFLAGS=-L$(PORTLIBDIR) -lSDL_ttf -lSDL
+OCAMLMKLIBFLAGS=-lSDL_ttf -lSDL
 endif
 endif
 ########
