@@ -108,6 +108,9 @@
 	void glSeparableFilter2D (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* row, const GLvoid* column)
 	void glGetSeparableFilter (GLenum target, GLenum format, GLenum type, GLvoid* row, GLvoid* column, GLvoid* span)
 	void glGetMinmax (GLenum target, GLboolean reset, GLenum format, GLenum types, GLvoid* values)
+
+#begin extension
+
 --GL_ARB_matrix_palette
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/matrix_palette.txt
 	GL_MATRIX_PALETTE_ARB 0x8840
@@ -3160,6 +3163,8 @@
 --http://msdn.microsoft.com/library/default.asp?url=/library/en-us/opengl/glfunc01_16zy.asp
 	void glAddSwapHintRectWIN (GLint x, GLint y, GLsizei width, GLsizei height)
 
+#end extension
+
 --GL_VERSION_1_1
 	 GL_ACCUM 0x0100
 	 GL_LOAD 0x0101
@@ -4587,14 +4592,17 @@
 	void glUniformMatrix3x4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x2fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x3fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+#begin extension
 --GL_ARB_vertex_array_object
 	void glBindVertexArray (GLuint array)
 	void glDeleteVertexArrays (GLsizei n, GLuint* arrays)
 	void glGenVertexArrays (GLsizei n, GLuint* arrays)
 	GLboolean glIsVertexArray (GLuint array)
+#end extension
 
 --GL_VERSION_3_0
 --http://www.opengl.org/registry/doc/glspec30.20080923.pdf
+#begin extension
 --GL_EXT_gpu_shader4
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_gpu_shader4.txt
 	GL_SAMPLER_1D_ARRAY_EXT 0x8DC0
@@ -4973,6 +4981,9 @@
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_framebuffer_sRGB.txt
 	GL_FRAMEBUFFER_SRGB_EXT 0x8DB9
 	GL_FRAMEBUFFER_SRGB_CAPABLE_EXT 0x8DBA
+#end extension
 
 --GLEW
+#begin extension
 	GLint glewInit (void)
+#end extension

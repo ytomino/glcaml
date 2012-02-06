@@ -10,9 +10,21 @@ else
 TARGET=$(shell gcc -dumpmachine)
 endif
 
-ifneq ($(GLEW),)
-CFLAGS=-DUSE_GLEW
+CFLAGS=-Wall -W -Wno-unused-parameter
+
+ifeq ($(LOADER),glew)
+CFLAGS+=-DUSE_GLEW
 CLIBS=GLEW
+else
+ifeq ($(LOADER),dynamic)
+CFLAGS+=-DUSE_DYNAMIC -DUSE_DYNAMIC_EXT # all dynamic
+else
+ifeq ($(LOADER),static)
+# all static
+else
+CFLAGS+=-DUSE_DYNAMIC_EXT # mixed mode
+endif
+endif
 endif
 
 ifdef NOSDL

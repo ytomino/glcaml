@@ -5,10 +5,15 @@ MAKE=make
 .PHONY: all sdl sdlmixer nosdl clean htmldoc
 
 # Uncomment the following line if use glew
-# export GLEW=true
+# export LOADER=glew
+# Uncomment the following line if use dynamic linking at all
+# export LOADER=dynamic
+# Uncomment the following line if use static linking at all
+# export LOADER=static
+# default is mixed mode, use dynamic linking for only extensions
 
 ALLTARGETS=sdl sdlmixer
-ifeq ($(GLEW),)
+ifneq ($(LOADER),glew)
 ALLTARGETS+=nosdl
 endif
 
@@ -37,7 +42,7 @@ sdl:
 	$(MAKE) -f makefile.inc MLFILE=lesson08
 	$(MAKE) -f makefile.inc MLFILE=lesson09
 
-ifeq ($(GLEW),)
+ifneq ($(LOADER),glew)
 nosdl:	
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim

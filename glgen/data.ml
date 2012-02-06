@@ -21,6 +21,7 @@ type glparameter =
 
 type glfunction =
   {
+    extension : bool;
     fname : string;
     freturn: glparameter;
     fparams: glparameter list
@@ -58,8 +59,9 @@ let mktype2 name =
 let mktype3 name =
   { pname = name; pconst = true; pptr = classify_ptr name }
 
-let mkfunc r f p =
+let mkfunc extension r f p =
   {
+    extension = extension;
     fname = f;
     freturn = mktype1 r;
     fparams = p
