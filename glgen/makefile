@@ -16,4 +16,5 @@ all:
 	cp output/* ../lib
 	
 clean:
-	rm -f *.o *.cmi *.cmo glparse.mli glparse.ml gllex.ml glgen output/*	
+	-rm -f *.o *.cmi *.cmo glparse.mli glparse.ml gllex.ml glgen output/*
+	-rmdir output

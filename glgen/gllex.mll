@@ -14,7 +14,8 @@ let glfunc = 'g''l' word+
 let glconstant = 'G''L''_'['a'-'z''A'-'Z''0'-'9''_']*
 let gltype = 'G''L' word+ ['*']* | 'v''o''i''d' ['*']* 
 let glpname = ['a'-'z']+ ['a'-'z''A'-'Z']* ['a'-'z''A'-'Z''0'-'9']*
-
+let begin_extension = '#''b''e''g''i''n'' ''e''x''t''e''n''s''i''o''n'
+let end_extension = '#''e''n''d'' ''e''x''t''e''n''s''i''o''n'
 
 rule token = parse
 	| '\n' { incr line; token lexbuf }
@@ -29,6 +30,8 @@ rule token = parse
 	| ')' { CLOSE }
 	| ',' { COMMA }
 	| number as n 	{ NUMBER (Int32.of_string n) }
+	| begin_extension { BEGIN_EXTENSION }
+	| end_extension { END_EXTENSION }
 	| eof { EOF }
 	| _ { failwith((Lexing.lexeme lexbuf) ^ 
         ": Error at line " ^ string_of_int !line)}

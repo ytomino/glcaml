@@ -3,10 +3,15 @@ MAKE=make
 .PHONY: all nosdl sdl sdlmixer sdlttf clean htmldoc
 
 # Uncomment the following line if use glew
-# export GLEW=true
+# export LOADER=glew
+# Uncomment the following line if use dynamic linking at all
+# export LOADER=dynamic
+# Uncomment the following line if use static linking at all
+# export LOADER=static
+# default is mixed mode, use dynamic linking for only extensions
 
 ALLTARGETS=sdl sdlmixer sdlttf
-ifeq ($(GLEW),)
+ifneq ($(LOADER),glew)
 ALLTARGETS+=nosdl
 endif
 
@@ -15,7 +20,7 @@ all: build/glcaml.cma $(ALLTARGETS)
 build/glcaml.cma:
 	make -C lib -f makefile install DESTDIR=$(abspath build)
 
-ifeq ($(GLEW),)
+ifneq ($(LOADER),glew)
 nosdl:
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=accum
 	$(MAKE) -f makefile.inc NOSDL=true MLFILE=prim

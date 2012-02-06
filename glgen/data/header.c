@@ -35,8 +35,28 @@
 #include <caml/callback.h>
 #include <caml/bigarray.h>
 
+#if defined(USE_GLEW) && defined(USE_DYNAMIC_EXT)
+#error "bad option"
+#endif
+#if defined(USE_DYNAMIC) && !defined(USE_DYNAMIC_EXT)
+#error "bad option"
+#endif
+
 #if defined(USE_GLEW)
 #include <GL/glew.h>
+#elif !defined(USE_DYNAMIC)
+#ifdef __APPLE__
+#include <OpenGL/gl.h>
+#else
+#include <GL/gl.h>
+#endif
+#if !defined(USE_DYNAMIC_EXT)
+#ifdef __APPLE__
+#include <OpenGL/glext.h>
+#else
+#include <GL/glext.h>
+#endif
+#endif
 #endif
 
 typedef unsigned int GLenum;
@@ -61,13 +81,18 @@ typedef char GLchar;
 typedef ptrdiff_t GLsizeiptr;
 typedef ptrdiff_t GLintptr;
 #endif
-typedef char* GLstring;
+typedef const unsigned char* GLstring;
 
 #if defined(__GLEW_H__)
 #define DECLARE_FUNCTION(func, args, ret)
 #define LOAD_FUNCTION(func)
 #define CALL_FUNCTION(func) func
+#define DECLARE_FUNCTION_EXT(func, args, ret)
+#define LOAD_FUNCTION_EXT(func)
+#define CALL_FUNCTION_EXT(func) func
 #else
+
+#if defined(USE_DYNAMIC_EXT)
 
 #ifdef _WIN32
 #include <windows.h>
@@ -134,12 +159,12 @@ static void *get_proc_address(char *fname)
 }
 #endif
 
-#define DECLARE_FUNCTION(func, args, ret)                               \
+#define DECLARE_FUNCTION_EXT(func, args, ret)                           \
 typedef ret APIENTRY (*pstub_##func)args;                               \
 static pstub_##func stub_##func = NULL;                                 \
 static int loaded_##func = 0;
 
-#define LOAD_FUNCTION(func)                                             \
+#define LOAD_FUNCTION_EXT(func)                                         \
         if(!loaded_##func)                                              \
         {                                                               \
                 init_lib ();                                            \
@@ -157,7 +182,23 @@ static int loaded_##func = 0;
                 }                                                       \
         }
 
-#define CALL_FUNCTION(func) (*stub_##func)
+#define CALL_FUNCTION_EXT(func) (*stub_##func)
+
+#else
+#define DECLARE_FUNCTION_EXT(func, args, ret)
+#define LOAD_FUNCTION_EXT(func)
+#define CALL_FUNCTION_EXT(func) func
+#endif
+
+#if defined(USE_DYNAMIC)
+#define DECLARE_FUNCTION DECLARE_FUNCTION_EXT
+#define LOAD_FUNCTION LOAD_FUNCTION_EXT
+#define CALL_FUNCTION CALL_FUNCTION_EXT
+#else
+#define DECLARE_FUNCTION(func, args, ret)
+#define LOAD_FUNCTION(func)
+#define CALL_FUNCTION(func) func
+#endif
 
 #endif
 

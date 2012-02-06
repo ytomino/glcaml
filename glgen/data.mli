@@ -3,6 +3,7 @@ type glconst = NumericalValue of int | Reference of string
 type glconstant = { cname : string; cval : glconst; }
 type glparameter = { pname : string; pconst : bool; pptr : vartype; }
 type glfunction = {
+  extension : bool;
   fname : string;
   freturn : glparameter;
   fparams : glparameter list;
@@ -13,7 +14,7 @@ val mkconst2 : string -> string -> glconstant
 val mktype1 : string -> glparameter
 val mktype2 : string -> glparameter
 val mktype3 : string -> glparameter
-val mkfunc : string -> string -> glparameter list -> glfunction
+val mkfunc : bool -> string -> string -> glparameter list -> glfunction
 val pvartype : vartype -> string
 val pconst : glconstant -> unit
 val pparam : glparameter -> unit
@@ -21,7 +22,8 @@ val pfunc : glfunction -> unit
 val qconstants : glconstant list ref
 val qfunctions : glfunction list ref
 val val_translate : string -> string -> string
+val const_qualifier: bool -> string;;
 val translate_val : string -> string
 val translate_ptr : string -> string -> string
-val translate_dblptr : string -> string -> string
+val translate_dblptr : bool -> string -> string -> string
 val translate_ml : string -> string

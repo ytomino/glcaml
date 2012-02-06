@@ -72,18 +72,38 @@ OCAMLMKLIBFLAGS=
 CCLIB=
 FLFLAGS:=
 
-ifneq ($(GLEW),)
+ifeq ($(LOADER),glew)
 CFLAGS+=-DUSE_GLEW
 ifneq ($(ComSpec),)
 OCAMLMKLIBFLAGS+=-lGLEW
 CCLIB=-cclib -lGLEW
 FLFLAGS=-defaultlib -lGLEW
 else
-OCAMLMKLIBFLAGS+=-framework SDL -framework OpenGL
-ifneq ($(FRAMEWORK),)
-OCAMLMKLIBFLAGS+=-framework SDL -framework GLEW
+ifneq ($(FRAMEWORKS),)
+OCAMLMKLIBFLAGS+=-framework GLEW
 else
 OCAMLMKLIBFLAGS+=-lGLEW
+endif
+endif
+else
+ifeq ($(LOADER),dynamic)
+CFLAGS+=-DUSE_DYNAMIC -DUSE_DYNAMIC_EXT # all dynamic
+else
+ifeq ($(LOADER),static)
+# all static
+else
+CFLAGS+=-DUSE_DYNAMIC_EXT # mixed mode
+endif
+ifneq ($(ComSpec),)
+OCAMLMKLIBFLAGS=-lopengl32
+CCLIB=-cclib -lopengl32
+FLFLAGS:=-defaultlib -lopengl32
+else
+ifneq ($(Apple_PubSub_Socket_Render),)
+OCAMLMKLIBFLAGS+=-framework OpenGL
+else
+OCAMLMKLIBFLAGS+=-lGL
+endif
 endif
 endif
 endif

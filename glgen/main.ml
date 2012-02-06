@@ -72,8 +72,9 @@ let make_stub_return f =
 
 (* Make C stub code typedef declarations for a given function *)
 let make_typedef_decl f =
-  let arglist = flatten (List.map (fun i -> i.pname) f.fparams) ", " in
-  (sprintf "DECLARE_FUNCTION(%s,(%s),%s);\n" f.fname arglist f.freturn.pname)
+  let ext = if f.extension then "_EXT" else "" in
+  let arglist = flatten (List.map (fun i -> const_qualifier i.pconst ^ i.pname) f.fparams) ", " in
+  (sprintf "DECLARE_FUNCTION%s(%s,(%s),%s);\n" ext f.fname arglist f.freturn.pname)
 
 (* Make C stub function call *)
 let make_func_call f =
@@ -84,19 +85,22 @@ let make_func_call f =
     else
       make_arg_list 0 l "lv"
   in
-  let return =
-  if (f.freturn.pptr = VOID) then "" else "ret = "
-  in
-  (sprintf "\tLOAD_FUNCTION(%s);\n"  f.fname) ^
-  (sprintf "\t%sCALL_FUNCTION(%s)(%s);\n"  return f.fname args)
+  let ext = if f.extension then "_EXT" else "" in
+  let return = if f.freturn.pptr = VOID then "" else "ret = " in
+  (sprintf "\tLOAD_FUNCTION%s(%s);\n" ext f.fname) ^
+  (sprintf "\t%sCALL_FUNCTION%s(%s)(%s);\n" return ext f.fname args)
 
 (* Load ML value into C type *)
 let ml_var_to_c i p =
   match p.pptr with
-  | VOID    -> ""
-  | VARIABLE  ->  sprintf "\t%s lv%d = %s(v%d);\n" p.pname i (translate_val p.pname) i
-  | POINTER   ->  sprintf "\t%s lv%d = %s;\n" p.pname i (translate_ptr p.pname (sprintf "v%d" i))
-  | DOUBLEPOINTER -> sprintf "\t%s lv%d = %s;\n" p.pname i (translate_dblptr p.pname (sprintf "v%d" i))
+  | VOID ->
+    ""
+  | VARIABLE ->
+    sprintf "\t%s lv%d = %s(v%d);\n" p.pname i (translate_val p.pname) i
+  | POINTER ->
+    sprintf "\t%s%s lv%d = %s;\n" (const_qualifier p.pconst) p.pname i (translate_ptr p.pname (sprintf "v%d" i))
+  | DOUBLEPOINTER ->
+    sprintf "\t%s%s lv%d = %s;\n" (const_qualifier p.pconst) p.pname i (translate_dblptr p.pconst p.pname (sprintf "v%d" i))
 
 (* Convert all parameters from ML to C *)
 let make_param_decl f =

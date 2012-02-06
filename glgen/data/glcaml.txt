@@ -108,6 +108,9 @@
 	void glSeparableFilter2D (GLenum target, GLenum internalformat, GLsizei width, GLsizei height, GLenum format, GLenum type, const GLvoid* row, const GLvoid* column)
 	void glGetSeparableFilter (GLenum target, GLenum format, GLenum type, GLvoid* row, GLvoid* column, GLvoid* span)
 	void glGetMinmax (GLenum target, GLboolean reset, GLenum format, GLenum types, GLvoid* values)
+
+#begin extension
+
 --GL_ARB_matrix_palette
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/matrix_palette.txt
 	GL_MATRIX_PALETTE_ARB 0x8840
@@ -597,6 +600,16 @@
 	void glGetLocalConstantBooleanvEXT (GLuint id, GLenum value, GLboolean* data)
 	void glGetLocalConstantIntegervEXT (GLuint id, GLenum value, GLint* data)
 	void glGetLocalConstantFloatvEXT (GLuint id, GLenum value, GLfloat* data)
+--GL_KTX_buffer_region
+--	GL_KTX_FRONT_REGION 0x0
+--	GL_KTX_BACK_REGION 0x1
+--	GL_KTX_Z_REGION 0x2
+--	GL_KTX_STENCIL_REGION 0x3
+--	GLuint glBufferRegionEnabledEXT (void)
+--	GLuint glNewBufferRegionEXT (GLenum region)
+--	void glDeleteBufferRegionEXT (GLenum region)
+--	void glReadBufferRegionEXT (GLuint region, GLint x, GLint y, GLsizei width, GLsizei height)
+--	void glDrawBufferRegionEXT (GLuint region, GLint x, GLint y, GLsizei width, GLsizei height, GLint xDest, GLint yDest)
 --GL_NV_fragment_program2
 --http://www.nvidia.com/dev_content/nvopenglspecs/GL_NV_fragment_program2.txt
 	GL_MAX_PROGRAM_EXEC_INSTRUCTIONS_NV 0x88F4
@@ -678,17 +691,9 @@
 	GL_TEXTURE_RANGE_POINTER_APPLE 0x85B8
 	void glTextureRangeAPPLE (GLenum target, GLsizei length, GLvoid* pointer)
 	void glGetTexParameterPointervAPPLE (GLenum target, GLenum pname, GLvoid** params)
-
 --GL_APPLE_transform_hint
 --http://oss.sgi.com/projects/ogl-sample/registry/APPLE/transform_hint.txt
 	GL_TRANSFORM_HINT_APPLE 0x85B1
---GL_APPLE_vertex_array_object
---http://oss.sgi.com/projects/ogl-sample/registry/APPLE/vertex_array_object.txt
-	GL_VERTEX_ARRAY_BINDING_APPLE 0x85B5
-	void glBindVertexArrayAPPLE (GLuint array)
-	void glDeleteVertexArraysAPPLE (GLsizei n, GLuint* arrays)
-	void glGenVertexArraysAPPLE (GLsizei n, GLuint* arrays)
-	GLboolean glIsVertexArrayAPPLE (GLuint array)
 --GL_APPLE_vertex_array_range
 --http://oss.sgi.com/projects/ogl-sample/registry/APPLE/vertex_array_range.txt
 	GL_VERTEX_ARRAY_RANGE_APPLE 0x851D
@@ -704,14 +709,6 @@
 	GL_YCBCR_422_APPLE 0x85B9
 	GL_UNSIGNED_SHORT_8_8_APPLE 0x85BA
 	GL_UNSIGNED_SHORT_8_8_REV_APPLE 0x85BB
---GL_ARB_color_buffer_float
---http://oss.sgi.com/projects/ogl-sample/registry/ARB/color_buffer_float.txt
-	GL_RGBA_FLOAT_MODE_ARB 0x8820
-	GL_CLAMP_VERTEX_COLOR_ARB 0x891A
-	GL_CLAMP_FRAGMENT_COLOR_ARB 0x891B
-	GL_CLAMP_READ_COLOR_ARB 0x891C
-	GL_FIXED_ONLY_ARB 0x891D
-	void glClampColorARB (GLenum target, GLenum clamp)
 --GL_ARB_depth_texture
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/depth_texture.txt
 	GL_DEPTH_COMPONENT16_ARB 0x81A5
@@ -763,9 +760,6 @@
 	GL_FRAGMENT_SHADER_ARB 0x8B30
 	GL_MAX_FRAGMENT_UNIFORM_COMPONENTS_ARB 0x8B49
 	GL_FRAGMENT_SHADER_DERIVATIVE_HINT_ARB 0x8B8B
---GL_ARB_half_float_pixel
---http://oss.sgi.com/projects/ogl-sample/registry/ARB/half_float_pixel.txt
-	GL_HALF_FLOAT_ARB 0x140B
 --GL_ARB_multisample
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/multisample.txt
 	GL_MULTISAMPLE_ARB 0x809D
@@ -864,7 +858,7 @@
 	void glGetUniformfvARB (GLuint programObj, GLint location, GLfloat* params)
 	void glGetUniformivARB (GLuint programObj, GLint location, GLint* params)
 	void glLinkProgramARB (GLuint programObj)
-	void glShaderSourceARB (GLuint shaderObj, GLsizei count, GLchar** string, GLint* length)
+	void glShaderSourceARB (GLuint shaderObj, GLsizei count, const GLchar** string, GLint* length)
 	void glUniform1fARB (GLint location, GLfloat v0)
 	void glUniform1fvARB (GLint location, GLsizei count, GLfloat* value)
 	void glUniform1iARB (GLint location, GLint v0)
@@ -966,28 +960,6 @@
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/texture_env_dot3.txt
 	GL_DOT3_RGB_ARB 0x86AE
 	GL_DOT3_RGBA_ARB 0x86AF
---GL_ARB_texture_float
---http://oss.sgi.com/projects/ogl-sample/registry/ARB/texture_float.txt
-	GL_RGBA32F_ARB 0x8814
-	GL_RGB32F_ARB 0x8815
-	GL_ALPHA32F_ARB 0x8816
-	GL_INTENSITY32F_ARB 0x8817
-	GL_LUMINANCE32F_ARB 0x8818
-	GL_LUMINANCE_ALPHA32F_ARB 0x8819
-	GL_RGBA16F_ARB 0x881A
-	GL_RGB16F_ARB 0x881B
-	GL_ALPHA16F_ARB 0x881C
-	GL_INTENSITY16F_ARB 0x881D
-	GL_LUMINANCE16F_ARB 0x881E
-	GL_LUMINANCE_ALPHA16F_ARB 0x881F
-	GL_TEXTURE_RED_TYPE_ARB 0x8C10
-	GL_TEXTURE_GREEN_TYPE_ARB 0x8C11
-	GL_TEXTURE_BLUE_TYPE_ARB 0x8C12
-	GL_TEXTURE_ALPHA_TYPE_ARB 0x8C13
-	GL_TEXTURE_LUMINANCE_TYPE_ARB 0x8C14
-	GL_TEXTURE_INTENSITY_TYPE_ARB 0x8C15
-	GL_TEXTURE_DEPTH_TYPE_ARB 0x8C16
-	GL_UNSIGNED_NORMALIZED_ARB 0x8C17
 --GL_ARB_texture_mirrored_repeat
 --http://oss.sgi.com/projects/ogl-sample/registry/ARB/texture_mirrored_repeat.txt
 	GL_MIRRORED_REPEAT_ARB 0x8370
@@ -1517,14 +1489,6 @@
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/cull_vertex.txt
 	void glCullParameterdvEXT (GLenum pname, GLdouble* params)
 	void glCullParameterfvEXT (GLenum pname, GLfloat* params)
---GL_EXT_draw_buffers2
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_draw_buffers2.txt
-	void glColorMaskIndexedEXT (GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
-	void glGetBooleanIndexedvEXT (GLenum target, GLuint index, GLboolean* data)
-	void glGetIntegerIndexedvEXT (GLenum target, GLuint index, GLint* data)
-	void glEnableIndexedEXT (GLenum target, GLuint index)
-	void glDisableIndexedEXT (GLenum target, GLuint index)
-	GLboolean glIsEnabledIndexedEXT (GLenum target, GLuint index)
 --GL_EXT_draw_instanced
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_draw_instanced.txt
 	void glDrawArraysInstancedEXT (GLenum mode, GLint start, GLsizei count, GLsizei primcount)
@@ -1563,93 +1527,6 @@
 	void glGetFragmentMaterialfvEXT (GLenum face, GLenum pname, GLfloat* params)
 	void glGetFragmentMaterialivEXT (GLenum face, GLenum pname, GLint* params)
 	void glLightEnviEXT (GLenum pname, GLint param)
---GL_EXT_framebuffer_blit
---http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_blit.txt
-	GL_DRAW_FRAMEBUFFER_BINDING_EXT 0x8CA6
-	GL_READ_FRAMEBUFFER_EXT 0x8CA8
-	GL_DRAW_FRAMEBUFFER_EXT 0x8CA9
-	GL_READ_FRAMEBUFFER_BINDING_EXT 0x8CAA
-	void glBlitFramebufferEXT (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
---GL_EXT_framebuffer_multisample
---http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_multisample.txt
-	GL_RENDERBUFFER_SAMPLES_EXT 0x8CAB
-	void glRenderbufferStorageMultisampleEXT (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
-	GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x8D56
-	GL_MAX_SAMPLES_EXT 0x8D57
---GL_EXT_framebuffer_object
---http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_object.txt
-	GL_INVALID_FRAMEBUFFER_OPERATION_EXT 0x0506
-	GL_MAX_RENDERBUFFER_SIZE_EXT 0x84E8
-	GL_FRAMEBUFFER_BINDING_EXT 0x8CA6
-	GL_RENDERBUFFER_BINDING_EXT 0x8CA7
-	GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT 0x8CD0
-	GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT 0x8CD1
-	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT 0x8CD2
-	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT 0x8CD3
-	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT 0x8CD4
-	GL_FRAMEBUFFER_COMPLETE_EXT 0x8CD5
-	GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT 0x8CD6
-	GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT 0x8CD7
-	GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT 0x8CD9
-	GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT 0x8CDA
-	GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT 0x8CDB
-	GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT 0x8CDC
-	GL_FRAMEBUFFER_UNSUPPORTED_EXT 0x8CDD
-	GL_MAX_COLOR_ATTACHMENTS_EXT 0x8CDF
-	GL_COLOR_ATTACHMENT0_EXT 0x8CE0
-	GL_COLOR_ATTACHMENT1_EXT 0x8CE1
-	GL_COLOR_ATTACHMENT2_EXT 0x8CE2
-	GL_COLOR_ATTACHMENT3_EXT 0x8CE3
-	GL_COLOR_ATTACHMENT4_EXT 0x8CE4
-	GL_COLOR_ATTACHMENT5_EXT 0x8CE5
-	GL_COLOR_ATTACHMENT6_EXT 0x8CE6
-	GL_COLOR_ATTACHMENT7_EXT 0x8CE7
-	GL_COLOR_ATTACHMENT8_EXT 0x8CE8
-	GL_COLOR_ATTACHMENT9_EXT 0x8CE9
-	GL_COLOR_ATTACHMENT10_EXT 0x8CEA
-	GL_COLOR_ATTACHMENT11_EXT 0x8CEB
-	GL_COLOR_ATTACHMENT12_EXT 0x8CEC
-	GL_COLOR_ATTACHMENT13_EXT 0x8CED
-	GL_COLOR_ATTACHMENT14_EXT 0x8CEE
-	GL_COLOR_ATTACHMENT15_EXT 0x8CEF
-	GL_DEPTH_ATTACHMENT_EXT 0x8D00
-	GL_STENCIL_ATTACHMENT_EXT 0x8D20
-	GL_FRAMEBUFFER_EXT 0x8D40
-	GL_RENDERBUFFER_EXT 0x8D41
-	GL_RENDERBUFFER_WIDTH_EXT 0x8D42
-	GL_RENDERBUFFER_HEIGHT_EXT 0x8D43
-	GL_RENDERBUFFER_INTERNAL_FORMAT_EXT 0x8D44
-	GL_STENCIL_INDEX1_EXT 0x8D46
-	GL_STENCIL_INDEX4_EXT 0x8D47
-	GL_STENCIL_INDEX8_EXT 0x8D48
-	GL_STENCIL_INDEX16_EXT 0x8D49
-	GL_RENDERBUFFER_RED_SIZE_EXT 0x8D50
-	GL_RENDERBUFFER_GREEN_SIZE_EXT 0x8D51
-	GL_RENDERBUFFER_BLUE_SIZE_EXT 0x8D52
-	GL_RENDERBUFFER_ALPHA_SIZE_EXT 0x8D53
-	GL_RENDERBUFFER_DEPTH_SIZE_EXT 0x8D54
-	GL_RENDERBUFFER_STENCIL_SIZE_EXT 0x8D55
-	void glBindFramebufferEXT (GLenum target, GLuint framebuffer)
-	void glBindRenderbufferEXT (GLenum target, GLuint renderbuffer)
-	GLenum glCheckFramebufferStatusEXT (GLenum target)
-	void glDeleteFramebuffersEXT (GLsizei n, GLuint* framebuffers)
-	void glDeleteRenderbuffersEXT (GLsizei n, GLuint* renderbuffers)
-	void glFramebufferRenderbufferEXT (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
-	void glFramebufferTexture1DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level)
-	void glFramebufferTexture2DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level)
-	void glFramebufferTexture3DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset)
-	void glGenFramebuffersEXT (GLsizei n, GLuint* framebuffers)
-	void glGenRenderbuffersEXT (GLsizei n, GLuint* renderbuffers)
-	void glGenerateMipmapEXT (GLenum target)
-	void glGetFramebufferAttachmentParameterivEXT (GLenum target, GLenum attachment, GLenum pname, GLint* params)
-	void glGetRenderbufferParameterivEXT (GLenum target, GLenum pname, GLint* params)
-	GLboolean glIsFramebufferEXT (GLuint framebuffer)
-	GLboolean glIsRenderbufferEXT (GLuint renderbuffer)
-	void glRenderbufferStorageEXT (GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
---GL_EXT_framebuffer_sRGB
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_framebuffer_sRGB.txt
-	GL_FRAMEBUFFER_SRGB_EXT 0x8DB9
-	GL_FRAMEBUFFER_SRGB_CAPABLE_EXT 0x8DBA
 --GL_EXT_geometry_shader4
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_geometry_shader4.txt
 	GL_GEOMETRY_SHADER_EXT 0x8DD9
@@ -1674,74 +1551,11 @@
 	GL_PROGRAM_POINT_SIZE_EXT 0x8642
 	void glProgramParameteriEXT (GLuint program, GLenum pname, GLint value)
 	void glFramebufferTextureEXT (GLenum target, GLenum attachment, GLuint texture, GLint level)
-	void glFramebufferTextureLayerEXT (GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
 	void glFramebufferTextureFaceEXT (GLenum target, GLenum attachment, GLuint texture, GLint level, GLenum face)
 --GL_EXT_gpu_program_parameters
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_gpu_program_parameters.txt
 	void glProgramEnvParameters4fvEXT (GLenum target, GLuint index, GLsizei count, GLfloat* params)
 	void glProgramLocalParameters4fvEXT (GLenum target, GLuint index, GLsizei count, GLfloat* params)
---GL_EXT_gpu_shader4
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_gpu_shader4.txt
-	GL_SAMPLER_1D_ARRAY_EXT 0x8DC0
-	GL_SAMPLER_2D_ARRAY_EXT 0x8DC1
-	GL_SAMPLER_BUFFER_EXT 0x8DC2
-	GL_SAMPLER_1D_ARRAY_SHADOW_EXT 0x8DC3
-	GL_SAMPLER_2D_ARRAY_SHADOW_EXT 0x8DC4
-	GL_SAMPLER_CUBE_SHADOW_EXT 0x8DC5
-	GL_UNSIGNED_INT_VEC2_EXT 0x8DC6
-	GL_UNSIGNED_INT_VEC3_EXT 0x8DC7
-	GL_UNSIGNED_INT_VEC4_EXT 0x8DC8
-	GL_INT_SAMPLER_1D_EXT 0x8DC9
-	GL_INT_SAMPLER_2D_EXT 0x8DCA
-	GL_INT_SAMPLER_3D_EXT 0x8DCB
-	GL_INT_SAMPLER_CUBE_EXT 0x8DCC
-	GL_INT_SAMPLER_2D_RECT_EXT 0x8DCD
-	GL_INT_SAMPLER_1D_ARRAY_EXT 0x8DCE
-	GL_INT_SAMPLER_2D_ARRAY_EXT 0x8DCF
-	GL_INT_SAMPLER_BUFFER_EXT 0x8DD0
-	GL_UNSIGNED_INT_SAMPLER_1D_EXT 0x8DD1
-	GL_UNSIGNED_INT_SAMPLER_2D_EXT 0x8DD2
-	GL_UNSIGNED_INT_SAMPLER_3D_EXT 0x8DD3
-	GL_UNSIGNED_INT_SAMPLER_CUBE_EXT 0x8DD4
-	GL_UNSIGNED_INT_SAMPLER_2D_RECT_EXT 0x8DD5
-	GL_UNSIGNED_INT_SAMPLER_1D_ARRAY_EXT 0x8DD6
-	GL_UNSIGNED_INT_SAMPLER_2D_ARRAY_EXT 0x8DD7
-	GL_UNSIGNED_INT_SAMPLER_BUFFER_EXT 0x8DD8
-	GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT 0x88FD
-	void glGetUniformuivEXT (GLuint program, GLint location, GLuint* params)
-	void glBindFragDataLocationEXT (GLuint program, GLuint color, GLchar* name)
-	GLint glGetFragDataLocationEXT (GLuint program, GLchar* name)
-	void glUniform1uiEXT (GLint location, GLuint v0)
-	void glUniform2uiEXT (GLint location, GLuint v0, GLuint v1)
-	void glUniform3uiEXT (GLint location, GLuint v0, GLuint v1, GLuint v2)
-	void glUniform4uiEXT (GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
-	void glUniform1uivEXT (GLint location, GLsizei count, GLuint* value)
-	void glUniform2uivEXT (GLint location, GLsizei count, GLuint* value)
-	void glUniform3uivEXT (GLint location, GLsizei count, GLuint* value)
-	void glUniform4uivEXT (GLint location, GLsizei count, GLuint* value)
-	void glVertexAttribI1iEXT (GLuint index, GLint x)
-	void glVertexAttribI2iEXT (GLuint index, GLint x, GLint y)
-	void glVertexAttribI3iEXT (GLuint index, GLint x, GLint y, GLint z)
-	void glVertexAttribI4iEXT (GLuint index, GLint x, GLint y, GLint z, GLint w)
-	void glVertexAttribI1uiEXT (GLuint index, GLuint x)
-	void glVertexAttribI2uiEXT (GLuint index, GLuint x, GLuint y)
-	void glVertexAttribI3uiEXT (GLuint index, GLuint x, GLuint y, GLuint z)
-	void glVertexAttribI4uiEXT (GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
-	void glVertexAttribI1ivEXT (GLuint index, GLint* v)
-	void glVertexAttribI2ivEXT (GLuint index, GLint* v)
-	void glVertexAttribI3ivEXT (GLuint index, GLint* v)
-	void glVertexAttribI4ivEXT (GLuint index, GLint* v)
-	void glVertexAttribI1uivEXT (GLuint index, GLuint* v)
-	void glVertexAttribI2uivEXT (GLuint index, GLuint* v)
-	void glVertexAttribI3uivEXT (GLuint index, GLuint* v)
-	void glVertexAttribI4uivEXT (GLuint index, GLuint* v)
-	void glVertexAttribI4bvEXT (GLuint index, GLbyte* v)
-	void glVertexAttribI4svEXT (GLuint index, GLshort* v)
-	void glVertexAttribI4ubvEXT (GLuint index, GLubyte* v)
-	void glVertexAttribI4usvEXT (GLuint index, GLushort* v)
-	void glVertexAttribIPointerEXT (GLuint index, GLint size, GLenum type, GLsizei stride, GLvoid* pointer)
-	void glGetVertexAttribIivEXT (GLuint index, GLenum pname, GLint* params)
-	void glGetVertexAttribIuivEXT (GLuint index, GLenum pname, GLuint* params)
 --GL_EXT_histogram
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/histogram.txt
 	GL_HISTOGRAM_EXT 0x8024
@@ -1796,7 +1610,7 @@
 --GL_EXT_multi_draw_arrays
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/multi_draw_arrays.txt
 	void glMultiDrawArraysEXT (GLenum mode, GLint* first, GLsizei* count, GLsizei primcount)
-	void glMultiDrawElementsEXT (GLenum mode, GLsizei* count, GLenum type, GLvoid** indices, GLsizei primcount)
+	void glMultiDrawElementsEXT (GLenum mode, GLsizei* count, GLenum type, const GLvoid** indices, GLsizei primcount)
 --GL_EXT_multisample
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/wgl_multisample.txt
 	GL_MULTISAMPLE_EXT 0x809D
@@ -1818,17 +1632,6 @@
 	GL_MULTISAMPLE_BIT_EXT 0x20000000
 	void glSampleMaskEXT (GLclampf value, GLboolean invert)
 	void glSamplePatternEXT (GLenum pattern)
---GL_EXT_packed_depth_stencil
---http://oss.sgi.com/projects/ogl-sample/registry/EXT/packed_depth_stencil.txt
-	GL_DEPTH_STENCIL_EXT 0x84F9
-	GL_UNSIGNED_INT_24_8_EXT 0x84FA
-	GL_DEPTH24_STENCIL8_EXT 0x88F0
-	GL_TEXTURE_STENCIL_SIZE_EXT 0x88F1
---GL_EXT_packed_float
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_packed_float.txt
-	GL_R11F_G11F_B10F_EXT 0x8C3A
-	GL_UNSIGNED_INT_10F_11F_11F_REV_EXT 0x8C3B
-	GL_RGBA_SIGNED_COMPONENTS_EXT 0x8C3C
 --GL_EXT_packed_pixels
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/packed_pixels.txt
 	GL_UNSIGNED_BYTE_3_3_2_EXT 0x8032
@@ -1974,16 +1777,6 @@
 	GL_TEXTURE_WRAP_R_EXT 0x8072
 	GL_MAX_3D_TEXTURE_SIZE_EXT 0x8073
 	void glTexImage3DEXT (GLenum target, GLint level, GLenum internalformat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, GLvoid* pixels)
---GL_EXT_texture_array
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_array.txt
-	GL_TEXTURE_1D_ARRAY_EXT 0x8C18
-	GL_PROXY_TEXTURE_1D_ARRAY_EXT 0x8C19
-	GL_TEXTURE_2D_ARRAY_EXT 0x8C1A
-	GL_PROXY_TEXTURE_2D_ARRAY_EXT 0x8C1B
-	GL_TEXTURE_BINDING_1D_ARRAY_EXT 0x8C1C
-	GL_TEXTURE_BINDING_2D_ARRAY_EXT 0x8C1D
-	GL_MAX_ARRAY_TEXTURE_LAYERS_EXT 0x88FF
-	GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT 0x884E
 --GL_EXT_texture_buffer_object
 --http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_buffer_object.txt
 	GL_TEXTURE_BUFFER_EXT 0x8C2A
@@ -1998,12 +1791,6 @@
 	GL_COMPRESSED_SIGNED_LUMINANCE_LATC1_EXT 0x8C71
 	GL_COMPRESSED_LUMINANCE_ALPHA_LATC2_EXT 0x8C72
 	GL_COMPRESSED_SIGNED_LUMINANCE_ALPHA_LATC2_EXT 0x8C73
---GL_EXT_texture_compression_rgtc
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_compression_rgtc.txt
-	GL_COMPRESSED_RED_RGTC1_EXT 0x8DBB
-	GL_COMPRESSED_SIGNED_RED_RGTC1_EXT 0x8DBC
-	GL_COMPRESSED_RED_GREEN_RGTC2_EXT 0x8DBD
-	GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT 0x8DBE
 --GL_EXT_texture_compression_s3tc
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/texture_compression_s3tc.txt
 	GL_COMPRESSED_RGB_S3TC_DXT1_EXT 0x83F0
@@ -2056,61 +1843,6 @@
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/texture_filter_anisotropic.txt
 	GL_TEXTURE_MAX_ANISOTROPY_EXT 0x84FE
 	GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT 0x84FF
---GL_EXT_texture_integer
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_integer.txt
-	GL_RGBA32UI_EXT 0x8D70
-	GL_RGB32UI_EXT 0x8D71
-	GL_ALPHA32UI_EXT 0x8D72
-	GL_INTENSITY32UI_EXT 0x8D73
-	GL_LUMINANCE32UI_EXT 0x8D74
-	GL_LUMINANCE_ALPHA32UI_EXT 0x8D75
-	GL_RGBA16UI_EXT 0x8D76
-	GL_RGB16UI_EXT 0x8D77
-	GL_ALPHA16UI_EXT 0x8D78
-	GL_INTENSITY16UI_EXT 0x8D79
-	GL_LUMINANCE16UI_EXT 0x8D7A
-	GL_LUMINANCE_ALPHA16UI_EXT 0x8D7B
-	GL_RGBA8UI_EXT 0x8D7C
-	GL_RGB8UI_EXT 0x8D7D
-	GL_ALPHA8UI_EXT 0x8D7E
-	GL_INTENSITY8UI_EXT 0x8D7F
-	GL_LUMINANCE8UI_EXT 0x8D80
-	GL_LUMINANCE_ALPHA8UI_EXT 0x8D81
-	GL_RGBA32I_EXT 0x8D82
-	GL_RGB32I_EXT 0x8D83
-	GL_ALPHA32I_EXT 0x8D84
-	GL_INTENSITY32I_EXT 0x8D85
-	GL_LUMINANCE32I_EXT 0x8D86
-	GL_LUMINANCE_ALPHA32I_EXT 0x8D87
-	GL_RGBA16I_EXT 0x8D88
-	GL_RGB16I_EXT 0x8D89
-	GL_ALPHA16I_EXT 0x8D8A
-	GL_INTENSITY16I_EXT 0x8D8B
-	GL_LUMINANCE16I_EXT 0x8D8C
-	GL_LUMINANCE_ALPHA16I_EXT 0x8D8D
-	GL_RGBA8I_EXT 0x8D8E
-	GL_RGB8I_EXT 0x8D8F
-	GL_ALPHA8I_EXT 0x8D90
-	GL_INTENSITY8I_EXT 0x8D91
-	GL_LUMINANCE8I_EXT 0x8D92
-	GL_LUMINANCE_ALPHA8I_EXT 0x8D93
-	GL_RED_INTEGER_EXT 0x8D94
-	GL_GREEN_INTEGER_EXT 0x8D95
-	GL_BLUE_INTEGER_EXT 0x8D96
-	GL_ALPHA_INTEGER_EXT 0x8D97
-	GL_RGB_INTEGER_EXT 0x8D98
-	GL_RGBA_INTEGER_EXT 0x8D99
-	GL_BGR_INTEGER_EXT 0x8D9A
-	GL_BGRA_INTEGER_EXT 0x8D9B
-	GL_LUMINANCE_INTEGER_EXT 0x8D9C
-	GL_LUMINANCE_ALPHA_INTEGER_EXT 0x8D9D
-	GL_RGBA_INTEGER_MODE_EXT 0x8D9E
-	void glTexParameterIivEXT (GLenum target, GLenum pname, GLint* params)
-	void glTexParameterIuivEXT (GLenum target, GLenum pname, GLuint* params)
-	void glGetTexParameterIivEXT (GLenum target, GLenum pname, GLint* params)
-	void glGetTexParameterIuivEXT (GLenum target, GLenum pname, GLuint* params)
-	void glClearColorIiEXT (GLint red, GLint green, GLint blue, GLint alpha)
-	void glClearColorIuiEXT (GLuint red, GLuint green, GLuint blue, GLuint alpha)
 --GL_EXT_texture_lod_bias
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/texture_lod_bias.txt
 	GL_MAX_TEXTURE_LOD_BIAS_EXT 0x84FD
@@ -2139,11 +1871,6 @@
 	GL_PERTURB_EXT 0x85AE
 	GL_TEXTURE_NORMAL_EXT 0x85AF
 	void glTextureNormalEXT (GLenum mode)
---GL_EXT_texture_shared_exponent
---http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_shared_exponent.txt
-	GL_RGB9_E5_EXT 0x8C3D
-	GL_UNSIGNED_INT_5_9_9_9_REV_EXT 0x8C3E
-	GL_TEXTURE_SHARED_SIZE_EXT 0x8C3F
 --GL_EXT_texture_sRGB
 --http://oss.sgi.com/projects/ogl-sample/registry/EXT/texture_sRGB.txt
 	GL_SRGB_EXT 0x8C40
@@ -2201,6 +1928,7 @@
 	void glColorPointerEXT (GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glDrawArraysEXT (GLenum mode, GLint first, GLsizei count)
 	void glEdgeFlagPointerEXT (GLsizei stride, GLsizei count, GLboolean* pointer)
+--	void glGetPointervEXT (GLenum pname, GLvoid** params)
 	void glIndexPointerEXT (GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glNormalPointerEXT (GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
 	void glTexCoordPointerEXT (GLint size, GLenum type, GLsizei stride, GLsizei count, GLvoid* pointer)
@@ -2248,7 +1976,7 @@
 --GL_IBM_multimode_draw_arrays
 --http://oss.sgi.com/projects/ogl-sample/registry/IBM/multimode_draw_arrays.txt
 	void glMultiModeDrawArraysIBM (GLenum* mode, GLint* first, GLsizei* count, GLsizei primcount, GLint modestride)
-	void glMultiModeDrawElementsIBM (GLenum* mode, GLsizei* count, GLenum type, GLvoid** indices, GLsizei primcount, GLint modestride)
+	void glMultiModeDrawElementsIBM (GLenum* mode, GLsizei* count, GLenum type, const GLvoid** indices, GLsizei primcount, GLint modestride)
 --GL_IBM_rasterpos_clip
 --http://oss.sgi.com/projects/ogl-sample/registry/IBM/rasterpos_clip.txt
 	GL_RASTER_POSITION_UNCLIPPED_IBM 103010
@@ -2277,14 +2005,14 @@
 	GL_EDGE_FLAG_ARRAY_LIST_STRIDE_IBM 103085
 	GL_FOG_COORDINATE_ARRAY_LIST_STRIDE_IBM 103086
 	GL_SECONDARY_COLOR_ARRAY_LIST_STRIDE_IBM 103087
-	void glColorPointerListIBM (GLint size, GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glEdgeFlagPointerListIBM (GLint stride, GLboolean** pointer, GLint ptrstride)
-	void glFogCoordPointerListIBM (GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glIndexPointerListIBM (GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glNormalPointerListIBM (GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glSecondaryColorPointerListIBM (GLint size, GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glTexCoordPointerListIBM (GLint size, GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
-	void glVertexPointerListIBM (GLint size, GLenum type, GLint stride, GLvoid** pointer, GLint ptrstride)
+	void glColorPointerListIBM (GLint size, GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glEdgeFlagPointerListIBM (GLint stride, const GLboolean** pointer, GLint ptrstride)
+	void glFogCoordPointerListIBM (GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glIndexPointerListIBM (GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glNormalPointerListIBM (GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glSecondaryColorPointerListIBM (GLint size, GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glTexCoordPointerListIBM (GLint size, GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
+	void glVertexPointerListIBM (GLint size, GLenum type, GLint stride, const GLvoid** pointer, GLint ptrstride)
 --GL_INGR_color_clamp
 --http://oss.sgi.com/projects/ogl-sample/registry/INGR/color_clamp.txt
 	GL_RED_MIN_CLAMP_INGR 0x8560
@@ -2305,10 +2033,10 @@
 	GL_NORMAL_ARRAY_PARALLEL_POINTERS_INTEL 0x83F6
 	GL_COLOR_ARRAY_PARALLEL_POINTERS_INTEL 0x83F7
 	GL_TEXTURE_COORD_ARRAY_PARALLEL_POINTERS_INTEL 0x83F8
-	void glColorPointervINTEL (GLint size, GLenum type, GLvoid** pointer)
-	void glNormalPointervINTEL (GLenum type, GLvoid** pointer)
-	void glTexCoordPointervINTEL (GLint size, GLenum type, GLvoid** pointer)
-	void glVertexPointervINTEL (GLint size, GLenum type, GLvoid** pointer)
+	void glColorPointervINTEL (GLint size, GLenum type, const GLvoid** pointer)
+	void glNormalPointervINTEL (GLenum type, const GLvoid** pointer)
+	void glTexCoordPointervINTEL (GLint size, GLenum type, const GLvoid** pointer)
+	void glVertexPointervINTEL (GLint size, GLenum type, const GLvoid** pointer)
 --GL_INTEL_texture_scissor
 --http://oss.sgi.com/projects/ogl-sample/registry/INTEL/texture_scissor.txt
 	void glTexScissorFuncINTEL (GLenum target, GLenum lfunc, GLenum hfunc)
@@ -2364,15 +2092,6 @@
 --http://oss.sgi.com/projects/ogl-sample/registry/NV/copy_depth_to_color.txt
 	GL_DEPTH_STENCIL_TO_RGBA_NV 0x886E
 	GL_DEPTH_STENCIL_TO_BGRA_NV 0x886F
---GL_NV_depth_buffer_float
---http://developer.download.nvidia.com/opengl/specs/GL_NV_depth_buffer_float.txt
-	GL_DEPTH_COMPONENT32F_NV 0x8DAB
-	GL_DEPTH32F_STENCIL8_NV 0x8DAC
-	GL_FLOAT_32_UNSIGNED_INT_24_8_REV_NV 0x8DAD
-	GL_DEPTH_BUFFER_FLOAT_MODE_NV 0x8DAF
-	void glDepthRangedNV (GLdouble zNear, GLdouble zFar)
-	void glClearDepthdNV (GLdouble depth)
-	void glDepthBoundsdNV (GLdouble zmin, GLdouble zmax)
 --GL_NV_depth_clamp
 --http://oss.sgi.com/projects/ogl-sample/registry/NV/depth_clamp.txt
 	GL_DEPTH_CLAMP_NV 0x864F
@@ -2506,55 +2225,6 @@
 	void glProgramEnvParameterI4uiNV (GLenum target, GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
 	void glProgramEnvParameterI4uivNV (GLenum target, GLuint index, GLuint* params)
 	void glProgramEnvParametersI4uivNV (GLenum target, GLuint index, GLsizei count, GLuint* params)
---GL_NV_half_float
---http://oss.sgi.com/projects/ogl-sample/registry/NV/half_float.txt
-	GL_HALF_FLOAT_NV 0x140B
-	void glColor3hNV (GLushort red, GLushort green, GLushort blue)
-	void glColor3hvNV (GLushort* v)
-	void glColor4hNV (GLushort red, GLushort green, GLushort blue, GLushort alpha)
-	void glColor4hvNV (GLushort* v)
-	void glFogCoordhNV (GLushort fog)
-	void glFogCoordhvNV (GLushort* fog)
-	void glMultiTexCoord1hNV (GLenum target, GLushort s)
-	void glMultiTexCoord1hvNV (GLenum target, GLushort* v)
-	void glMultiTexCoord2hNV (GLenum target, GLushort s, GLushort t)
-	void glMultiTexCoord2hvNV (GLenum target, GLushort* v)
-	void glMultiTexCoord3hNV (GLenum target, GLushort s, GLushort t, GLushort r)
-	void glMultiTexCoord3hvNV (GLenum target, GLushort* v)
-	void glMultiTexCoord4hNV (GLenum target, GLushort s, GLushort t, GLushort r, GLushort q)
-	void glMultiTexCoord4hvNV (GLenum target, GLushort* v)
-	void glNormal3hNV (GLushort nx, GLushort ny, GLushort nz)
-	void glNormal3hvNV (GLushort* v)
-	void glSecondaryColor3hNV (GLushort red, GLushort green, GLushort blue)
-	void glSecondaryColor3hvNV (GLushort* v)
-	void glTexCoord1hNV (GLushort s)
-	void glTexCoord1hvNV (GLushort* v)
-	void glTexCoord2hNV (GLushort s, GLushort t)
-	void glTexCoord2hvNV (GLushort* v)
-	void glTexCoord3hNV (GLushort s, GLushort t, GLushort r)
-	void glTexCoord3hvNV (GLushort* v)
-	void glTexCoord4hNV (GLushort s, GLushort t, GLushort r, GLushort q)
-	void glTexCoord4hvNV (GLushort* v)
-	void glVertex2hNV (GLushort x, GLushort y)
-	void glVertex2hvNV (GLushort* v)
-	void glVertex3hNV (GLushort x, GLushort y, GLushort z)
-	void glVertex3hvNV (GLushort* v)
-	void glVertex4hNV (GLushort x, GLushort y, GLushort z, GLushort w)
-	void glVertex4hvNV (GLushort* v)
-	void glVertexAttrib1hNV (GLuint index, GLushort x)
-	void glVertexAttrib1hvNV (GLuint index, GLushort* v)
-	void glVertexAttrib2hNV (GLuint index, GLushort x, GLushort y)
-	void glVertexAttrib2hvNV (GLuint index, GLushort* v)
-	void glVertexAttrib3hNV (GLuint index, GLushort x, GLushort y, GLushort z)
-	void glVertexAttrib3hvNV (GLuint index, GLushort* v)
-	void glVertexAttrib4hNV (GLuint index, GLushort x, GLushort y, GLushort z, GLushort w)
-	void glVertexAttrib4hvNV (GLuint index, GLushort* v)
-	void glVertexAttribs1hvNV (GLuint index, GLsizei n, GLushort* v)
-	void glVertexAttribs2hvNV (GLuint index, GLsizei n, GLushort* v)
-	void glVertexAttribs3hvNV (GLuint index, GLsizei n, GLushort* v)
-	void glVertexAttribs4hvNV (GLuint index, GLsizei n, GLushort* v)
-	void glVertexWeighthNV (GLushort weight)
-	void glVertexWeighthvNV (GLushort* weight)
 --GL_NV_light_max_exponent
 --http://oss.sgi.com/projects/ogl-sample/registry/NV/light_max_exponent.txt
 	GL_MAX_SHININESS_NV 0x8504
@@ -3491,7 +3161,10 @@
 	GL_FOG_SPECULAR_TEXTURE_WIN 0x80EC
 --GL_WIN_swap_hint
 --http://msdn.microsoft.com/library/default.asp?url=/library/en-us/opengl/glfunc01_16zy.asp
-	void glAddSwapHintRectWIN (GLint x, GLint y, GLsizei width, GLsizei height)	
+	void glAddSwapHintRectWIN (GLint x, GLint y, GLsizei width, GLsizei height)
+
+#end extension
+
 --GL_VERSION_1_1
 	 GL_ACCUM 0x0100
 	 GL_LOAD 0x0101
@@ -3928,6 +3601,7 @@
 	 GL_REPEAT 0x2901
 	 GL_CLIENT_PIXEL_STORE_BIT 0x00000001
 	 GL_CLIENT_VERTEX_ARRAY_BIT 0x00000002
+--	 GL_CLIENT_ALL_ATTRIB_BITS 0xffffffff
 	 GL_CLIENT_ALL_ATTRIB_BITS 0x7fffffff
 	 GL_POLYGON_OFFSET_FACTOR 0x8038
 	 GL_POLYGON_OFFSET_UNITS 0x2A00
@@ -4363,6 +4037,7 @@
 	 void  glVertex4sv (const GLshort* v)
 	 void  glVertexPointer (GLint size, GLenum type, GLsizei stride, const GLvoid* pointer)
 	 void  glViewport (GLint x, GLint y, GLsizei width, GLsizei height)
+
 --GL_VERSION_1_2
 	GL_UNSIGNED_BYTE_3_3_2 0x8032
 	GL_UNSIGNED_SHORT_4_4_4_4 0x8033
@@ -4409,6 +4084,7 @@
 	void glTexImage3D (GLenum target, GLint level, GLint internalFormat, GLsizei width, GLsizei height, GLsizei depth, GLint border, GLenum format, GLenum type, const GLvoid* pixels)
 	void glTexSubImage3D (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLsizei width, GLsizei height, GLsizei depth, GLenum format, GLenum type, const GLvoid* pixels)
 	void glCopyTexSubImage3D (GLenum target, GLint level, GLint xoffset, GLint yoffset, GLint zoffset, GLint x, GLint y, GLsizei width, GLsizei height)
+
 --GL_VERSION_1_3
 	GL_TEXTURE0 0x84C0
 	GL_TEXTURE1 0x84C1
@@ -4552,6 +4228,7 @@
 	void glMultiTexCoord4s (GLenum target, GLshort s, GLshort t, GLshort r, GLshort q)
 	void glMultiTexCoord4sv (GLenum target, const GLshort* v)
 	void glSampleCoverage (GLclampf value, GLboolean invert)
+
 --GL_VERSION_1_4
 	GL_GENERATE_MIPMAP 0x8191
 	GL_GENERATE_MIPMAP_HINT 0x8192
@@ -4637,6 +4314,7 @@
 	void glWindowPos3fv (const GLfloat* p)
 	void glWindowPos3iv (const GLint* p)
 	void glWindowPos3sv (const GLshort* p)
+
 --GL_VERSION_1_5
 --http://www.opengl.org/documentation/specs/version1.5/glspec15.pdf
 	GL_BUFFER_SIZE 0x8764
@@ -4708,6 +4386,7 @@
 	GLboolean glUnmapBuffer (GLenum target)
 	void glGetBufferParameteriv (GLenum target, GLenum pname, GLint* params)
 	void glGetBufferPointerv (GLenum target, GLenum pname, GLvoid** params)
+
 --GL_VERSION_2_0
 --http://www.opengl.org/documentation/specs/version2.0/glspec20.pdf
 	GL_BLEND_EQUATION_RGB GL_BLEND_EQUATION
@@ -4887,7 +4566,8 @@
 	void glVertexAttrib4uiv (GLuint index, const GLuint* v)
 	void glVertexAttrib4usv (GLuint index, const GLushort* v)
 	void glVertexAttribPointer (GLuint index, GLint size, GLenum type, GLboolean normalized, GLsizei stride, const GLvoid* pointer)
---GL_VERSION_2_1	
+
+--GL_VERSION_2_1
 --http://www.opengl.org/documentation/specs/version2.1/glspec21.pdf
 	GL_CURRENT_RASTER_SECONDARY_COLOR 0x845F
 	GL_PIXEL_PACK_BUFFER 0x88EB
@@ -4912,9 +4592,398 @@
 	void glUniformMatrix3x4fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x2fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
 	void glUniformMatrix4x3fv (GLint location, GLsizei count, GLboolean transpose, const GLfloat* value)
+#begin extension
 --GL_ARB_vertex_array_object
 	void glBindVertexArray (GLuint array)
 	void glDeleteVertexArrays (GLsizei n, GLuint* arrays)
 	void glGenVertexArrays (GLsizei n, GLuint* arrays)
 	GLboolean glIsVertexArray (GLuint array)
-    GLint glewInit (void)
+#end extension
+
+--GL_VERSION_3_0
+--http://www.opengl.org/registry/doc/glspec30.20080923.pdf
+#begin extension
+--GL_EXT_gpu_shader4
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_gpu_shader4.txt
+	GL_SAMPLER_1D_ARRAY_EXT 0x8DC0
+	GL_SAMPLER_2D_ARRAY_EXT 0x8DC1
+	GL_SAMPLER_BUFFER_EXT 0x8DC2
+	GL_SAMPLER_1D_ARRAY_SHADOW_EXT 0x8DC3
+	GL_SAMPLER_2D_ARRAY_SHADOW_EXT 0x8DC4
+	GL_SAMPLER_CUBE_SHADOW_EXT 0x8DC5
+	GL_UNSIGNED_INT_VEC2_EXT 0x8DC6
+	GL_UNSIGNED_INT_VEC3_EXT 0x8DC7
+	GL_UNSIGNED_INT_VEC4_EXT 0x8DC8
+	GL_INT_SAMPLER_1D_EXT 0x8DC9
+	GL_INT_SAMPLER_2D_EXT 0x8DCA
+	GL_INT_SAMPLER_3D_EXT 0x8DCB
+	GL_INT_SAMPLER_CUBE_EXT 0x8DCC
+	GL_INT_SAMPLER_2D_RECT_EXT 0x8DCD
+	GL_INT_SAMPLER_1D_ARRAY_EXT 0x8DCE
+	GL_INT_SAMPLER_2D_ARRAY_EXT 0x8DCF
+	GL_INT_SAMPLER_BUFFER_EXT 0x8DD0
+	GL_UNSIGNED_INT_SAMPLER_1D_EXT 0x8DD1
+	GL_UNSIGNED_INT_SAMPLER_2D_EXT 0x8DD2
+	GL_UNSIGNED_INT_SAMPLER_3D_EXT 0x8DD3
+	GL_UNSIGNED_INT_SAMPLER_CUBE_EXT 0x8DD4
+	GL_UNSIGNED_INT_SAMPLER_2D_RECT_EXT 0x8DD5
+	GL_UNSIGNED_INT_SAMPLER_1D_ARRAY_EXT 0x8DD6
+	GL_UNSIGNED_INT_SAMPLER_2D_ARRAY_EXT 0x8DD7
+	GL_UNSIGNED_INT_SAMPLER_BUFFER_EXT 0x8DD8
+	GL_VERTEX_ATTRIB_ARRAY_INTEGER_EXT 0x88FD
+	void glGetUniformuivEXT (GLuint program, GLint location, GLuint* params)
+	void glBindFragDataLocationEXT (GLuint program, GLuint color, GLchar* name)
+	GLint glGetFragDataLocationEXT (GLuint program, GLchar* name)
+	void glUniform1uiEXT (GLint location, GLuint v0)
+	void glUniform2uiEXT (GLint location, GLuint v0, GLuint v1)
+	void glUniform3uiEXT (GLint location, GLuint v0, GLuint v1, GLuint v2)
+	void glUniform4uiEXT (GLint location, GLuint v0, GLuint v1, GLuint v2, GLuint v3)
+	void glUniform1uivEXT (GLint location, GLsizei count, GLuint* value)
+	void glUniform2uivEXT (GLint location, GLsizei count, GLuint* value)
+	void glUniform3uivEXT (GLint location, GLsizei count, GLuint* value)
+	void glUniform4uivEXT (GLint location, GLsizei count, GLuint* value)
+	void glVertexAttribI1iEXT (GLuint index, GLint x)
+	void glVertexAttribI2iEXT (GLuint index, GLint x, GLint y)
+	void glVertexAttribI3iEXT (GLuint index, GLint x, GLint y, GLint z)
+	void glVertexAttribI4iEXT (GLuint index, GLint x, GLint y, GLint z, GLint w)
+	void glVertexAttribI1uiEXT (GLuint index, GLuint x)
+	void glVertexAttribI2uiEXT (GLuint index, GLuint x, GLuint y)
+	void glVertexAttribI3uiEXT (GLuint index, GLuint x, GLuint y, GLuint z)
+	void glVertexAttribI4uiEXT (GLuint index, GLuint x, GLuint y, GLuint z, GLuint w)
+	void glVertexAttribI1ivEXT (GLuint index, GLint* v)
+	void glVertexAttribI2ivEXT (GLuint index, GLint* v)
+	void glVertexAttribI3ivEXT (GLuint index, GLint* v)
+	void glVertexAttribI4ivEXT (GLuint index, GLint* v)
+	void glVertexAttribI1uivEXT (GLuint index, GLuint* v)
+	void glVertexAttribI2uivEXT (GLuint index, GLuint* v)
+	void glVertexAttribI3uivEXT (GLuint index, GLuint* v)
+	void glVertexAttribI4uivEXT (GLuint index, GLuint* v)
+	void glVertexAttribI4bvEXT (GLuint index, GLbyte* v)
+	void glVertexAttribI4svEXT (GLuint index, GLshort* v)
+	void glVertexAttribI4ubvEXT (GLuint index, GLubyte* v)
+	void glVertexAttribI4usvEXT (GLuint index, GLushort* v)
+	void glVertexAttribIPointerEXT (GLuint index, GLint size, GLenum type, GLsizei stride, GLvoid* pointer)
+	void glGetVertexAttribIivEXT (GLuint index, GLenum pname, GLint* params)
+	void glGetVertexAttribIuivEXT (GLuint index, GLenum pname, GLuint* params)
+--GL_NV_conditional_render
+	GL_QUERY_WAIT_NV 0x8E13
+	GL_QUERY_NO_WAIT_NV 0x8E14
+	GL_QUERY_BY_REGION_WAIT_NV 0x8E15
+	GL_QUERY_BY_REGION_NO_WAIT_NV 0x8E16
+	void glBeginConditionalRenderNV (GLuint id, GLenum mode)
+	void glEndConditionalRenderNV (void)
+--GL_APPLE_flush_buffer_range
+	GL_BUFFER_SERIALIZED_MODIFY_APPLE 0x8A12
+	GL_BUFFER_FLUSHING_UNMAP_APPLE 0x8A13
+	void glBufferParameteriAPPLE(GLenum target, GLenum pname, GLint param)
+	void glFlushMappedBufferRangeAPPLE(GLenum target, GLintptr offset, GLsizeiptr size)
+--GL_ARB_color_buffer_float
+--http://oss.sgi.com/projects/ogl-sample/registry/ARB/color_buffer_float.txt
+	GL_RGBA_FLOAT_MODE_ARB 0x8820
+	GL_CLAMP_VERTEX_COLOR_ARB 0x891A
+	GL_CLAMP_FRAGMENT_COLOR_ARB 0x891B
+	GL_CLAMP_READ_COLOR_ARB 0x891C
+	GL_FIXED_ONLY_ARB 0x891D
+	void glClampColorARB (GLenum target, GLenum clamp)
+--GL_NV_depth_buffer_float
+--http://developer.download.nvidia.com/opengl/specs/GL_NV_depth_buffer_float.txt
+	GL_DEPTH_COMPONENT32F_NV 0x8DAB
+	GL_DEPTH32F_STENCIL8_NV 0x8DAC
+	GL_FLOAT_32_UNSIGNED_INT_24_8_REV_NV 0x8DAD
+	GL_DEPTH_BUFFER_FLOAT_MODE_NV 0x8DAF
+	void glDepthRangedNV (GLdouble zNear, GLdouble zFar)
+	void glClearDepthdNV (GLdouble depth)
+	void glDepthBoundsdNV (GLdouble zmin, GLdouble zmax)
+--GL_ARB_texture_float
+--http://oss.sgi.com/projects/ogl-sample/registry/ARB/texture_float.txt
+	GL_RGBA32F_ARB 0x8814
+	GL_RGB32F_ARB 0x8815
+	GL_ALPHA32F_ARB 0x8816
+	GL_INTENSITY32F_ARB 0x8817
+	GL_LUMINANCE32F_ARB 0x8818
+	GL_LUMINANCE_ALPHA32F_ARB 0x8819
+	GL_RGBA16F_ARB 0x881A
+	GL_RGB16F_ARB 0x881B
+	GL_ALPHA16F_ARB 0x881C
+	GL_INTENSITY16F_ARB 0x881D
+	GL_LUMINANCE16F_ARB 0x881E
+	GL_LUMINANCE_ALPHA16F_ARB 0x881F
+	GL_TEXTURE_RED_TYPE_ARB 0x8C10
+	GL_TEXTURE_GREEN_TYPE_ARB 0x8C11
+	GL_TEXTURE_BLUE_TYPE_ARB 0x8C12
+	GL_TEXTURE_ALPHA_TYPE_ARB 0x8C13
+	GL_TEXTURE_LUMINANCE_TYPE_ARB 0x8C14
+	GL_TEXTURE_INTENSITY_TYPE_ARB 0x8C15
+	GL_TEXTURE_DEPTH_TYPE_ARB 0x8C16
+	GL_UNSIGNED_NORMALIZED_ARB 0x8C17
+--GL_EXT_packed_float
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_packed_float.txt
+	GL_R11F_G11F_B10F_EXT 0x8C3A
+	GL_UNSIGNED_INT_10F_11F_11F_REV_EXT 0x8C3B
+	GL_RGBA_SIGNED_COMPONENTS_EXT 0x8C3C
+--GL_EXT_texture_shared_exponent
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_shared_exponent.txt
+	GL_RGB9_E5_EXT 0x8C3D
+	GL_UNSIGNED_INT_5_9_9_9_REV_EXT 0x8C3E
+	GL_TEXTURE_SHARED_SIZE_EXT 0x8C3F
+--GL_EXT_framebuffer_object
+--http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_object.txt
+	GL_INVALID_FRAMEBUFFER_OPERATION_EXT 0x0506
+	GL_MAX_RENDERBUFFER_SIZE_EXT 0x84E8
+	GL_FRAMEBUFFER_BINDING_EXT 0x8CA6
+	GL_RENDERBUFFER_BINDING_EXT 0x8CA7
+	GL_FRAMEBUFFER_ATTACHMENT_OBJECT_TYPE_EXT 0x8CD0
+	GL_FRAMEBUFFER_ATTACHMENT_OBJECT_NAME_EXT 0x8CD1
+	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_LEVEL_EXT 0x8CD2
+	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_CUBE_MAP_FACE_EXT 0x8CD3
+	GL_FRAMEBUFFER_ATTACHMENT_TEXTURE_3D_ZOFFSET_EXT 0x8CD4
+	GL_FRAMEBUFFER_COMPLETE_EXT 0x8CD5
+	GL_FRAMEBUFFER_INCOMPLETE_ATTACHMENT_EXT 0x8CD6
+	GL_FRAMEBUFFER_INCOMPLETE_MISSING_ATTACHMENT_EXT 0x8CD7
+	GL_FRAMEBUFFER_INCOMPLETE_DIMENSIONS_EXT 0x8CD9
+	GL_FRAMEBUFFER_INCOMPLETE_FORMATS_EXT 0x8CDA
+	GL_FRAMEBUFFER_INCOMPLETE_DRAW_BUFFER_EXT 0x8CDB
+	GL_FRAMEBUFFER_INCOMPLETE_READ_BUFFER_EXT 0x8CDC
+	GL_FRAMEBUFFER_UNSUPPORTED_EXT 0x8CDD
+	GL_MAX_COLOR_ATTACHMENTS_EXT 0x8CDF
+	GL_COLOR_ATTACHMENT0_EXT 0x8CE0
+	GL_COLOR_ATTACHMENT1_EXT 0x8CE1
+	GL_COLOR_ATTACHMENT2_EXT 0x8CE2
+	GL_COLOR_ATTACHMENT3_EXT 0x8CE3
+	GL_COLOR_ATTACHMENT4_EXT 0x8CE4
+	GL_COLOR_ATTACHMENT5_EXT 0x8CE5
+	GL_COLOR_ATTACHMENT6_EXT 0x8CE6
+	GL_COLOR_ATTACHMENT7_EXT 0x8CE7
+	GL_COLOR_ATTACHMENT8_EXT 0x8CE8
+	GL_COLOR_ATTACHMENT9_EXT 0x8CE9
+	GL_COLOR_ATTACHMENT10_EXT 0x8CEA
+	GL_COLOR_ATTACHMENT11_EXT 0x8CEB
+	GL_COLOR_ATTACHMENT12_EXT 0x8CEC
+	GL_COLOR_ATTACHMENT13_EXT 0x8CED
+	GL_COLOR_ATTACHMENT14_EXT 0x8CEE
+	GL_COLOR_ATTACHMENT15_EXT 0x8CEF
+	GL_DEPTH_ATTACHMENT_EXT 0x8D00
+	GL_STENCIL_ATTACHMENT_EXT 0x8D20
+	GL_FRAMEBUFFER_EXT 0x8D40
+	GL_RENDERBUFFER_EXT 0x8D41
+	GL_RENDERBUFFER_WIDTH_EXT 0x8D42
+	GL_RENDERBUFFER_HEIGHT_EXT 0x8D43
+	GL_RENDERBUFFER_INTERNAL_FORMAT_EXT 0x8D44
+	GL_STENCIL_INDEX1_EXT 0x8D46
+	GL_STENCIL_INDEX4_EXT 0x8D47
+	GL_STENCIL_INDEX8_EXT 0x8D48
+	GL_STENCIL_INDEX16_EXT 0x8D49
+	GL_RENDERBUFFER_RED_SIZE_EXT 0x8D50
+	GL_RENDERBUFFER_GREEN_SIZE_EXT 0x8D51
+	GL_RENDERBUFFER_BLUE_SIZE_EXT 0x8D52
+	GL_RENDERBUFFER_ALPHA_SIZE_EXT 0x8D53
+	GL_RENDERBUFFER_DEPTH_SIZE_EXT 0x8D54
+	GL_RENDERBUFFER_STENCIL_SIZE_EXT 0x8D55
+	void glBindFramebufferEXT (GLenum target, GLuint framebuffer)
+	void glBindRenderbufferEXT (GLenum target, GLuint renderbuffer)
+	GLenum glCheckFramebufferStatusEXT (GLenum target)
+	void glDeleteFramebuffersEXT (GLsizei n, GLuint* framebuffers)
+	void glDeleteRenderbuffersEXT (GLsizei n, GLuint* renderbuffers)
+	void glFramebufferRenderbufferEXT (GLenum target, GLenum attachment, GLenum renderbuffertarget, GLuint renderbuffer)
+	void glFramebufferTexture1DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level)
+	void glFramebufferTexture2DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level)
+	void glFramebufferTexture3DEXT (GLenum target, GLenum attachment, GLenum textarget, GLuint texture, GLint level, GLint zoffset)
+	void glGenFramebuffersEXT (GLsizei n, GLuint* framebuffers)
+	void glGenRenderbuffersEXT (GLsizei n, GLuint* renderbuffers)
+	void glGenerateMipmapEXT (GLenum target)
+	void glGetFramebufferAttachmentParameterivEXT (GLenum target, GLenum attachment, GLenum pname, GLint* params)
+	void glGetRenderbufferParameterivEXT (GLenum target, GLenum pname, GLint* params)
+	GLboolean glIsFramebufferEXT (GLuint framebuffer)
+	GLboolean glIsRenderbufferEXT (GLuint renderbuffer)
+	void glRenderbufferStorageEXT (GLenum target, GLenum internalformat, GLsizei width, GLsizei height)
+--GL_NV_half_float
+--http://oss.sgi.com/projects/ogl-sample/registry/NV/half_float.txt
+	GL_HALF_FLOAT_NV 0x140B
+	void glColor3hNV (GLushort red, GLushort green, GLushort blue)
+	void glColor3hvNV (GLushort* v)
+	void glColor4hNV (GLushort red, GLushort green, GLushort blue, GLushort alpha)
+	void glColor4hvNV (GLushort* v)
+	void glFogCoordhNV (GLushort fog)
+	void glFogCoordhvNV (GLushort* fog)
+	void glMultiTexCoord1hNV (GLenum target, GLushort s)
+	void glMultiTexCoord1hvNV (GLenum target, GLushort* v)
+	void glMultiTexCoord2hNV (GLenum target, GLushort s, GLushort t)
+	void glMultiTexCoord2hvNV (GLenum target, GLushort* v)
+	void glMultiTexCoord3hNV (GLenum target, GLushort s, GLushort t, GLushort r)
+	void glMultiTexCoord3hvNV (GLenum target, GLushort* v)
+	void glMultiTexCoord4hNV (GLenum target, GLushort s, GLushort t, GLushort r, GLushort q)
+	void glMultiTexCoord4hvNV (GLenum target, GLushort* v)
+	void glNormal3hNV (GLushort nx, GLushort ny, GLushort nz)
+	void glNormal3hvNV (GLushort* v)
+	void glSecondaryColor3hNV (GLushort red, GLushort green, GLushort blue)
+	void glSecondaryColor3hvNV (GLushort* v)
+	void glTexCoord1hNV (GLushort s)
+	void glTexCoord1hvNV (GLushort* v)
+	void glTexCoord2hNV (GLushort s, GLushort t)
+	void glTexCoord2hvNV (GLushort* v)
+	void glTexCoord3hNV (GLushort s, GLushort t, GLushort r)
+	void glTexCoord3hvNV (GLushort* v)
+	void glTexCoord4hNV (GLushort s, GLushort t, GLushort r, GLushort q)
+	void glTexCoord4hvNV (GLushort* v)
+	void glVertex2hNV (GLushort x, GLushort y)
+	void glVertex2hvNV (GLushort* v)
+	void glVertex3hNV (GLushort x, GLushort y, GLushort z)
+	void glVertex3hvNV (GLushort* v)
+	void glVertex4hNV (GLushort x, GLushort y, GLushort z, GLushort w)
+	void glVertex4hvNV (GLushort* v)
+	void glVertexAttrib1hNV (GLuint index, GLushort x)
+	void glVertexAttrib1hvNV (GLuint index, GLushort* v)
+	void glVertexAttrib2hNV (GLuint index, GLushort x, GLushort y)
+	void glVertexAttrib2hvNV (GLuint index, GLushort* v)
+	void glVertexAttrib3hNV (GLuint index, GLushort x, GLushort y, GLushort z)
+	void glVertexAttrib3hvNV (GLuint index, GLushort* v)
+	void glVertexAttrib4hNV (GLuint index, GLushort x, GLushort y, GLushort z, GLushort w)
+	void glVertexAttrib4hvNV (GLuint index, GLushort* v)
+	void glVertexAttribs1hvNV (GLuint index, GLsizei n, GLushort* v)
+	void glVertexAttribs2hvNV (GLuint index, GLsizei n, GLushort* v)
+	void glVertexAttribs3hvNV (GLuint index, GLsizei n, GLushort* v)
+	void glVertexAttribs4hvNV (GLuint index, GLsizei n, GLushort* v)
+	void glVertexWeighthNV (GLushort weight)
+	void glVertexWeighthvNV (GLushort* weight)
+--GL_ARB_half_float_pixel
+--http://oss.sgi.com/projects/ogl-sample/registry/ARB/half_float_pixel.txt
+	GL_HALF_FLOAT_ARB 0x140B
+--GL_EXT_framebuffer_multisample
+--http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_multisample.txt
+	GL_RENDERBUFFER_SAMPLES_EXT 0x8CAB
+	void glRenderbufferStorageMultisampleEXT (GLenum target, GLsizei samples, GLenum internalformat, GLsizei width, GLsizei height)
+	GL_FRAMEBUFFER_INCOMPLETE_MULTISAMPLE_EXT 0x8D56
+	GL_MAX_SAMPLES_EXT 0x8D57
+--GL_EXT_framebuffer_blit
+--http://oss.sgi.com/projects/ogl-sample/registry/EXT/framebuffer_blit.txt
+	GL_DRAW_FRAMEBUFFER_BINDING_EXT 0x8CA6
+	GL_READ_FRAMEBUFFER_EXT 0x8CA8
+	GL_DRAW_FRAMEBUFFER_EXT 0x8CA9
+	GL_READ_FRAMEBUFFER_BINDING_EXT 0x8CAA
+	void glBlitFramebufferEXT (GLint srcX0, GLint srcY0, GLint srcX1, GLint srcY1, GLint dstX0, GLint dstY0, GLint dstX1, GLint dstY1, GLbitfield mask, GLenum filter)
+--GL_EXT_texture_integer
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_integer.txt
+	GL_RGBA32UI_EXT 0x8D70
+	GL_RGB32UI_EXT 0x8D71
+	GL_ALPHA32UI_EXT 0x8D72
+	GL_INTENSITY32UI_EXT 0x8D73
+	GL_LUMINANCE32UI_EXT 0x8D74
+	GL_LUMINANCE_ALPHA32UI_EXT 0x8D75
+	GL_RGBA16UI_EXT 0x8D76
+	GL_RGB16UI_EXT 0x8D77
+	GL_ALPHA16UI_EXT 0x8D78
+	GL_INTENSITY16UI_EXT 0x8D79
+	GL_LUMINANCE16UI_EXT 0x8D7A
+	GL_LUMINANCE_ALPHA16UI_EXT 0x8D7B
+	GL_RGBA8UI_EXT 0x8D7C
+	GL_RGB8UI_EXT 0x8D7D
+	GL_ALPHA8UI_EXT 0x8D7E
+	GL_INTENSITY8UI_EXT 0x8D7F
+	GL_LUMINANCE8UI_EXT 0x8D80
+	GL_LUMINANCE_ALPHA8UI_EXT 0x8D81
+	GL_RGBA32I_EXT 0x8D82
+	GL_RGB32I_EXT 0x8D83
+	GL_ALPHA32I_EXT 0x8D84
+	GL_INTENSITY32I_EXT 0x8D85
+	GL_LUMINANCE32I_EXT 0x8D86
+	GL_LUMINANCE_ALPHA32I_EXT 0x8D87
+	GL_RGBA16I_EXT 0x8D88
+	GL_RGB16I_EXT 0x8D89
+	GL_ALPHA16I_EXT 0x8D8A
+	GL_INTENSITY16I_EXT 0x8D8B
+	GL_LUMINANCE16I_EXT 0x8D8C
+	GL_LUMINANCE_ALPHA16I_EXT 0x8D8D
+	GL_RGBA8I_EXT 0x8D8E
+	GL_RGB8I_EXT 0x8D8F
+	GL_ALPHA8I_EXT 0x8D90
+	GL_INTENSITY8I_EXT 0x8D91
+	GL_LUMINANCE8I_EXT 0x8D92
+	GL_LUMINANCE_ALPHA8I_EXT 0x8D93
+	GL_RED_INTEGER_EXT 0x8D94
+	GL_GREEN_INTEGER_EXT 0x8D95
+	GL_BLUE_INTEGER_EXT 0x8D96
+	GL_ALPHA_INTEGER_EXT 0x8D97
+	GL_RGB_INTEGER_EXT 0x8D98
+	GL_RGBA_INTEGER_EXT 0x8D99
+	GL_BGR_INTEGER_EXT 0x8D9A
+	GL_BGRA_INTEGER_EXT 0x8D9B
+	GL_LUMINANCE_INTEGER_EXT 0x8D9C
+	GL_LUMINANCE_ALPHA_INTEGER_EXT 0x8D9D
+	GL_RGBA_INTEGER_MODE_EXT 0x8D9E
+	void glTexParameterIivEXT (GLenum target, GLenum pname, GLint* params)
+	void glTexParameterIuivEXT (GLenum target, GLenum pname, GLuint* params)
+	void glGetTexParameterIivEXT (GLenum target, GLenum pname, GLint* params)
+	void glGetTexParameterIuivEXT (GLenum target, GLenum pname, GLuint* params)
+	void glClearColorIiEXT (GLint red, GLint green, GLint blue, GLint alpha)
+	void glClearColorIuiEXT (GLuint red, GLuint green, GLuint blue, GLuint alpha)
+--GL_EXT_texture_array
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_array.txt
+	GL_TEXTURE_1D_ARRAY_EXT 0x8C18
+	GL_PROXY_TEXTURE_1D_ARRAY_EXT 0x8C19
+	GL_TEXTURE_2D_ARRAY_EXT 0x8C1A
+	GL_PROXY_TEXTURE_2D_ARRAY_EXT 0x8C1B
+	GL_TEXTURE_BINDING_1D_ARRAY_EXT 0x8C1C
+	GL_TEXTURE_BINDING_2D_ARRAY_EXT 0x8C1D
+	GL_MAX_ARRAY_TEXTURE_LAYERS_EXT 0x88FF
+	GL_COMPARE_REF_DEPTH_TO_TEXTURE_EXT 0x884E
+	void glFramebufferTextureLayerEXT (GLenum target, GLenum attachment, GLuint texture, GLint level, GLint layer)
+--GL_EXT_packed_depth_stencil
+--http://oss.sgi.com/projects/ogl-sample/registry/EXT/packed_depth_stencil.txt
+	GL_DEPTH_STENCIL_EXT 0x84F9
+	GL_UNSIGNED_INT_24_8_EXT 0x84FA
+	GL_DEPTH24_STENCIL8_EXT 0x88F0
+	GL_TEXTURE_STENCIL_SIZE_EXT 0x88F1
+--GL_EXT_draw_buffers2
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_draw_buffers2.txt
+	void glColorMaskIndexedEXT (GLuint index, GLboolean r, GLboolean g, GLboolean b, GLboolean a)
+	void glGetBooleanIndexedvEXT (GLenum target, GLuint index, GLboolean* data)
+	void glGetIntegerIndexedvEXT (GLenum target, GLuint index, GLint* data)
+	void glEnableIndexedEXT (GLenum target, GLuint index)
+	void glDisableIndexedEXT (GLenum target, GLuint index)
+	GLboolean glIsEnabledIndexedEXT (GLenum target, GLuint index)
+--GL_EXT_texture_compression_rgtc
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_texture_compression_rgtc.txt
+	GL_COMPRESSED_RED_RGTC1_EXT 0x8DBB
+	GL_COMPRESSED_SIGNED_RED_RGTC1_EXT 0x8DBC
+	GL_COMPRESSED_RED_GREEN_RGTC2_EXT 0x8DBD
+	GL_COMPRESSED_SIGNED_RED_GREEN_RGTC2_EXT 0x8DBE
+--GL_EXT_transform_feedback
+	GL_TRANSFORM_FEEDBACK_BUFFER_EXT 0x8C8E 
+	GL_TRANSFORM_FEEDBACK_BUFFER_START_EXT 0x8C84 
+	GL_TRANSFORM_FEEDBACK_BUFFER_SIZE_EXT 0x8C85 
+	GL_TRANSFORM_FEEDBACK_BUFFER_BINDING_EXT 0x8C8F 
+	GL_INTERLEAVED_ATTRIBS_EXT 0x8C8C 
+	GL_SEPARATE_ATTRIBS_EXT 0x8C8D 
+	GL_PRIMITIVES_GENERATED_EXT 0x8C87 
+	GL_TRANSFORM_FEEDBACK_PRIMITIVES_WRITTEN_EXT 0x8C88 
+	GL_RASTERIZER_DISCARD_EXT 0x8C89 
+	GL_MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS_EXT 0x8C8A 
+	GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS_EXT 0x8C8B 
+	GL_MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS_EXT 0x8C80 
+	GL_TRANSFORM_FEEDBACK_VARYINGS_EXT 0x8C83 
+	GL_TRANSFORM_FEEDBACK_BUFFER_MODE_EXT 0x8C7F
+	GL_TRANSFORM_FEEDBACK_VARYING_MAX_LENGTH_EXT 0x8C76 
+	void glBindBufferRangeEXT(GLenum target, GLuint index, GLuint buffer, GLintptr offset, GLsizeiptr size)
+	void glBindBufferOffsetEXT(GLenum target, GLuint index, GLuint buffer, GLintptr offset)
+	void glBindBufferBaseEXT(GLenum target, GLuint index, GLuint buffer)
+	void glBeginTransformFeedbackEXT(GLenum primitiveMode)
+	void glEndTransformFeedbackEXT(void)
+	void glTransformFeedbackVaryingsEXT(GLuint program, GLsizei count, const GLchar** varyings, GLenum bufferMode)
+	void glGetTransformFeedbackVaryingEXT(GLuint program, GLuint index, GLsizei bufSize, GLsizei* length, GLsizei* size, GLenum* type, GLchar* name)
+--GL_APPLE_vertex_array_object
+--http://oss.sgi.com/projects/ogl-sample/registry/APPLE/vertex_array_object.txt
+	GL_VERTEX_ARRAY_BINDING_APPLE 0x85B5
+	void glBindVertexArrayAPPLE (GLuint array)
+	void glDeleteVertexArraysAPPLE (GLsizei n, GLuint* arrays)
+	void glGenVertexArraysAPPLE (GLsizei n, GLuint* arrays)
+	GLboolean glIsVertexArrayAPPLE (GLuint array)
+--GL_EXT_framebuffer_sRGB
+--http://developer.download.nvidia.com/opengl/specs/GL_EXT_framebuffer_sRGB.txt
+	GL_FRAMEBUFFER_SRGB_EXT 0x8DB9
+	GL_FRAMEBUFFER_SRGB_CAPABLE_EXT 0x8DBA
+#end extension
+
+--GLEW
+#begin extension
+	GLint glewInit (void)
+#end extension
