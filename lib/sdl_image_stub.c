@@ -10,6 +10,11 @@
 #include "caml/fail.h"
 #include "caml/alloc.h"
 
+#define SDL_IMAGE_VERSION_NUM \
+	(SDL_IMAGE_MAJOR_VERSION * 0x10000 \
+	+ SDL_IMAGE_MINOR_VERSION * 0x100 \
+	+ SDL_IMAGE_PATCHLEVEL)
+
 /* utilities */
 
 #define is_not_nil Is_block
@@ -26,10 +31,14 @@ static inline value Val_SDL_Surface(SDL_Surface *surface)
 /* IMG_InitFlags */
 
 static int const initflags_table[] = {
-    IMG_INIT_JPG,
-    IMG_INIT_PNG,
-    IMG_INIT_TIF,
-    IMG_INIT_WEBP,
+	IMG_INIT_JPG,
+	IMG_INIT_PNG,
+	IMG_INIT_TIF,
+#if SDL_IMAGE_VERSION_NUM >= 0x1020c
+	IMG_INIT_WEBP,
+#else
+	0,
+#endif
 };
 
 static inline int Initflags_val(value initflags)
