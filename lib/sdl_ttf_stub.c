@@ -9,6 +9,11 @@
 #include "caml/fail.h"
 #include "caml/bigarray.h"
 
+#define SDL_TTF_VERSION_NUM \
+	(SDL_TTF_MAJOR_VERSION * 0x10000 \
+	+ SDL_TTF_MINOR_VERSION * 0x100 \
+	+ SDL_TTF_PATCHLEVEL)
+
 /* utilities */
 
 #define is_not_nil Is_block
@@ -90,6 +95,8 @@ static int Style_val(value style)
 
 /* hinting */
 
+#if SDL_TTF_VERSION_NUM >= 0x02000b
+
 static value Val_hinting(int hinting)
 {
 	return Val_int(hinting);
@@ -99,6 +106,8 @@ static int Hinting_val(value hinting)
 {
 	return Int_val(hinting);
 }
+
+#endif
 
 /* exception */
 
@@ -175,15 +184,24 @@ CAMLprim value sdlttfstub_set_font_style(value font, value style)
 CAMLprim value sdlttfstub_get_font_hinting(value font)
 {
 	CAMLparam1(font);
+	CAMLlocal1(result);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
 	int hinting = TTF_GetFontHinting(TTF_Font_val(font));
-	value result = Val_hinting(hinting);
+	result = Val_hinting(hinting);
+#else
+	failwith("sdlttfstub_get_font_hinting(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
 
 CAMLprim value sdlttfstub_set_font_hinting(value font, value hinting)
 {
 	CAMLparam2(font, hinting);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
 	TTF_SetFontHinting(TTF_Font_val(font), Hinting_val(hinting));
+#else
+	failwith("sdlttfstub_set_font_hinting(unimplemented)");
+#endif
 	CAMLreturn(Val_unit);
 }
 
@@ -218,15 +236,24 @@ CAMLprim value sdlttfstub_font_line_skip(value font)
 CAMLprim value sdlttfstub_get_font_kerning(value font)
 {
 	CAMLparam1(font);
+	CAMLlocal1(result);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
 	int allowed = TTF_GetFontKerning(TTF_Font_val(font));
-	value result = Val_bool(allowed);
+	result = Val_bool(allowed);
+#else
+	failwith("sdlttfstub_get_font_kerning(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
 
 CAMLprim value sdlttfstub_set_font_kerning(value font, value allowed)
 {
 	CAMLparam2(font, allowed);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
 	TTF_SetFontKerning(TTF_Font_val(font), Bool_val(allowed));
+#else
+	failwith("sdlttfstub_set_font_kerning(unimplemented)");
+#endif
 	CAMLreturn(Val_unit);
 }
 
@@ -261,7 +288,12 @@ CAMLprim value sdlttfstub_font_face_style_name(value font)
 CAMLprim value sdlttfstub_glyph_is_provided(value font, value ch)
 {
 	CAMLparam2(font, ch);
-	value result = Val_bool(TTF_GlyphIsProvided(TTF_Font_val(font), Int_val(ch)));
+	CAMLlocal1(result);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
+	result = Val_bool(TTF_GlyphIsProvided(TTF_Font_val(font), Int_val(ch)));
+#else
+	failwith("sdlttfstub_glyph_is_provided(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
 
@@ -519,9 +551,14 @@ CAMLprim value sdlttfstub_was_init(value unit)
 CAMLprim value sdlttfstub_get_font_kerning_size(value font, value prev_index, value index)
 {
 	CAMLparam3(font, prev_index, index);
-	value result = Val_int(TTF_GetFontKerningSize(
+	CAMLlocal1(result);
+#if SDL_TTF_VERSION_NUM >= 0x02000b
+	result = Val_int(TTF_GetFontKerningSize(
 		TTF_Font_val(font),
 		Int_val(prev_index),
 		Int_val(index)));
+#else
+	failwith("sdlttfstub_get_font_kerning_size(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
