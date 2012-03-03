@@ -10,6 +10,11 @@
 #include "caml/alloc.h"
 #include "caml/bigarray.h"
 
+#define SDL_MIXER_VERSION_NUM \
+	(SDL_MIXER_MAJOR_VERSION * 0x10000 \
+	+ SDL_MIXER_MINOR_VERSION * 0x100 \
+	+ SDL_MIXER_PATCHLEVEL)
+
 /* utilities */
 
 #define is_not_nil Is_block
@@ -29,11 +34,15 @@ static value cons(value x, value l)
 /* MIX_InitFlags */
 
 static int const initflags_table[] = {
-    MIX_INIT_FLAC,
-    MIX_INIT_MOD,
-    MIX_INIT_MP3,
-    MIX_INIT_OGG,
-    MIX_INIT_FLUIDSYNTH,
+	MIX_INIT_FLAC,
+	MIX_INIT_MOD,
+	MIX_INIT_MP3,
+	MIX_INIT_OGG,
+#if SDL_MIXER_VERSION_NUM >= 0x01020c
+	MIX_INIT_FLUIDSYNTH,
+#else
+	0,
+#endif
 };
 
 static inline int Initflags_val(value initflags)
@@ -702,17 +711,27 @@ CAMLprim value sdlmixerstub_get_synchro_value(value unit)
 CAMLprim value sdlmixerstub_set_sound_fonts(value paths)
 {
 	CAMLparam1(paths);
+#if SDL_MIXER_VERSION_NUM >= 0x01020c
 	Mix_SetSoundFonts(String_val(paths));
+#else
+	failwith("sdlmixerstub_set_sound_fonts(unimplemented)");
+#endif
 	CAMLreturn(Val_unit);
 }
 
 CAMLprim value sdlmixerstub_get_sound_fonts(value unit)
 {
 	CAMLparam1(unit);
-	value result = caml_copy_string(Mix_GetSoundFonts());
+	CAMLlocal1(result);
+#if SDL_MIXER_VERSION_NUM >= 0x01020c
+	result = caml_copy_string(Mix_GetSoundFonts());
+#else
+	failwith("sdlmixerstub_get_sound_fonts(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
 
+#if SDL_MIXER_VERSION_NUM >= 0x01020c
 static int EachSoundFont(char const *paths, void *data)
 {
 	CAMLparam0();
@@ -721,11 +740,17 @@ static int EachSoundFont(char const *paths, void *data)
 	value result = Val_int(caml_callback(function, caml_copy_string(paths)));
 	CAMLreturn(result);
 }
+#endif
 
 CAMLprim value sdlmixerstub_each_sound_font(value function)
 {
 	CAMLparam1(function);
-	value result = Val_int(Mix_EachSoundFont(EachSoundFont, (void *)function));
+	CAMLlocal1(result);
+#if SDL_MIXER_VERSION_NUM >= 0x01020c
+	result = Val_int(Mix_EachSoundFont(EachSoundFont, (void *)function));
+#else
+	failwith("sdlmixerstub_each_sound_font(unimplemented)");
+#endif
 	CAMLreturn(result);
 }
 
