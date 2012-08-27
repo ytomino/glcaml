@@ -696,6 +696,7 @@ module Draw = struct
 
 
 (******************* Bitmap scaling **********************)
+  (*
   let print_array a =
     let dim = Array.length a.(0) in
     for i = 0 to (dim - 1) do
@@ -704,6 +705,7 @@ module Draw = struct
       done;
       Printf.printf "\n";
     done
+  *)
 
   let normalize a =
     let total = ref 0.0 in
