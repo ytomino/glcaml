@@ -67,10 +67,12 @@ LIBNAME=sdl_mixer
 STUBLIBNAME=ml$(LIBNAME)
 
 OCAMLCFLAGS=-w Aer
-CFLAGS=-O2 -W -Wall
+CFLAGS=-O2 -Wall -Wextra $(addprefix -I,$(addsuffix /include,$(SDLPREFIX)))
+
+SDLLDFLAGS=$(addprefix -L,$(addsuffix /lib,$(SDLPREFIX)))
 
 ifneq ($(findstring mingw,$(TARGET)),)
- OCAMLMKLIBFLAGS=-lSDL_mixer -lSDL
+ OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDL_mixer -lSDL
  CCLIB=-cclib -lSDL_mixer.dll -cclib -lSDL.dll
  LDFLAGS=-defaultlib -lSDL_mixer -defaultlib -lSDL
 else
@@ -80,9 +82,9 @@ else
   CCLIB=$(addprefix -cclib ,-framework SDL_mixer)
   LDFLAGS=-framework SDL_mixer
  else
-  OCAMLMKLIBFLAGS=-lSDL_mixer -lSDL
-  CCLIB=-cclib -lSDL_mixer -cclib -lSDL
-  LDFLAGS=-lSDL_mixer -lSDL
+  OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDL_mixer -lSDL
+  CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -lSDL_mixer -lSDL)
+  LDFLAGS=$(SDLLDFLAGS) -lSDL_mixer -lSDL
  endif
 endif
 ########

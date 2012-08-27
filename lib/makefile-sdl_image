@@ -67,7 +67,9 @@ LIBNAME=sdl_image
 STUBLIBNAME=ml$(LIBNAME)
 
 OCAMLCFLAGS=-w Aer
-CFLAGS=-O2
+CFLAGS=-O2 $(addprefix -I,$(addsuffix /include,$(SDLPREFIX)))
+
+SDLLDFLAGS=$(addprefix -L,$(addsuffix /lib,$(SDLPREFIX)))
 
 ifneq ($(findstring mingw,$(TARGET)),)
  OCAMLMKLIBFLAGS=-lSDL_image -lSDL -lpng -lz
@@ -76,13 +78,13 @@ ifneq ($(findstring mingw,$(TARGET)),)
 else
  ifneq ($(FRAMEWORKS),)
   CFLAGS+=-DUSE_FRAMEWORK -I$(FRAMEWORKS)/SDL.framework/Headers -framework SDL_image
-  OCAMLMKLIBFLAGS=-framework SDL_image -lpng -lz
-  CCLIB=$(addprefix -cclib ,-framework SDL_image -lpng -lz)
-  LDFLAGS=-framework SDL_image -lpng -lz
+  OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -framework SDL_image -lpng -lz
+  CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -framework SDL_image -lpng -lz)
+  LDFLAGS=$(SDLLDFLAGS) -framework SDL_image -lpng -lz
  else
-  OCAMLMKLIBFLAGS=-lSDL_image -lSDL -lpng -lz
-  CCLIB=-cclib -lSDL_image -cclib -lSDL -cclib -lpng -cclib -lz
-  LDFLAGS=-lSDL_image -lSDL -lpng -lz
+  OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDL_image -lSDL -lpng -lz
+  CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -lSDL_image -lSDL -lpng -lz)
+  LDFLAGS=$(SDLLDFLAGS) -lSDL_image -lSDL -lpng -lz
  endif
 endif
 ########

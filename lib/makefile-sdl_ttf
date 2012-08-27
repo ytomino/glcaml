@@ -67,7 +67,9 @@ LIBNAME=sdl_ttf
 STUBLIBNAME=ml$(LIBNAME)
 
 OCAMLCFLAGS=-w Aer
-CFLAGS=-O2 -W -Wall
+CFLAGS=-O2 -Wall -Wextra $(addprefix -I,$(addsuffix /include,$(SDLPREFIX)))
+
+SDLLDFLAGS=$(addprefix -L,$(addsuffix /lib,$(SDLPREFIX)))
 
 ifneq ($(findstring mingw,$(TARGET)),)
  OCAMLMKLIBFLAGS=-lSDL_ttf -lSDL
@@ -80,9 +82,9 @@ else
   CCLIB=$(addprefix -cclib ,-framework SDL_ttf)
   LDFLAGS=-framework SDL_ttf
  else
-  OCAMLMKLIBFLAGS=-lSDL_ttf -lSDL
-  CCLIB=-cclib -lSDL_ttf -cclib -lSDL
-  LDFLAGS=-lSDL_ttf -lSDL
+  OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDL_ttf -lSDL
+  CCLIB=$(addprefix -cclib, $(SDLLDFLAGS) -lSDL_ttf -lSDL)
+  LDFLAGS=$(SDLLDFLAGS) -lSDL_ttf -lSDL
  endif
 endif
 ########

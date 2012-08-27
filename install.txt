@@ -39,7 +39,7 @@ DESTDIR=`ocamlc -where` (default)
 FRAMEWORKS=not empty or empty (default)
 
 	not empty       -> use SDL.Framework on Mac OS X
-	empty (default) -> use libraries in /usr/local/lib
+	empty (default) -> use libraries in /usr/local/lib or $(SDLPREFIX)/lib
 
 LOADER=glew, dynamic, static or empty (default)
 

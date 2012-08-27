@@ -15,9 +15,9 @@ ifneq ($(LOADER),glew)
 ALLTARGETS+=nosdl
 endif
 
-all: build/glcaml.cma $(ALLTARGETS)
+all: build/glcaml.cma build/sdl.cma build/sdl_image.cma build/sdl_mixer.cma build/sdl_ttf.cma $(ALLTARGETS)
 
-build/glcaml.cma:
+build/glcaml.cma build/sdl.cma build/sdl_image.cma build/sdl_mixer.cma build/sdl_ttf.cma:
 	make -C lib -f makefile install DESTDIR=$(abspath build)
 
 ifneq ($(LOADER),glew)

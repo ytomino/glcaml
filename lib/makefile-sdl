@@ -67,7 +67,9 @@ LIBNAME=sdl
 STUBLIBNAME=ml$(LIBNAME)
 
 OCAMLCFLAGS=-w Aer
-CFLAGS=-O2
+CFLAGS=-O2 $(addprefix -I,$(addsuffix /include,$(SDLPREFIX)))
+
+SDLLDFLAGS=$(addprefix -L,$(SDLPREFIX)/lib)
 
 ifneq ($(findstring mingw,$(TARGET)),)
  OCAMLMKLIBFLAGS=-lSDL.dll
@@ -76,18 +78,18 @@ ifneq ($(findstring mingw,$(TARGET)),)
 else
  ifneq ($(FRAMEWORKS),)
   CFLAGS+=-framework SDL
-  OCAMLMKLIBFLAGS=-lSDLmain -framework SDL -framework Cocoa
-  CCLIB=$(addprefix -cclib ,-lSDLmain -framework SDL -framework Cocoa)
-  LDFLAGS=-lSDLmain -framework SDL -framework Cocoa
+  OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDLmain -framework SDL -framework Cocoa
+  CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -lSDLmain -framework SDL -framework Cocoa)
+  LDFLAGS=$(SDLLDFLAGS) -lSDLmain -framework SDL -framework Cocoa
  else
   ifneq ($(findstring darwin,$(TARGET)),)
-   OCAMLMKLIBFLAGS=-lSDLmain -lSDL -framework Cocoa
-   CCLIB=$(addprefix -cclib ,-lSDLmain -lSDL -framework Cocoa)
-   LDFLAGS=-lSDLmain -lSDL -framework Cocoa
+   OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDLmain -lSDL -framework Cocoa
+   CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -lSDLmain -lSDL -framework Cocoa)
+   LDFLAGS=$(SDLLDFLAGS) -lSDLmain -lSDL -framework Cocoa
   else
-   OCAMLMKLIBFLAGS=-lSDLmain -lSDL
-   CCLIB=-cclib -lSDLmain -cclib -lSDL
-   LDFLAGS=-lSDLmain -lSDL
+   OCAMLMKLIBFLAGS=$(SDLLDFLAGS) -lSDLmain -lSDL
+   CCLIB=$(addprefix -cclib ,$(SDLLDFLAGS) -lSDLmain -lSDL)
+   LDFLAGS=$(SDLLDFLAGS) -lSDLmain -lSDL
   endif
  endif
 endif
