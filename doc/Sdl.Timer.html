@@ -12,28 +12,28 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl.Timer</title>
 </head>
 <body>
-<div class="navbar"><a href="Sdl.Event.html">Previous</a>
-&nbsp;<a href="Sdl.html">Up</a>
-&nbsp;<a href="Sdl.Audio.html">Next</a>
+<div class="navbar"><a class="pre" href="Sdl.Event.html" title="Sdl.Event">Previous</a>
+&nbsp;<a class="up" href="Sdl.html" title="Sdl">Up</a>
+&nbsp;<a class="post" href="Sdl.Audio.html" title="Sdl.Audio">Next</a>
 </div>
-<center><h1>Module <a href="type_Sdl.Timer.html">Sdl.Timer</a></h1></center>
-<br>
+<h1>Module <a href="type_Sdl.Timer.html">Sdl.Timer</a></h1>
 <pre><span class="keyword">module</span> Timer: <code class="code">sig</code> <a href="Sdl.Timer.html">..</a> <code class="code">end</code></pre>Timer module<br>
 <hr width="100%">
-<pre><span class="keyword">val</span> <a name="VALget_ticks"></a>get_ticks : <code class="type">unit -> int</code></pre><div class="info">
+<pre><span id="VALget_ticks"><span class="keyword">val</span> get_ticks</span> : <code class="type">unit -> int</code></pre><div class="info">
 <code class="code">get_ticks -&gt; milliseconds</code>
-		Returns the number of milliseconds since SDL library initialization. Note that this value wraps around 
-		if the program runs for more than ~49.7 days.<br>
+    Returns the number of milliseconds since SDL library initialization. Note that this value wraps around
+    if the program runs for more than ~49.7 days.<br>
 </div>
-<pre><span class="keyword">val</span> <a name="VALdelay"></a>delay : <code class="type">int -> unit</code></pre><div class="info">
+<pre><span id="VALdelay"><span class="keyword">val</span> delay</span> : <code class="type">int -> unit</code></pre><div class="info">
 <code class="code">delay milliseconds</code>
-		Wait a specified number of milliseconds before returning. 
-		<code class="code">delay</code> will wait at least the specified time, but possible longer due to OS scheduling.
-		Note: Count on a delay granularity of at least 10 ms. Some platforms have shorter clock ticks but this is the most common.<br>
+    Wait a specified number of milliseconds before returning.
+    <code class="code">delay</code> will wait at least the specified time, but possible longer due to OS scheduling.
+    Note: Count on a delay granularity of at least 10 ms. Some platforms have shorter clock ticks but this is the most common.<br>
 </div>
 </body></html>

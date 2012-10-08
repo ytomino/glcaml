@@ -7,6 +7,7 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl.Event</title>
@@ -18,6 +19,7 @@
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;pointer<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;app_state&nbsp;=&nbsp;<span class="constructor">APPMOUSEFOCUS</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">APPINPUTFOCUS</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">APPACTIVE</span><br>
 &nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_app_state&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Event</span>.app_state&nbsp;list<br>
+&nbsp;&nbsp;<span class="keyword">val</span>&nbsp;get_mouse_state&nbsp;:&nbsp;unit&nbsp;<span class="keywordsign">-&gt;</span>&nbsp;int&nbsp;*&nbsp;int&nbsp;*&nbsp;int<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;key&nbsp;=<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="constructor">K_UNKNOWN</span><br>
 &nbsp;&nbsp;&nbsp;&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">K_FIRST</span><br>
@@ -287,7 +289,7 @@
 &nbsp;&nbsp;}<br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;mouse_button&nbsp;=&nbsp;<span class="constructor">LEFT</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">MIDDLE</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">RIGHT</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">WHEELUP</span>&nbsp;<span class="keywordsign">|</span>&nbsp;<span class="constructor">WHEELDOWN</span><br>
 &nbsp;&nbsp;<span class="keyword">type</span>&nbsp;mouse_motion_event&nbsp;=&nbsp;{<br>
-&nbsp;&nbsp;&nbsp;&nbsp;mousestate&nbsp;:&nbsp;<span class="constructor">Sdl</span>.<span class="constructor">Event</span>.press_release;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;mousestate&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mx&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;my&nbsp;:&nbsp;int;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;mxrel&nbsp;:&nbsp;int;<br>
