@@ -11,45 +11,45 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Sdl_mixer</title>
 </head>
 <body>
-<div class="navbar"><a href="Win.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
+<div class="navbar"><a class="pre" href="Win.html" title="Win">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
 &nbsp;</div>
-<center><h1>Module <a href="type_Sdl_mixer.html">Sdl_mixer</a></h1></center>
-<br>
+<h1>Module <a href="type_Sdl_mixer.html">Sdl_mixer</a></h1>
 <pre><span class="keyword">module</span> Sdl_mixer: <code class="code">sig</code> <a href="Sdl_mixer.html">..</a> <code class="code">end</code></pre>Initialization flags<br>
 <hr width="100%">
-<br><code><span class="keyword">type</span> <a name="TYPEinit_flag"></a><code class="type"></code>init_flag = </code><table class="typetable">
+<pre><code><span id="TYPEinit_flag"><span class="keyword">type</span> <code class="type"></code>init_flag</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">FLAC</span></code></td>
+<code><span id="TYPEELTinit_flag.FLAC"><span class="constructor">FLAC</span></span></code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize FLAC decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MOD</span></code></td>
+<code><span id="TYPEELTinit_flag.MOD"><span class="constructor">MOD</span></span></code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize MOD  decoder (via mikmod library)</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MP3</span></code></td>
+<code><span id="TYPEELTinit_flag.MP3"><span class="constructor">MP3</span></span></code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize MP3 decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">OGG</span></code></td>
+<code><span id="TYPEELTinit_flag.OGG"><span class="constructor">OGG</span></span></code></td>
 <td class="typefieldcomment" align="left" valign="top" ><code>(*</code></td><td class="typefieldcomment" align="left" valign="top" >Initialize OGG decoder</td><td class="typefieldcomment" align="left" valign="bottom" ><code>*)</code></td>
 </tr></table>
 
@@ -57,26 +57,26 @@
 Initialization flags<br>
 </div>
 
-<br><code><span class="keyword">type</span> <a name="TYPEfading_type"></a><code class="type"></code>fading_type = </code><table class="typetable">
+<pre><code><span id="TYPEfading_type"><span class="keyword">type</span> <code class="type"></code>fading_type</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">NO_FADING</span></code></td>
+<code><span id="TYPEELTfading_type.NO_FADING"><span class="constructor">NO_FADING</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">FADING_OUT</span></code></td>
+<code><span id="TYPEELTfading_type.FADING_OUT"><span class="constructor">FADING_OUT</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">FADING_IN</span></code></td>
+<code><span id="TYPEELTfading_type.FADING_IN"><span class="constructor">FADING_IN</span></span></code></td>
 
 </tr></table>
 
@@ -84,68 +84,68 @@ Initialization flags<br>
 Fading status query return codes<br>
 </div>
 
-<br><code><span class="keyword">type</span> <a name="TYPEmusic_type"></a><code class="type"></code>music_type = </code><table class="typetable">
+<pre><code><span id="TYPEmusic_type"><span class="keyword">type</span> <code class="type"></code>music_type</span> = </code></pre><table class="typetable">
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_NONE</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_NONE"><span class="constructor">MUS_NONE</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_CMD</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_CMD"><span class="constructor">MUS_CMD</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_WAV</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_WAV"><span class="constructor">MUS_WAV</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_MOD</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_MOD"><span class="constructor">MUS_MOD</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_MID</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_MID"><span class="constructor">MUS_MID</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_OGG</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_OGG"><span class="constructor">MUS_OGG</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_MP3</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_MP3"><span class="constructor">MUS_MP3</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_MP3_MAD</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_MP3_MAD"><span class="constructor">MUS_MP3_MAD</span></span></code></td>
 
 </tr>
 <tr>
 <td align="left" valign="top" >
 <code><span class="keyword">|</span></code></td>
 <td align="left" valign="top" >
-<code><span class="constructor">MUS_FLAC</span></code></td>
+<code><span id="TYPEELTmusic_type.MUS_FLAC"><span class="constructor">MUS_FLAC</span></span></code></td>
 
 </tr></table>
 
@@ -153,17 +153,17 @@ Fading status query return codes<br>
 Music type query return codes<br>
 </div>
 
-<pre><span class="keyword">type</span> <a name="TYPEchunk_t"></a><code class="type"></code>chunk_t </pre>
+<pre><span id="TYPEchunk_t"><span class="keyword">type</span> <code class="type"></code>chunk_t</span> </pre>
 <div class="info">
 Pointer-wrapped representation of audio chunk<br>
 </div>
 
-<pre><span class="keyword">type</span> <a name="TYPEmusic_t"></a><code class="type"></code>music_t </pre>
+<pre><span id="TYPEmusic_t"><span class="keyword">type</span> <code class="type"></code>music_t</span> </pre>
 <div class="info">
 Pointer-wrapped representation of music file<br>
 </div>
 
-<pre><span class="keyword">type</span> <a name="TYPEchannel"></a><code class="type"></code>channel = <code class="type">int</code> </pre>
+<pre><span id="TYPEchannel"><span class="keyword">type</span> <code class="type"></code>channel</span> = <code class="type">int</code> </pre>
 <div class="info">
 Channel number type. -1 usually corresponds to "all channels" or "any
     channel", depending on context.<br>

@@ -8,12 +8,15 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Index of types</title>
 </head>
 <body>
-<center><h1>Index of types</h1></center>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of types</h1>
 <table>
 <tr><td align="left"><br>A</td></tr>
 <tr><td><a href="Sdl.Event.html#TYPEactive_event">active_event</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
@@ -26,12 +29,12 @@ Active event type, containing the application state and focus
 Application state: application has mouse focus, input focus, active
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#TYPEaudio_spec">audio_spec</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#TYPEaudio_spec">audio_spec</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 The <code class="code">audio_spec</code> structure is used to describe the format of some audio data.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#TYPEaudio_status">audio_status</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#TYPEaudio_status">audio_status</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 Status of the audio device
 </div>
@@ -52,6 +55,8 @@ Unsigned char Bigarrays, with C-style layout
 Channel number type.
 </div>
 </td></tr>
+<tr><td><a href="Sdl_audio.html#TYPEchannel_type">channel_type</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
+<td></td></tr>
 <tr><td><a href="Sdl.Audio.html#TYPEchannel_type">channel_type</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td></td></tr>
 <tr><td><a href="Sdl_mixer.html#TYPEchunk_t">chunk_t</a> [<a href="Sdl_mixer.html">Sdl_mixer</a>]</td>
@@ -139,14 +144,14 @@ Joystick hat event
 <tr><td align="left"><br>K</td></tr>
 <tr><td><a href="Sdl.Event.html#TYPEkey">key</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
-SDLKey enum 
-		An enumeration of keysym definitions.
+SDLKey enum
+    An enumeration of keysym definitions.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#TYPEkey_mod">key_mod</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
-SDLMod enum 
-		An enumeration of key modifier definitions.
+SDLMod enum
+    An enumeration of key modifier definitions.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#TYPEkeyboard_event">keyboard_event</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
@@ -221,6 +226,11 @@ Window resize event
 </div>
 </td></tr>
 <tr><td align="left"><br>S</td></tr>
+<tr><td><a href="Sdl_audio.html#TYPEsample_type">sample_type</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
+<td><div class="info">
+Type of sample
+</div>
+</td></tr>
 <tr><td><a href="Sdl.Audio.html#TYPEsample_type">sample_type</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
 <td><div class="info">
 Type of sample
@@ -229,7 +239,7 @@ Type of sample
 <tr><td><a href="Sdl.Draw.html#TYPEsfont">sfont</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 SFont texturemapped fonts based on the specifications at http://www.linux-games.com/sfont/
-		A font consists of a 32bpp RGBA surface with ASCII characters from 33 to 127.
+    A font consists of a 32bpp RGBA surface with ASCII characters from 33 to 127.
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#TYPEshort_array">short_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -250,9 +260,9 @@ tsyswmevent not implemented in trial version
 <tr><td><a href="Sdl.Draw.html#TYPEtga_orientation">tga_orientation</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">read_tga file -&gt; width * height * bitsperpixel * pixel-data</code>
-		Targa TGA image file reader, based on the specs at http://astronomy.swin.edu.au/~pbourke/dataformats/tga/
-		Takes as parameter the file name and returns a tuple containing the image width, height, bytes-per-pixel
-		a string containing the image data in BGR(A) format, and the image orientation.
+    Targa TGA image file reader, based on the specs at http://astronomy.swin.edu.au/~pbourke/dataformats/tga/
+    Takes as parameter the file name and returns a tuple containing the image width, height, bytes-per-pixel
+    a string containing the image data in BGR(A) format, and the image orientation.
 </div>
 </td></tr>
 <tr><td align="left"><br>U</td></tr>
@@ -280,6 +290,6 @@ Flags that determine properties of video surfaces
 <td></td></tr>
 <tr><td><a href="Glcaml.html#TYPEword_matrix">word_matrix</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
-</table><br>
+</table>
 </body>
 </html>

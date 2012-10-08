@@ -8,12 +8,15 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Index of values</title>
 </head>
 <body>
-<center><h1>Index of values</h1></center>
+<div class="navbar">&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;</div>
+<h1>Index of values</h1>
 <table>
 <tr><td align="left"><br>A</td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALall_channels">all_channels</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -28,7 +31,7 @@
 <tr><td><a href="Sdl.Video.html#VALblit_surface">blit_surface</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">blit_surface source_surface srcrect dest_surface dstrect</code>
-		This performs a fast blit from the source surface to the destination surface.
+    This performs a fast blit from the source surface to the destination surface.
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#VALbool_of_int">bool_of_int</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -47,17 +50,17 @@
 Closes the mixer, halting all playing audio.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALclose_audio">close_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALclose_audio">close_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 <code class="code">close_audio</code> closes the audio device
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALconvert_audio">convert_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALconvert_audio">convert_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">convert_audio from_format from_channels from_frequency to_format to_channels to_frequency input_buffer -&gt; output_buffer</code> 
-		Converts an audio sample in <code class="code">input_buffer</code> of sample type <code class="code">from_format</code>, number of channels <code class="code">from_channels</code>, and sample frequency <code class="code">from_frequency</code>
-		to sample type <code class="code">to_format</code>, number of channels <code class="code">to_channels</code>, and sample frequency <code class="code">to_frequency</code>
-		The converted samples are returned in <code class="code">output_buffer</code>
+<code class="code">convert_audio from_format from_channels from_frequency to_format to_channels to_frequency input_buffer -&gt; output_buffer</code>
+  Converts an audio sample in <code class="code">input_buffer</code> of sample type <code class="code">from_format</code>, number of channels <code class="code">from_channels</code>, and sample frequency <code class="code">from_frequency</code>
+  to sample type <code class="code">to_format</code>, number of channels <code class="code">to_channels</code>, and sample frequency <code class="code">to_frequency</code>
+  The converted samples are returned in <code class="code">output_buffer</code>
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#VALcopy_byte_array">copy_byte_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -81,8 +84,8 @@ Closes the mixer, halting all playing audio.
 <tr><td><a href="Sdl.Video.html#VALcreate_rgb_surface">create_rgb_surface</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">create_rgb_surface video_flag_list width height bitsperpixel -&gt; surface</code>
-		Allocate an empty surface (must be called after <code class="code">set_video_mode</code>)
-		If bitsPerPixel is 8 an empty palette is allocated for the surface, otherwise a 'packed-pixel' pixel format is created using internal RGBA masks based on standard 15,16,24 and 32 bitperpixel formats, and taking platform endianness into account.
+    Allocate an empty surface (must be called after <code class="code">set_video_mode</code>)
+    If bitsPerPixel is 8 an empty palette is allocated for the surface, otherwise a 'packed-pixel' pixel format is created using internal RGBA masks based on standard 15,16,24 and 32 bitperpixel formats, and taking platform endianness into account.
 </div>
 </td></tr>
 <tr><td align="left"><br>D</td></tr>
@@ -99,32 +102,32 @@ Default keyboard repeat interval
 <tr><td><a href="Sdl.Timer.html#VALdelay">delay</a> [<a href="Sdl.Timer.html">Sdl.Timer</a>]</td>
 <td><div class="info">
 <code class="code">delay milliseconds</code>
-		Wait a specified number of milliseconds before returning.
+    Wait a specified number of milliseconds before returning.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALdisable_clipping">disable_clipping</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">disable_clipping surface</code>
-		Disables clipping to the clipping rectangle set for a surface
+    Disables clipping to the clipping rectangle set for a surface
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALdisplay_format">display_format</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">display_format src_surface -&gt; dest_surface</code>
-		This function takes a surface and copies it to a new surface of the pixel format and colors of the video framebuffer, suitable for fast blitting onto the display surface.
+    This function takes a surface and copies it to a new surface of the pixel format and colors of the video framebuffer, suitable for fast blitting onto the display surface.
 </div>
 </td></tr>
 <tr><td align="left"><br>E</td></tr>
 <tr><td><a href="Sdl.Event.html#VALenable_key_repeat">enable_key_repeat</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">enable_key_repeat repeat_delay repeat_interval</code>
-		Enables or disables the keyboard repeat rate.
+    Enables or disables the keyboard repeat rate.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#VALenable_unicode">enable_unicode</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">enable_unicode query/disable/enable -&gt; on/off</code>
-		Enables/Disables Unicode keyboard translation.
+    Enables/Disables Unicode keyboard translation.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALexpire_channel">expire_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -190,13 +193,13 @@ Queries the fading status of the music.
 <tr><td><a href="Sdl.Video.html#VALfill_rect">fill_rect</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">fill_rect surface  dstrect pixel</code>
-		This function performs a fast fill of the given rectangle with color.
+    This function performs a fast fill of the given rectangle with color.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALfill_surface">fill_surface</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">fill_surface surface  pixel</code>
-		Fills the surface with pixels of the given color
+    Fills the surface with pixels of the given color
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALfirst_available_channel">first_available_channel</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -204,7 +207,7 @@ Queries the fading status of the music.
 <tr><td><a href="Sdl.Video.html#VALflip">flip</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">flip surface</code>
-		On hardware that supports double-buffering, this function sets up a flip and returns.
+    On hardware that supports double-buffering, this function sets up a flip and returns.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALfree_chunk">free_chunk</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -222,41 +225,41 @@ Releases allocated music file
 Free a surface.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALfree_wav">free_wav</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALfree_wav">free_wav</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">free_wav wav_buffer</code> 
-		Frees a WAV buffer allocated by load-wav
+<code class="code">free_wav wav_buffer</code>
+  Frees a WAV buffer allocated by load-wav
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALfx_pan">fx_pan</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALfx_pan">fx_pan</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">fx_pan  pan volume input_buffer  -&gt; output_buffer</code> 
-		This is an auxiliary, non core SDL mixing function.
+<code class="code">fx_pan  pan volume input_buffer  -&gt; output_buffer</code>
+  This is an auxiliary, non core SDL mixing function.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALfx_shift">fx_shift</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALfx_shift">fx_shift</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 <code class="code">fx_shift : frequency_shift input_buffer -&gt; output_buffer</code>
-		This is an auxiliary, non core SDL mixing function.
+  This is an auxiliary, non core SDL mixing function.
 </div>
 </td></tr>
 <tr><td align="left"><br>G</td></tr>
 <tr><td><a href="Sdl.Event.html#VALget_app_state">get_app_state</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">get_app_state -&gt; app_state list</code>
-		This function returns the current state of the application.
+    This function returns the current state of the application.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.SDLGL.html#VALget_attribute">get_attribute</a> [<a href="Sdl.SDLGL.html">Sdl.SDLGL</a>]</td>
 <td><div class="info">
-<code class="code">get_attribute attr -&gt; value</code>	 
-		Returns the value of the SDL/OpenGL attribute attr in value.
+<code class="code">get_attribute attr -&gt; value</code>
+    Returns the value of the SDL/OpenGL attribute attr in value.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALget_audio_status">get_audio_status</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALget_audio_status">get_audio_status</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 <code class="code">get_audio_status -&gt; audio_status</code>
-		Returns either <code class="code">STOPPED</code>, <code class="code">PAUSED</code> or <code class="code">PLAYING</code> depending on the current audio status
+  Returns either <code class="code">STOPPED</code>, <code class="code">PAUSED</code> or <code class="code">PLAYING</code> depending on the current audio status
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALget_available_channel_count">get_available_channel_count</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -267,7 +270,7 @@ Returns the total number of available channels.
 <tr><td><a href="Sdl.Window.html#VALget_caption">get_caption</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">get_caption -&gt; window_caption * taskbar_caption</code>
-		Gets the title-bar and icon name of the display window.
+    Gets the title-bar and icon name of the display window.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALget_channel_fading">get_channel_fading</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -298,13 +301,13 @@ Gets a string containing a description of the most recent SDL error
 <tr><td><a href="Sdl.Window.html#VALget_grab_input">get_grab_input</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">get_grab_input</code>
-		Returns <code class="code">true</code> if the input has been grabbed by the application, else <code class="code">false</code>
+    Returns <code class="code">true</code> if the input has been grabbed by the application, else <code class="code">false</code>
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#VALget_key_name">get_key_name</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">get_key_name key keyname</code>
-		Returns the SDL-defined name of the key in <code class="code">key</code>
+    Returns the SDL-defined name of the key in <code class="code">key</code>
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALget_last_error">get_last_error</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -315,9 +318,11 @@ Retrieves a string containing a description of most recent Mix error.
 <tr><td><a href="Sdl.Event.html#VALget_mod_state">get_mod_state</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">get_mod_state -&gt; key_mod list</code>
-		Returns a list of the current state of the modifier keys (CTRL, ALT, etc.).
+    Returns a list of the current state of the modifier keys (CTRL, ALT, etc.).
 </div>
 </td></tr>
+<tr><td><a href="Sdl.Event.html#VALget_mouse_state">get_mouse_state</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
+<td></td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALget_music_decoders">get_music_decoders</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
 <td><div class="info">
 Retrieves a list of formats supported for music files.
@@ -341,25 +346,25 @@ Retrieves the volume of currently playing music.
 <tr><td><a href="Sdl.Draw.html#VALget_pixel">get_pixel</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">get_pixel surface x y -&gt; pixel</code>
-		gets an int32 rgb(a) pixel, from surface <code class="code">surface</code> at location <code class="code">(x,y)</code>
+    gets an int32 rgb(a) pixel, from surface <code class="code">surface</code> at location <code class="code">(x,y)</code>
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALget_rgb">get_rgb</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">get_rgb surface -&gt; pixel -&gt; red * green * blue</code>
-		Get RGB component values from a pixel stored in the specified pixel format.
+    Get RGB component values from a pixel stored in the specified pixel format.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALget_rgba">get_rgba</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">get_rgba  surface -&gt; pixel -&gt; red * green * blue * alpha</code>
-		Get RGBA component values from a pixel stored in the specified pixel format.
+    Get RGBA component values from a pixel stored in the specified pixel format.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Timer.html#VALget_ticks">get_ticks</a> [<a href="Sdl.Timer.html">Sdl.Timer</a>]</td>
 <td><div class="info">
 <code class="code">get_ticks -&gt; milliseconds</code>
-		Returns the number of milliseconds since SDL library initialization.
+    Returns the number of milliseconds since SDL library initialization.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALget_version">get_version</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -414,6 +419,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBegin">glBegin</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBeginConditionalRenderNV">glBeginConditionalRenderNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBeginFragmentShaderATI">glBeginFragmentShaderATI</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBeginOcclusionQueryNV">glBeginOcclusionQueryNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -423,6 +430,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglBeginQueryARB">glBeginQueryARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBeginSceneEXT">glBeginSceneEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBeginTransformFeedbackEXT">glBeginTransformFeedbackEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBeginTransformFeedbackNV">glBeginTransformFeedbackNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -436,9 +445,15 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindBufferARB">glBindBufferARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBindBufferBaseEXT">glBindBufferBaseEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindBufferBaseNV">glBindBufferBaseNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBindBufferOffsetEXT">glBindBufferOffsetEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindBufferOffsetNV">glBindBufferOffsetNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBindBufferRangeEXT">glBindBufferRangeEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindBufferRangeNV">glBindBufferRangeNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -467,6 +482,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglBindTextureEXT">glBindTextureEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindTextureUnitParameterEXT">glBindTextureUnitParameterEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglBindVertexArray">glBindVertexArray</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBindVertexArrayAPPLE">glBindVertexArrayAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -500,7 +517,7 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBufferDataARB">glBufferDataARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
-<tr><td><a href="Glcaml.html#VALglBufferRegionEnabledEXT">glBufferRegionEnabledEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<tr><td><a href="Glcaml.html#VALglBufferParameteriAPPLE">glBufferParameteriAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglBufferSubData">glBufferSubData</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -792,8 +809,6 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDeleteAsyncMarkersSGIX">glDeleteAsyncMarkersSGIX</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
-<tr><td><a href="Glcaml.html#VALglDeleteBufferRegionEXT">glDeleteBufferRegionEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDeleteBuffers">glDeleteBuffers</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDeleteBuffersARB">glDeleteBuffersARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -829,6 +844,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglDeleteTextures">glDeleteTextures</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDeleteTexturesEXT">glDeleteTexturesEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglDeleteVertexArrays">glDeleteVertexArrays</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDeleteVertexArraysAPPLE">glDeleteVertexArraysAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -873,8 +890,6 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglDrawArraysInstancedEXT">glDrawArraysInstancedEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDrawBuffer">glDrawBuffer</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALglDrawBufferRegionEXT">glDrawBufferRegionEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglDrawBuffers">glDrawBuffers</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -928,6 +943,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglEnd">glEnd</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALglEndConditionalRenderNV">glEndConditionalRenderNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglEndFragmentShaderATI">glEndFragmentShaderATI</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglEndList">glEndList</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -939,6 +956,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglEndQueryARB">glEndQueryARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglEndSceneEXT">glEndSceneEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglEndTransformFeedbackEXT">glEndTransformFeedbackEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglEndTransformFeedbackNV">glEndTransformFeedbackNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -991,6 +1010,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglFinishTextureSUNX">glFinishTextureSUNX</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglFlush">glFlush</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglFlushMappedBufferRangeAPPLE">glFlushMappedBufferRangeAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglFlushPixelDataRangeNV">glFlushPixelDataRangeNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -1145,6 +1166,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglGenTextures">glGenTextures</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGenTexturesEXT">glGenTexturesEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglGenVertexArrays">glGenVertexArrays</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGenVertexArraysAPPLE">glGenVertexArraysAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -1370,8 +1393,6 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGetPointerv">glGetPointerv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
-<tr><td><a href="Glcaml.html#VALglGetPointervEXT">glGetPointervEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGetPolygonStipple">glGetPolygonStipple</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGetProgramEnvParameterdvARB">glGetProgramEnvParameterdvARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -1465,6 +1486,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglGetTexParameteriv">glGetTexParameteriv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGetTrackMatrixivNV">glGetTrackMatrixivNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglGetTransformFeedbackVaryingEXT">glGetTransformFeedbackVaryingEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglGetTransformFeedbackVaryingNV">glGetTransformFeedbackVaryingNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -1641,6 +1664,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglIsTextureEXT">glIsTextureEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglIsVariantEnabledEXT">glIsVariantEnabledEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglIsVertexArray">glIsVertexArray</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglIsVertexArrayAPPLE">glIsVertexArrayAPPLE</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -1915,8 +1940,6 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglMultiTexCoord4sv">glMultiTexCoord4sv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglMultiTexCoord4svARB">glMultiTexCoord4svARB</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALglNewBufferRegionEXT">glNewBufferRegionEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglNewList">glNewList</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -2195,8 +2218,6 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglRasterPos4sv">glRasterPos4sv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglReadBuffer">glReadBuffer</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALglReadBufferRegionEXT">glReadBufferRegionEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglReadPixels">glReadPixels</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -2651,6 +2672,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALglTrackMatrixNV">glTrackMatrixNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglTransformFeedbackAttribsNV">glTransformFeedbackAttribsNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALglTransformFeedbackVaryingsEXT">glTransformFeedbackVaryingsEXT</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALglTransformFeedbackVaryingsNV">glTransformFeedbackVaryingsNV</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -3744,6 +3767,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_buffer_access_arb">gl_buffer_access_arb</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_buffer_flushing_unmap_apple">gl_buffer_flushing_unmap_apple</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_buffer_map_pointer">gl_buffer_map_pointer</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_buffer_map_pointer_arb">gl_buffer_map_pointer_arb</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -3751,6 +3776,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALgl_buffer_mapped">gl_buffer_mapped</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_buffer_mapped_arb">gl_buffer_mapped_arb</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_buffer_serialized_modify_apple">gl_buffer_serialized_modify_apple</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_buffer_size">gl_buffer_size</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -5338,6 +5365,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_interlace_sgix">gl_interlace_sgix</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_interleaved_attribs_ext">gl_interleaved_attribs_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_interleaved_attribs_nv">gl_interleaved_attribs_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_interpolate">gl_interpolate</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -5369,14 +5398,6 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALgl_inverted_screen_w_rend">gl_inverted_screen_w_rend</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_keep">gl_keep</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALgl_ktx_back_region">gl_ktx_back_region</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALgl_ktx_front_region">gl_ktx_front_region</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALgl_ktx_stencil_region">gl_ktx_stencil_region</a> [<a href="Glcaml.html">Glcaml</a>]</td>
-<td></td></tr>
-<tr><td><a href="Glcaml.html#VALgl_ktx_z_region">gl_ktx_z_region</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_left">gl_left</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -6098,9 +6119,15 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_max_track_matrix_stack_depth_nv">gl_max_track_matrix_stack_depth_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_interleaved_components_ext">gl_max_transform_feedback_interleaved_components_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_interleaved_components_nv">gl_max_transform_feedback_interleaved_components_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_separate_attribs_ext">gl_max_transform_feedback_separate_attribs_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_separate_attribs_nv">gl_max_transform_feedback_separate_attribs_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_separate_components_ext">gl_max_transform_feedback_separate_components_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_max_transform_feedback_separate_components_nv">gl_max_transform_feedback_separate_components_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -7048,6 +7075,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_primitive_restart_nv">gl_primitive_restart_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_primitives_generated_ext">gl_primitives_generated_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_primitives_generated_nv">gl_primitives_generated_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_program_address_registers_arb">gl_program_address_registers_arb</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -7188,9 +7217,15 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_quarter_bit_ati">gl_quarter_bit_ati</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_query_by_region_no_wait_nv">gl_query_by_region_no_wait_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_query_by_region_wait_nv">gl_query_by_region_wait_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_query_counter_bits">gl_query_counter_bits</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_query_counter_bits_arb">gl_query_counter_bits_arb</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_query_no_wait_nv">gl_query_no_wait_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_query_result">gl_query_result</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -7203,6 +7238,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALgl_query_result_available_nv">gl_query_result_available_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_query_result_nv">gl_query_result_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_query_wait_nv">gl_query_wait_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_r">gl_r</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -7227,6 +7264,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALgl_r3_g3_b2">gl_r3_g3_b2</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_raster_position_unclipped_ibm">gl_raster_position_unclipped_ibm</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_rasterizer_discard_ext">gl_rasterizer_discard_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_rasterizer_discard_nv">gl_rasterizer_discard_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -7703,6 +7742,8 @@ Retrieves current volume of the channel.
 <tr><td><a href="Glcaml.html#VALgl_separable_2d">gl_separable_2d</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_separable_2d_ext">gl_separable_2d_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_separate_attribs_ext">gl_separate_attribs_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_separate_attribs_nv">gl_separate_attribs_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -8564,19 +8605,35 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_attribs_nv">gl_transform_feedback_attribs_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_binding_ext">gl_transform_feedback_buffer_binding_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_binding_nv">gl_transform_feedback_buffer_binding_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_ext">gl_transform_feedback_buffer_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_mode_ext">gl_transform_feedback_buffer_mode_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_mode_nv">gl_transform_feedback_buffer_mode_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_nv">gl_transform_feedback_buffer_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_size_ext">gl_transform_feedback_buffer_size_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_size_nv">gl_transform_feedback_buffer_size_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_start_ext">gl_transform_feedback_buffer_start_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_buffer_start_nv">gl_transform_feedback_buffer_start_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_primitives_written_ext">gl_transform_feedback_primitives_written_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_primitives_written_nv">gl_transform_feedback_primitives_written_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_record_nv">gl_transform_feedback_record_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_varying_max_length_ext">gl_transform_feedback_varying_max_length_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
+<tr><td><a href="Glcaml.html#VALgl_transform_feedback_varyings_ext">gl_transform_feedback_varyings_ext</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_transform_feedback_varyings_nv">gl_transform_feedback_varyings_nv</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -9046,6 +9103,8 @@ Retrieves current volume of the channel.
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALgl_zoom_y">gl_zoom_y</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
+<tr><td><a href="Glcaml.html#VALglewInit">glewInit</a> [<a href="Glcaml.html">Glcaml</a>]</td>
+<td></td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALgroup_available">group_available</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
 <td><div class="info">
 <code class="code">group_available tag -&gt; channel</code>
@@ -9105,7 +9164,7 @@ Halts playing the music.
 <tr><td><a href="Sdl.Window.html#VALiconify_window">iconify_window</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">iconify_window</code>
-		If the application is running in a window managed environment SDL attempts to iconify/minimise it.
+    If the application is running in a window managed environment SDL attempts to iconify/minimise it.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALinit">init</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9125,9 +9184,9 @@ Set up Ocaml graphics window for OpenGL input.
 </td></tr>
 <tr><td><a href="Glcaml.html#VALint_of_bool">int_of_bool</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
-<tr><td><a href="Sdl.Audio.html#VALint_of_channel">int_of_channel</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALint_of_channel">int_of_channel</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td></td></tr>
-<tr><td><a href="Sdl.Audio.html#VALint_of_sampletype">int_of_sampletype</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALint_of_sampletype">int_of_sampletype</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td></td></tr>
 <tr><td><a href="Glcaml.html#VALint_to_bool_array">int_to_bool_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
 <td></td></tr>
@@ -9137,13 +9196,13 @@ Set up Ocaml graphics window for OpenGL input.
 <tr><td><a href="Sdl.SDLGL.html#VALload_bmp">load_bmp</a> [<a href="Sdl.SDLGL.html">Sdl.SDLGL</a>]</td>
 <td><div class="info">
 <code class="code">load_bmp file -&gt; surface</code>
-		Loads a Windows Bitmap file and loads it into a surface suitable for use as an OpenGL texture
+    Loads a Windows Bitmap file and loads it into a surface suitable for use as an OpenGL texture
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALload_bmp">load_bmp</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">load_bmp file -&gt; surface</code>
-		Loads a surface from a named Windows BMP file.
+    Loads a surface from a named Windows BMP file.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALload_mus">load_mus</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9161,7 +9220,7 @@ Set up Ocaml graphics window for OpenGL input.
 <tr><td><a href="Sdl.Draw.html#VALload_tga">load_tga</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">load_tga file -&gt; surface</code>
-		Loads a TGA file and returns a surface with the image data
+    Loads a TGA file and returns a surface with the image data
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALload_wav">load_wav</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9170,13 +9229,13 @@ Set up Ocaml graphics window for OpenGL input.
     Load a wave file
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALload_wav">load_wav</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALload_wav">load_wav</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">load_wav filename -&gt; obtained audio_spec * wav_buffer</code> 
-		This function loads a WAVE file into memory.
+<code class="code">load_wav filename -&gt; obtained audio_spec * wav_buffer</code>
+  This function loads a WAVE file into memory.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALlock_audio">lock_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALlock_audio">lock_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 The lock manipulated by these functions protects the callback function.
 </div>
@@ -9212,14 +9271,14 @@ The lock manipulated by these functions protects the callback function.
 <tr><td><a href="Sdl.Draw.html#VALmake_mipmaps">make_mipmaps</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">make_mipmaps surface_bitmap scale_filter_type  -&gt;  array of mipmaps down to 1x1</code>
-		Makes mipmaps suitable for use in OpenGL, by generating an array of mipmaps down to 1x1.
+    Makes mipmaps suitable for use in OpenGL, by generating an array of mipmaps down to 1x1.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALmake_sfont">make_sfont</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">make_sfont Surface_containing_loaded_RGBA_texture_map_with_font_characters -&gt;  sfont</code>
-		Takes a surface containing a texture-mapped font (see http://www.linux-games.com/sfont/)
-		and returns an sfont structure
+    Takes a surface containing a texture-mapped font (see http://www.linux-games.com/sfont/)
+    and returns an sfont structure
 </div>
 </td></tr>
 <tr><td><a href="Glcaml.html#VALmake_short_array">make_short_array</a> [<a href="Glcaml.html">Glcaml</a>]</td>
@@ -9241,25 +9300,25 @@ The lock manipulated by these functions protects the callback function.
 <tr><td><a href="Sdl.Video.html#VALmap_rgb">map_rgb</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">map_rgb surface -&gt; red -&gt; green -&gt; blue -&gt; pixel</code>
-		Maps the RGB color value to the specified pixel format and returns the pixel value as a 32-bit int.
+    Maps the RGB color value to the specified pixel format and returns the pixel value as a 32-bit int.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALmap_rgba">map_rgba</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">map_rgba surface -&gt; red -&gt; green -&gt; blue -&gt; alpha -&gt; pixel</code>
-		Maps the RGBA color value to the specified pixel format and returns the pixel value as a 32-bit int.
+    Maps the RGBA color value to the specified pixel format and returns the pixel value as a 32-bit int.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALmitchell">mitchell</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td></td></tr>
-<tr><td><a href="Sdl.Audio.html#VALmix_audio">mix_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALmix_audio">mix_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">mix_audio buffer1 buffer2  volume</code> 
-		This function takes two audio buffers of len bytes each of the playing audio format and mixes them, 
-		performing addition, volume adjustment, and overflow clipping.
+<code class="code">mix_audio buffer1 buffer2  volume</code>
+  This function takes two audio buffers of len bytes each of the playing audio format and mixes them,
+  performing addition, volume adjustment, and overflow clipping.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALmix_maxvolume">mix_maxvolume</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALmix_maxvolume">mix_maxvolume</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 The maximum sample mixer volume.
 </div>
@@ -9276,11 +9335,11 @@ The maximum sample mixer volume.
     Opens the mixer with certain audio format.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALopen_audio">open_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALopen_audio">open_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">open_audio desired_audio_spec mixer_callback -&gt; obtained audio_spec </code> 
-		This function opens the audio device with the <code class="code">desired</code> parameters, and returns the <code class="code">obtained</code> parameters, 
-		placing the actual hardware parameters in the structure pointed to by <code class="code">obtained</code>.
+<code class="code">open_audio desired_audio_spec mixer_callback -&gt; obtained audio_spec </code>
+  This function opens the audio device with the <code class="code">desired</code> parameters, and returns the <code class="code">obtained</code> parameters,
+  placing the actual hardware parameters in the structure pointed to by <code class="code">obtained</code>.
 </div>
 </td></tr>
 <tr><td align="left"><br>P</td></tr>
@@ -9289,10 +9348,10 @@ The maximum sample mixer volume.
 Pauses the specified channel.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALpause_audio">pause_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALpause_audio">pause_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
-<code class="code">pause_audio on\off</code> 
-		Toggle audio playback on and off
+<code class="code">pause_audio on\off</code>
+  Toggle audio playback on and off
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALpause_music">pause_music</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9339,19 +9398,19 @@ Queries whether the music is currently playing.
 <tr><td><a href="Sdl.Event.html#VALpoll_event">poll_event</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">poll_event -&gt; event</code>
-		Polls for currently pending events.
+    Polls for currently pending events.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#VALpump_events">pump_events</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">pump_events</code>
-		Pumps the event loop, gathering events from the input devices.
+    Pumps the event loop, gathering events from the input devices.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALput_pixel">put_pixel</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">put_pixel surface x y pixel</code>
-		puts an int32 rgb(a) pixel, such as output of <code class="code">map_rgb(a)</code>, on surface <code class="code">surface</code> at location <code class="code">(x,y)</code>
+    puts an int32 rgb(a) pixel, such as output of <code class="code">map_rgb(a)</code>, on surface <code class="code">surface</code> at location <code class="code">(x,y)</code>
 </div>
 </td></tr>
 <tr><td align="left"><br>Q</td></tr>
@@ -9401,37 +9460,37 @@ Restarts the music playback from the beginning.
 <tr><td><a href="Sdl.Video.html#VALsave_bmp">save_bmp</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">save_bmp surface file </code>
-		Saves the SDL_Surface <i>surface</i> as a Windows BMP file named <i>file</i>
+    Saves the SDL_Surface <i>surface</i> as a Windows BMP file named <i>file</i>
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALscale">scale</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">scale surface factor filter -&gt; surface</code>
-		Scales a surface by the given scale <code class="code">factor</code>, using the given <code class="code">filter</code>, and returning a new scaled surface
+    Scales a surface by the given scale <code class="code">factor</code>, using the given <code class="code">filter</code>, and returning a new scaled surface
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALscale_to">scale_to</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
 <td><div class="info">
 <code class="code">scale_to surface new_width new_height filter -&gt; surface</code>
-		Scales a surface to the new width and height given, using the given <code class="code">filter</code>, and returning a new scaled surface
+    Scales a surface to the new width and height given, using the given <code class="code">filter</code>, and returning a new scaled surface
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_alpha">set_alpha</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
-<code class="code">set_alpha surf flag alpha</code> 
-		Note: This function and the semantics of SDL alpha blending have changed since version 1.1.4.
+<code class="code">set_alpha surf flag alpha</code>
+    Note: This function and the semantics of SDL alpha blending have changed since version 1.1.4.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.SDLGL.html#VALset_attribute">set_attribute</a> [<a href="Sdl.SDLGL.html">Sdl.SDLGL</a>]</td>
 <td><div class="info">
 <code class="code">set_attribute attr value</code>
-		Sets the OpenGL attribute attr to value.
+    Sets the OpenGL attribute attr to value.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Window.html#VALset_caption">set_caption</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">set_caption window_caption taskbar_caption</code>
-		Sets the title-bar and icon name of the display window.
+    Sets the title-bar and icon name of the display window.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALset_chunk_volume">set_chunk_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9442,20 +9501,20 @@ Restarts the music playback from the beginning.
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_clipping">set_clipping</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
-<code class="code">set_clipping surf top left bottom right</code> 
-		Sets the clipping rectangle for a surface.
+<code class="code">set_clipping surf top left bottom right</code>
+    Sets the clipping rectangle for a surface.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_color_key">set_color_key</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
-<code class="code">set_color_key surf flag key</code> 
-		Sets the color key (transparent pixel) in a blittable surface and enables or disables RLE blit acceleration.
+<code class="code">set_color_key surf flag key</code>
+    Sets the color key (transparent pixel) in a blittable surface and enables or disables RLE blit acceleration.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_colors">set_colors</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
-<code class="code">set_colors surf colors firstcolor ncolors</code> 
-		Sets a portion of the colormap for the given 8-bit surface.
+<code class="code">set_colors surf colors firstcolor ncolors</code>
+    Sets a portion of the colormap for the given 8-bit surface.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALset_distance">set_distance</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9467,20 +9526,20 @@ Restarts the music playback from the beginning.
 <tr><td><a href="Sdl.Window.html#VALset_grab_input">set_grab_input</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">set_grab_input true/false</code>
-		Grabbing means that the mouse is confined to the application window, and nearly all keyboard input is passed 
-		directly to the application, and not interpreted by a window manager, if any.
+    Grabbing means that the mouse is confined to the application window, and nearly all keyboard input is passed
+    directly to the application, and not interpreted by a window manager, if any.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Window.html#VALset_icon">set_icon</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">set_icon surface</code>
-	 	Sets the window icon to the surface.
+    Sets the window icon to the surface.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Event.html#VALset_mod_state">set_mod_state</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">set_mod_state key_mod list</code>
-		Sets the current state of the modifier keys (CTRL, ALT, etc.) in the input list.
+    Sets the current state of the modifier keys (CTRL, ALT, etc.) in the input list.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALset_music_cmd">set_music_cmd</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9520,8 +9579,8 @@ Stops music and sets external music playback command.
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALset_video_mode">set_video_mode</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
-<code class="code">set_video_mode width height bpp flags -&gt; surface</code> 
-		Set up a video mode with the specified width, height and bitsperpixel.
+<code class="code">set_video_mode width height bpp flags -&gt; surface</code>
+    Set up a video mode with the specified width, height and bitsperpixel.
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALset_volume">set_volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9538,13 +9597,13 @@ Stops music and sets external music playback command.
 <tr><td><a href="Sdl.Video.html#VALshow_cursor">show_cursor</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">show_cursor true\false</code>
-		Toggle whether or not the cursor is shown on the screen.
+    Toggle whether or not the cursor is shown on the screen.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALstring_of_pixels">string_of_pixels</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">string_of_pixels surface -&gt; string</code>
-		Returns a copy of the raw pixel data in a surface as a string.
+    Returns a copy of the raw pixel data in a surface as a string.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALsurface_amask">surface_amask</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
@@ -9600,7 +9659,7 @@ Swap the back buffer to the screen
 <tr><td><a href="Sdl.SDLGL.html#VALswap_buffers">swap_buffers</a> [<a href="Sdl.SDLGL.html">Sdl.SDLGL</a>]</td>
 <td><div class="info">
 <code class="code">swap_buffers</code>
-		Swap OpenGL framebuffers/Update Display
+    Swap OpenGL framebuffers/Update Display
 </div>
 </td></tr>
 <tr><td align="left"><br>T</td></tr>
@@ -9627,7 +9686,7 @@ Swap the back buffer to the screen
 <tr><td><a href="Sdl.Window.html#VALtoggle_fullscreen">toggle_fullscreen</a> [<a href="Sdl.Window.html">Sdl.Window</a>]</td>
 <td><div class="info">
 <code class="code">toggle_fullscreen surface</code>
-		Toggles the application between windowed and fullscreen mode, if supported.
+    Toggles the application between windowed and fullscreen mode, if supported.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Draw.html#VALtriangle">triangle</a> [<a href="Sdl.Draw.html">Sdl.Draw</a>]</td>
@@ -9645,7 +9704,7 @@ Swap the back buffer to the screen
     Remove a tag from the range of channels.
 </div>
 </td></tr>
-<tr><td><a href="Sdl.Audio.html#VALunlock_audio">unlock_audio</a> [<a href="Sdl.Audio.html">Sdl.Audio</a>]</td>
+<tr><td><a href="Sdl_audio.html#VALunlock_audio">unlock_audio</a> [<a href="Sdl_audio.html">Sdl_audio</a>]</td>
 <td><div class="info">
 Unlocks a previous <code class="code">lock_audio</code> call.
 </div>
@@ -9658,19 +9717,19 @@ Unlock surface
 <tr><td><a href="Sdl.Video.html#VALupdate_rect">update_rect</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">update_rect surface left top width height</code>
-		Makes sure the given area is updated on the given screen.
+    Makes sure the given area is updated on the given screen.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALupdate_rects">update_rects</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">update_rects surface  rect_array</code>
-		Makes sure the given list of rectangles is updated on the given screen.
+    Makes sure the given list of rectangles is updated on the given screen.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALupdate_surface">update_surface</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">update_surface surface</code>
-		Makes sure the screen is updated
+    Makes sure the screen is updated
 </div>
 </td></tr>
 <tr><td><a href="Win.html#VALusleep">usleep</a> [<a href="Win.html">Win</a>]</td>
@@ -9682,9 +9741,9 @@ Sleep for n microseconds
 <tr><td><a href="Sdl.Video.html#VALvideo_mode_ok">video_mode_ok</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">video_mode_ok width height bpp_flags -&gt; true/false</code>
-		<code class="code">video_mode_ok</code> returns false if the requested mode is not supported under any bit depth, 
-	    or returns true if a closest available mode with the given width, height and 
-	    requested surface flags exists (see <code class="code">set_video_mode</code>).
+    <code class="code">video_mode_ok</code> returns false if the requested mode is not supported under any bit depth,
+      or returns true if a closest available mode with the given width, height and
+      requested surface flags exists (see <code class="code">set_video_mode</code>).
 </div>
 </td></tr>
 <tr><td><a href="Sdl_mixer.Mix.html#VALvolume">volume</a> [<a href="Sdl_mixer.Mix.html">Sdl_mixer.Mix</a>]</td>
@@ -9709,15 +9768,15 @@ Sleep for n microseconds
 <tr><td><a href="Sdl.Event.html#VALwait_event">wait_event</a> [<a href="Sdl.Event.html">Sdl.Event</a>]</td>
 <td><div class="info">
 <code class="code">wait_event -&gt; event</code>
-		Waits indefinitely for the next available event.
+    Waits indefinitely for the next available event.
 </div>
 </td></tr>
 <tr><td><a href="Sdl.Video.html#VALwarp_mouse">warp_mouse</a> [<a href="Sdl.Video.html">Sdl.Video</a>]</td>
 <td><div class="info">
 <code class="code">warp_mouse x y</code>
-		Set the position of the mouse cursor (generates a mouse motion event).
+    Set the position of the mouse cursor (generates a mouse motion event).
 </div>
 </td></tr>
-</table><br>
+</table>
 </body>
 </html>

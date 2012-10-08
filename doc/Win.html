@@ -12,28 +12,28 @@
 <link title="Index of values" rel=Appendix href="index_values.html">
 <link title="Index of modules" rel=Appendix href="index_modules.html">
 <link title="Sdl" rel="Chapter" href="Sdl.html">
+<link title="Sdl_audio" rel="Chapter" href="Sdl_audio.html">
 <link title="Glcaml" rel="Chapter" href="Glcaml.html">
 <link title="Win" rel="Chapter" href="Win.html">
 <link title="Sdl_mixer" rel="Chapter" href="Sdl_mixer.html"><title>Win</title>
 </head>
 <body>
-<div class="navbar"><a href="Glcaml.html">Previous</a>
-&nbsp;<a href="index.html">Up</a>
-&nbsp;<a href="Sdl_mixer.html">Next</a>
+<div class="navbar"><a class="pre" href="Glcaml.html" title="Glcaml">Previous</a>
+&nbsp;<a class="up" href="index.html" title="Index">Up</a>
+&nbsp;<a class="post" href="Sdl_mixer.html" title="Sdl_mixer">Next</a>
 </div>
-<center><h1>Module <a href="type_Win.html">Win</a></h1></center>
-<br>
+<h1>Module <a href="type_Win.html">Win</a></h1>
 <pre><span class="keyword">module</span> Win: <code class="code">sig</code> <a href="Win.html">..</a> <code class="code">end</code></pre>Provides a few basic functions to use OpenGL from Ocaml Graphics module<br>
 <hr width="100%">
-<pre><span class="keyword">val</span> <a name="VALinit_opengl"></a>init_opengl : <code class="type">unit -> unit</code></pre><div class="info">
+<pre><span id="VALinit_opengl"><span class="keyword">val</span> init_opengl</span> : <code class="type">unit -> unit</code></pre><div class="info">
 Set up Ocaml graphics window for OpenGL input.
    A window has to be created before this function may be called.
    If the window had a title it will have to be set again<br>
 </div>
-<pre><span class="keyword">val</span> <a name="VALswap_buffers"></a>swap_buffers : <code class="type">unit -> unit</code></pre><div class="info">
+<pre><span id="VALswap_buffers"><span class="keyword">val</span> swap_buffers</span> : <code class="type">unit -> unit</code></pre><div class="info">
 Swap the back buffer to the screen<br>
 </div>
-<pre><span class="keyword">val</span> <a name="VALusleep"></a>usleep : <code class="type">int -> unit</code></pre><div class="info">
+<pre><span id="VALusleep"><span class="keyword">val</span> usleep</span> : <code class="type">int -> unit</code></pre><div class="info">
 Sleep for n microseconds<br>
 </div>
 </body></html>

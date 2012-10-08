@@ -30,10 +30,10 @@ nosdl:
 endif
 
 sdl:
-	$(MAKE) -f makefile.inc MLFILE=audiopan
-	$(MAKE) -f makefile.inc MLFILE=audiopitch
-	$(MAKE) -f makefile.inc MLFILE=audiopitchpan
-	$(MAKE) -f makefile.inc MLFILE=audiosample
+	$(MAKE) -f makefile.inc THREADS=true MLFILE=audiopan
+	$(MAKE) -f makefile.inc THREADS=true MLFILE=audiopitch
+	$(MAKE) -f makefile.inc THREADS=true MLFILE=audiopitchpan
+	$(MAKE) -f makefile.inc THREADS=true MLFILE=audiosample
 	$(MAKE) -f makefile.inc MLFILE=events
 	$(MAKE) -f makefile.inc MLFILE=foolesson2
 	$(MAKE) -f makefile.inc MLFILE=foolesson4
@@ -91,4 +91,4 @@ clean:
 	-rmdir build
 
 htmldoc:
-	ocamldoc -v -I lib -html lib/sdl.mli lib/glcaml.mli lib/win.mli lib/sdl_mixer.mli -d doc
+	ocamldoc -v -I lib -html lib/sdl.mli lib/sdl_audio.mli lib/glcaml.mli lib/win.mli lib/sdl_mixer.mli -d doc

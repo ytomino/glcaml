@@ -58,10 +58,10 @@ BUILDDIR=build
 all:
 
 ########
-MLI=sdl.mli
-MLSRC=sdl.ml
+MLI=sdl.mli sdl_audio.mli
+MLSRC=sdl.ml sdl_audio.ml
 MLINIT=
-CSRC=sdl_stub.c
+CSRC=sdl_stub.c sdl_audio_stub.c
 
 LIBNAME=sdl
 STUBLIBNAME=ml$(LIBNAME)
@@ -93,6 +93,11 @@ else
   endif
  endif
 endif
+
+$(BUILDDIR)/sdl_audio.cmo: sdl_audio.ml $(BUILDDIR)/sdl.cmi
+	$(OCAMLC) -c -I $(BUILDDIR) $(OCAMLCFLAGS) -thread -o $@ $<
+$(BUILDDIR)/sdl_audio.cmx: sdl_audio.ml $(BUILDDIR)/sdl.cmi
+	$(OCAMLOPT) -c -I $(BUILDDIR) $(OCAMLCFLAGS) -thread -o $@ $<
 ########
 
 MLCMO=$(addprefix $(BUILDDIR)/,$(addsuffix .cmo,$(basename $(MLSRC) $(MLINIT))))
