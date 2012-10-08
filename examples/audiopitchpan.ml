@@ -1,5 +1,5 @@
 open Sdl
-open Audio
+open Sdl_audio
 open Event
 
 

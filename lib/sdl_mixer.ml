@@ -16,7 +16,6 @@
  *)
 
 open Sdl
-open Audio
 
 type byte_array = (int, Bigarray.int8_unsigned_elt, Bigarray.c_layout) Bigarray.Array1.t
 
@@ -64,7 +63,7 @@ external init : init_flag list -> unit = "sdlmixer_init"
 external quit : unit -> unit = "sdlmixer_quit"
 external proto_open_audio : int -> int -> int -> int -> unit = "sdlmixer_open_audio"
 let open_audio frequency format channels samples =
-    proto_open_audio frequency (int_of_sampletype format) (int_of_channel channels) samples
+    proto_open_audio frequency (Sdl_audio.int_of_sampletype format) (Sdl_audio.int_of_channel channels) samples
 
 external allocate_channels : int -> int = "sdlmixer_allocate_channels"
 

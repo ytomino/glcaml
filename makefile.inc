@@ -39,12 +39,14 @@ CFLAGS+=-D__unix__ -isystem /usr/X11/include
 endif
 endif
 else
+THREADS=1 # for Sdl_audio
+LIBS:=$(filter-out unix,$(LIBS)) # unix is added by OCamlMakefile
 CLIBS+=SDL
 ifneq ($(findstring darwin,$(TARGET)),)
 CLIBS+=SDLmain
 OCAMLLDFLAGS+=-ccopt -framework -ccopt Cocoa -ccopt -framework -ccopt OpenGL
 endif
-SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml
+SDL_SOURCE=$(LIBDIR)/sdl_stub.c $(LIBDIR)/sdl.mli $(LIBDIR)/sdl.ml $(LIBDIR)/sdl_audio_stub.c $(LIBDIR)/sdl_audio.mli $(LIBDIR)/sdl_audio.ml
 ifndef NOSDLMIXER
 CLIBS+=SDL_mixer
 SDL_SOURCE+=$(LIBDIR)/sdl_mixer_stub.c $(LIBDIR)/sdl_mixer.mli $(LIBDIR)/sdl_mixer.ml
