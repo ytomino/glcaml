@@ -357,6 +357,14 @@ module Video : sig
     Set the position of the mouse cursor (generates a mouse motion event). *)
   val warp_mouse : int -> int -> unit
 
+  (** Mouse cursor *)
+  type cursor
+
+  val create_cursor: byte_array -> byte_array -> int -> int -> int -> int -> cursor
+  val set_cursor: cursor -> unit
+  val get_cursor: unit -> cursor
+  val free_cursor: cursor -> unit
+
   (** [string_of_pixels surface -> string]
     Returns a copy of the raw pixel data in a surface as a string. *)
   val string_of_pixels : surface -> string
@@ -678,6 +686,20 @@ module Timer : sig
     [delay] will wait at least the specified time, but possible longer due to OS scheduling.
     Note: Count on a delay granularity of at least 10 ms. Some platforms have shorter clock ticks but this is the most common. *)
   val delay : int -> unit
+
+end
+
+
+(* ------------------------------- Joystick.------------------------------- *)
+(** Joystick event handling *)
+module Joystick: sig
+
+  type joystick
+
+  val num_joysticks: unit -> int
+  val joystick_open: int -> joystick
+  val joystick_close: joystick -> unit
+  val joystick_event_state: Event.que_dis_ena -> Event.que_dis_ena
 
 end
 

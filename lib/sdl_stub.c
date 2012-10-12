@@ -686,6 +686,49 @@ value sdlstub_warp_mouse(value x, value y)
     CAMLreturn(Val_unit);
 }
 
+value sdlstub_create_cursor(value data, value mask, value w, value h, value hot_x, value hot_y)
+{
+    CAMLparam5(data, mask, w, h, hot_x);
+    CAMLxparam1(hot_y);
+    SDL_Cursor *result = SDL_CreateCursor(
+        Data_bigarray_val(data),
+        Data_bigarray_val(mask),
+        Int_val(w),
+        Int_val(h),
+        Int_val(hot_x),
+        Int_val(hot_y));
+    if(result == NULL){
+        raise_failure();
+    }
+    CAMLreturn((value)result);
+}
+
+value sdlstub_create_cursor_byte(value *argv, __attribute__((unused)) int n)
+{
+    return sdlstub_create_cursor(argv[0], argv[1], argv[2], argv[3], argv[4], argv[5]);
+}
+
+value sdlstub_set_cursor(value cursor)
+{
+    CAMLparam1(cursor);
+    SDL_SetCursor((SDL_Cursor *)cursor);
+    CAMLreturn(Val_unit);
+}
+
+value sdlstub_get_cursor(value unit)
+{
+    CAMLparam1(unit);
+    SDL_Cursor *result = SDL_GetCursor();
+    CAMLreturn((value)result);
+}
+
+value sdlstub_free_cursor(value cursor)
+{
+    CAMLparam1(cursor);
+    SDL_FreeCursor((SDL_Cursor *)cursor);
+    CAMLreturn(Val_unit);
+}
+
 /* --------------------- events -------------------------------- */
 #define FLAG_TO_MOD_SIZE 12
 
@@ -714,7 +757,7 @@ static value carray_to_ML_list(int carray[], int arr_size)
     tail=toreturn;
     for(i=1;i<arr_size;i++)
     {
-        Field(tail,1) = alloc(2,0);
+        Store_field(tail,1, alloc(2,0));
         tail=Field(tail,1);
         Store_field(tail, 0, Val_int(carray[i]));
     }
@@ -1220,6 +1263,39 @@ value sdldraw_get_pixel(value s, value vx, value vy) {
     CAMLreturn(rs);
 }
 
+/* joystick */
+
+value sdlstub_num_joysticks(value unit)
+{
+    CAMLparam1(unit);
+    int result = SDL_NumJoysticks();
+    CAMLreturn(Val_int(result));
+}
+
+value sdlstub_joystick_open(value index)
+{
+    CAMLparam1(index);
+    SDL_Joystick *result = SDL_JoystickOpen(Int_val(index));
+    if(result == NULL){
+        raise_failure();
+    }
+    CAMLreturn((value)result);
+}
+
+value sdlstub_joystick_close(value joy)
+{
+    CAMLparam1(joy);
+    SDL_JoystickClose((SDL_Joystick *)joy);
+    CAMLreturn(Val_unit);
+}
+
+value sdlstub_joystick_event_state(value enable)
+{
+    CAMLparam1(enable);
+    CAMLreturn(Val_int(SDL_JoystickEventState(Int_val(enable)-1)+1));
+}
+
+/* for libSDLmain */
 
 #ifdef __APPLE__
 int main(int argc, char **argv)

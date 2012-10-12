@@ -48,6 +48,7 @@ sdl:
 	$(MAKE) -f makefile.inc MLFILE=lesson07
 	$(MAKE) -f makefile.inc MLFILE=lesson08
 	$(MAKE) -f makefile.inc MLFILE=lesson09
+	$(MAKE) -f makefile.inc MLFILE=test_cursor
 
 sdlmixer: 
 	$(MAKE) -f makefile.inc MLFILE=mixer
@@ -81,6 +82,7 @@ clean:
 	$(MAKE) -f makefile.inc MLFILE=lesson07 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson08 clean
 	$(MAKE) -f makefile.inc MLFILE=lesson09 clean
+	$(MAKE) -f makefile.inc MLFILE=test_cursor clean
 	# mixer
 	$(MAKE) -f makefile.inc MLFILE=mixer clean
 	# ttf

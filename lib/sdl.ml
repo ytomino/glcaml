@@ -157,6 +157,14 @@ module Video = struct
   = "sdlstub_show_cursor"
   external warp_mouse : int -> int -> unit
     = "sdlstub_warp_mouse"
+
+  type cursor
+
+  external create_cursor: byte_array -> byte_array -> int -> int -> int -> int -> cursor = "sdlstub_create_cursor_byte" "sdlstub_create_cursor"
+  external set_cursor: cursor -> unit = "sdlstub_set_cursor"
+  external get_cursor: unit -> cursor = "sdlstub_get_cursor"
+  external free_cursor: cursor -> unit = "sdlstub_free_cursor"
+
   external string_of_pixels : surface -> string = "sdlstub_string_of_pixels"
 
 end
@@ -210,7 +218,6 @@ type gl_attr =
 
 end
 (**************************** End Open GL support **************************************)
-
 
 (***************************** Events. *************************************************)
 module Event  = struct
@@ -355,6 +362,20 @@ module Timer = struct
 
 end
 (***************************** End Timer. ******************************************************)
+
+
+(********************************* Joystick. *********************************)
+module Joystick = struct
+
+  type joystick
+
+  external num_joysticks: unit -> int = "sdlstub_num_joysticks"
+  external joystick_open: int -> joystick = "sdlstub_joystick_open"
+  external joystick_close: joystick -> unit = "sdlstub_joystick_close"
+  external joystick_event_state: Event.que_dis_ena -> Event.que_dis_ena = "sdlstub_joystick_event_state"
+
+end
+(******************************* End Joystick. *******************************)
 
 
 (****************************** Audio ****************************)
