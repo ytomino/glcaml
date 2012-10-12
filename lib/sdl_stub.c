@@ -757,7 +757,7 @@ static value carray_to_ML_list(int carray[], int arr_size)
     tail=toreturn;
     for(i=1;i<arr_size;i++)
     {
-        Field(tail,1) = alloc(2,0);
+        Store_field(tail,1, alloc(2,0));
         tail=Field(tail,1);
         Store_field(tail, 0, Val_int(carray[i]));
     }
