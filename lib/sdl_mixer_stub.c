@@ -26,8 +26,8 @@ static value cons(value x, value l)
 	CAMLparam2(x, l);
 	CAMLlocal1(m);
 	m = alloc_small(2, Tag_cons);
-	Field(m, 0) = x;
-	Field(m, 1) = l;
+	Store_field(m, 0, x);
+	Store_field(m, 1, l);
 	CAMLreturn(m);
 }
 
@@ -203,9 +203,9 @@ CAMLprim value sdlmixerstub_query_spec(value unit)
 		raise_failure();
 	}
 	result = caml_alloc_tuple(3);
-	Field(result, 0) = Val_int(frequency);
-	Field(result, 1) = Val_sample_type(format);
-	Field(result, 2) = Val_int(channels);
+	Store_field(result, 0, Val_int(frequency));
+	Store_field(result, 1, Val_sample_type(format));
+	Store_field(result, 2, Val_int(channels));
 	CAMLreturn(result);
 }
 

@@ -25,8 +25,8 @@ static value cons(value x, value l)
 	CAMLparam2(x, l);
 	CAMLlocal1(m);
 	m = alloc_small(2, Tag_cons);
-	Field(m, 0) = x;
-	Field(m, 1) = l;
+	Store_field(m, 0, x);
+	Store_field(m, 1, l);
 	CAMLreturn(m);
 }
 
@@ -322,8 +322,8 @@ CAMLprim value sdlttfstub_size_text(value font, value text)
 		raise_failure();
 	}
 	result = alloc_small(2, 0);
-	Field(result, 0) = Val_int(w);
-	Field(result, 1) = Val_int(h);
+	Store_field(result, 0, Val_int(w));
+	Store_field(result, 1, Val_int(h));
 	CAMLreturn(result);
 }
 
@@ -336,8 +336,8 @@ CAMLprim value sdlttfstub_size_utf8(value font, value text)
 		raise_failure();
 	}
 	result = alloc_small(2, 0);
-	Field(result, 0) = Val_int(w);
-	Field(result, 1) = Val_int(h);
+	Store_field(result, 0, Val_int(w));
+	Store_field(result, 1, Val_int(h));
 	CAMLreturn(result);
 }
 
@@ -350,8 +350,8 @@ CAMLprim value sdlttfstub_size_unicode(value font, value text)
 		raise_failure();
 	}
 	result = alloc_small(2, 0);
-	Field(result, 0) = Val_int(w);
-	Field(result, 1) = Val_int(h);
+	Store_field(result, 0, Val_int(w));
+	Store_field(result, 1, Val_int(h));
 	CAMLreturn(result);
 }
 
