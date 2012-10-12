@@ -37,7 +37,8 @@ static Window local_find_window (Display *display, Window root, char *name)
     Window parent;
     Window *children;
     unsigned int num_children = 0;
-    int i, status = 0;
+    unsigned i;
+    int status = 0;
     XTextProperty tex_prop;
     char **list_return = NULL;
     int count_return = 0;
